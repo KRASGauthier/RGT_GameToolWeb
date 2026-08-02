@@ -1,6 +1,5 @@
-import type { ReactNode } from "react";
 import type { GPageProps } from "../../../rgt/pages/shared/pageCommon";
-import { Box, Stack } from "@mui/material";
+import {  Stack } from "@mui/material";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import CDrawerMenu from "../../../rgt/components/navigation/drawers/CDrawerMenu";
 import {
@@ -30,12 +29,12 @@ const groups: TListMenuGroupData[] = [
 			},
 			{
 				value: EAppMenus.MANAGEMENT_ROADMAP,
-				display: "Episodes",
+				display: "Roadmap",
 				icon: <TimelineRounded />,
 			},
 			{
 				value: EAppMenus.MANAGEMENT_BUGS,
-				display: "Library",
+				display: "Bugs",
 				icon: <BugReportRounded />,
 			},
 		],
