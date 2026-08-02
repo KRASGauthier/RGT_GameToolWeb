@@ -1,0 +1,51 @@
+#--------------------------------------------------
+#                    COMMON
+#--------------------------------------------------
+APP_NAME=
+APP_TAG="1.0"
+
+#--------------------------------------------------
+#                     FRONTEND
+#--------------------------------------------------
+FRONTEND_LOCATION="./frontend/"
+FRONTEND_INIT="init.dev.sh"
+
+#--------------------------------------------------
+#                     BACKEND
+#--------------------------------------------------
+BACKEND_LOCATION="./backend/"
+BACKEND_INIT="init.dev.sh"
+BACKEND_UPLOADE_LOCATION="./uploaded-dev/"
+
+#--------------------------------------------------
+#                     DB
+#--------------------------------------------------
+DB_USERNAME=
+DB_PASSWORD=
+DB_NAME=
+
+DB_DEV_LOCATION="./DB/Dev/"
+DB_DEV_UPLOADE_LOCATION="./DB/uploaded-dev/"
+
+#--------------------------------------------------
+#                     DEV
+#--------------------------------------------------
+DEV_NAME=
+DEV_NETWORK="tapp_netword"
+DEV_FILES="dockerfile.dev"
+
+DEV_VITE_PORT_IN=5173
+DEV_VITE_PORT_OUT=8081
+
+DEV_NODE_PORT_IN=8080
+DEV_NODE_PORT_OUT=8082
+
+#--------------------------------------------------
+#                     SYSTEM
+#--------------------------------------------------
+SYSTEM_LOC=".system/"
+SYSTEM_DEFAULT_LOC=".system/defaults/"
+SYSTEM_DEFAULT_FRONT_LOC=".system/defaults/frontend/"
+SYSTEM_DEFAULT_BACK_LOC=".system/defaults/backend/"
+SYSTEM_SYNC_PROJECT_LOCATION=
+SYSTEM_SYNC_SAVE_LOCATION=

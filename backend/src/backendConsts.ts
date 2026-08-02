@@ -1,0 +1,1 @@
+export const GLOBAL_SCHEMA_VERSION = 0;

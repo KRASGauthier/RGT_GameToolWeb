@@ -1,0 +1,96 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - dev-network
+    volumes:
+      - db-dev-volume:/data/db
+
+  mongo-express:
+    depends_on:
+      - mongo	
+    image: mongo-express
+    restart: always
+    ports:
+      - 8083:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://${DB_USERNAME}:${DB_PASSWORD}@mongo:27017/
+      ME_CONFIG_BASICAUTH_ENABLED: true
+      ME_CONFIG_BASICAUTH_USERNAME: ${DB_USERNAME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - dev-network
+
+  frontend:
+    depends_on:
+      - mongo	
+    container_name: ${APP_NAME}-frontend
+    build: 
+      context: ./frontend
+      dockerfile: ${DEV_FILES}
+    image: ${APP_NAME}_frontend:$APP_TAG
+    env_file:
+     - path: .env
+       required: true
+    restart: always
+    networks:
+      - dev-network
+    volumes:
+     - frontend-volume:/home/app/
+    ports:
+     - ${DEV_VITE_PORT_OUT}:${DEV_VITE_PORT_IN}
+
+  backend-node:
+    depends_on:
+      - mongo	
+    container_name: ${APP_NAME}-backend-node
+    build: 
+      context: ./backend
+      dockerfile: ${DEV_FILES}
+    image: ${APP_NAME}_backend_node:$APP_TAG
+    env_file:
+     - path: .env
+       required: true
+    restart: always
+    networks:
+      - dev-network
+    volumes:
+     - backend-volume:/home/app/
+     - db-dev-upload-volume:/home/app/${BACKEND_UPLOADE_LOCATION}
+    ports:
+     - ${DEV_NODE_PORT_OUT}:${DEV_NODE_PORT_IN}
+
+networks:
+  dev-network:
+    name: ${DEV_NETWORK}
+    driver: bridge
+
+volumes:
+  frontend-volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: ${FRONTEND_LOCATION}
+  backend-volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: ${BACKEND_LOCATION}
+  db-dev-volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: ${DB_DEV_LOCATION}
+  db-dev-upload-volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: ${DB_DEV_UPLOADE_LOCATION}

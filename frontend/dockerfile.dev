@@ -1,0 +1,10 @@
+FROM node:24-alpine
+
+RUN mkdir /home/app/
+RUN mkdir /home/run/
+
+COPY ./init.dev.sh /home/run/init.sh
+RUN chmod +x /home/run/init.sh
+
+CMD ["/home/run/init.sh"]
+# CMD ["tail", "-f", "/dev/null"]
