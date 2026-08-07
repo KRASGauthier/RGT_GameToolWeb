@@ -1,5 +1,5 @@
 import type { GPageProps } from "../../../rgt/pages/shared/pageCommon";
-import {  Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import CDrawerMenu from "../../../rgt/components/navigation/drawers/CDrawerMenu";
 import {
@@ -12,8 +12,7 @@ import {
 import type { TListMenuGroupData } from "../../../rgt/components/data/lists/subs/CListMenuGroup";
 import { EAppMenus } from "../../consts";
 
-export interface PBasePageProps extends GPageProps {
-}
+export interface PBasePageProps extends GPageProps {}
 
 const groups: TListMenuGroupData[] = [
 	{
@@ -38,23 +37,22 @@ const groups: TListMenuGroupData[] = [
 				icon: <BugReportRounded />,
 			},
 		],
-	}
+	},
 ];
 
-function PBasePage({ }: PBasePageProps) {
-
+function PBasePage({}: PBasePageProps) {
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
 	const currentMenu = pathname == "/" ? EAppMenus.HOME : pathname.split("/")[1];
 
 	//ANDLES
 	const handleNavigate = (toward: string) => {
-		navigate("/" +  (toward == EAppMenus.HOME ? "" : toward));
-	}
+		navigate("/" + (toward == EAppMenus.HOME ? "" : toward));
+	};
 
 	return (
-		<Stack  direction="row" sx={{position: "fixed", inset: 0}}>
-			<CDrawerMenu 
+		<Stack direction="row" sx={{ position: "fixed", inset: 0 }}>
+			<CDrawerMenu
 				onValueChange={handleNavigate}
 				value={currentMenu}
 				comps={[
@@ -64,9 +62,9 @@ function PBasePage({ }: PBasePageProps) {
 						display: "Home",
 						icon: <HomeRounded />,
 					},
-				]} groups={groups}>
-
-			</CDrawerMenu>
+				]}
+				groups={groups}
+			></CDrawerMenu>
 			<Outlet />
 		</Stack>
 	);
