@@ -3,8 +3,9 @@ import type { GCompProps } from "../../shared/ccommon";
 import { CButtonStyle, type IButtonStyle } from "../../../style/components/inputs/CButtonStyle";
 import { memo } from "react";
 import { sxMerger } from "../../../utils/UStyles";
-import type { TLighingType, TQuadStyle } from "../../../types/TStyles";
+import type { TQuadStyle, TSize } from "../../../types/TStyles";
 
+export type TButtonStylingTypes = "dark" | "medium" | "light";
 export interface CButtonGlobalProps extends GCompProps {
 	bgColor?: string[];
 	bgColorHover?: string[];
@@ -15,7 +16,8 @@ export interface CButtonGlobalProps extends GCompProps {
 	textColor?: string;
 	textHoverColor?: string;
 
-	lighting?: TLighingType;
+	styling?: TButtonStylingTypes;
+	padding?: TSize;
 
 	checked?: boolean;
 }
@@ -30,7 +32,8 @@ export const CButtonPropCleaner = <_In extends CButtonGlobalProps>(other: _In) =
 		"elevation",
 		"textColor",
 		"textHoverColor",
-		"lighting",
+		"styling",
+		"padding",
 		"checked",
 	].forEach((key) => {
 		Reflect.deleteProperty(cleanedVersion, key);

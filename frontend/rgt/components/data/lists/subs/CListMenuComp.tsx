@@ -62,10 +62,9 @@ export interface CListMenuCompProps extends Omit<CListMenuItemButtonProps, "styl
 	value: string;
 	comp: TListMenuCompData;
 	onValueChange?: (value: string) => void;
-	small?: boolean
+	small?: boolean;
 }
 function CListMenuComp({ value, onValueChange, comp, small, sx, ...other }: CListMenuCompProps) {
-
 	const style: IListMenuCompStyle = useMemo(() => {
 		return CListMenuCompStyle({ comp, small });
 	}, [comp, small]);

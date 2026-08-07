@@ -38,7 +38,7 @@ function CDrawerMini({
 
 	return (
 		<Box sx={sxMerger(style.main, sx ? sx : {})} {...other}>
-			<Stack sx={{position: "absolute", inset: 0}}>
+			<Stack sx={{ position: "absolute", inset: 0 }}>
 				<CButtonIconText
 					onClick={() => {
 						onOpen?.(!open);
@@ -50,7 +50,7 @@ function CDrawerMini({
 					}
 					iconOnly={!open}
 					justifyContent={"center"}
-					lighting="dark"
+					styling="dark"
 				>
 					{drawerName ? drawerName : "Close"}
 				</CButtonIconText>
