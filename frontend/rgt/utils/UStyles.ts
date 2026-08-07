@@ -5,6 +5,7 @@ import type {
 	TColorSimple,
 	TDropShadow,
 	TQuadStyle,
+	TSize,
 } from "../types/TStyles";
 import { appTheme } from "../../src/style/theme";
 
@@ -20,6 +21,12 @@ export function getQuadStyle<_T>(
 	if (target == "normal") return style.normal;
 	if (!style[target]) return style.normal;
 	return style[target];
+}
+
+export function sizeToString(value?: TSize, fallback?: string, sufix?: string): string | undefined {
+	if (value == undefined) return fallback;
+	if (typeof value == "number") return value.toString() + (sufix ?? "px");
+	return value;
 }
 
 //--------------------------------------------------

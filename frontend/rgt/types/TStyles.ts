@@ -1,7 +1,7 @@
 //--------------------------------------------------
-//                   VARIANTS
+//                   SAHRED
 //--------------------------------------------------
-export type TLighingType = "dark" | "medium" | "light";
+export type TSize = string | number | undefined;
 
 //--------------------------------------------------
 //                    CSS
@@ -16,7 +16,7 @@ export type TDropShadow = {
 export type TQuadStyle<_T> = {
 	normal: _T;
 	hovered?: _T;
-	pressed?: _T;
+	focused?: _T;
 	disabled?: _T;
 };
 
