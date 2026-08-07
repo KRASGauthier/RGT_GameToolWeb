@@ -1,6 +1,6 @@
 import { useTheme, type SxProps, type Theme } from "@mui/material";
 import { appTheme } from "../../../../src/style/theme";
-import { getActiveColor, getNeutralColor, type CInputOutlinedColor } from "./sharedStyle";
+import { getLightColor, getNeutralColor, type CInputOutlinedColor } from "./sharedStyle";
 import type { CTextFieldOutlinedProps } from "../../../components/inputs/text/CTextFieldOutlined";
 import { getQuadStyle, shadowGenerate } from "../../../utils/UStyles";
 
@@ -36,7 +36,7 @@ export const CTextFieldOutlinedStyle = ({
 		borderWidth = typeof borderWidth == "number" ? borderWidth + "px" : borderWidth;
 	if (!borderWidth) borderWidth = "2px";
 
-	let colors: CInputOutlinedColor = getActiveColor();
+	let colors: CInputOutlinedColor = getLightColor();
 	if (styling && styling == "neutral") colors = getNeutralColor();
 
 	return {
@@ -93,7 +93,7 @@ export const CTextFieldOutlinedStyle = ({
 
 			"& .MuiOutlinedInput-root.Mui-focused": {
 				backgroundColor: colors.bgFocus,
-				boxShadow: shadowGenerate(getQuadStyle(elevation, "pressed") ?? 25),
+				boxShadow: shadowGenerate(getQuadStyle(elevation, "focused") ?? 25),
 			},
 
 			"& .MuiOutlinedInput-root.Mui-disabled": {
