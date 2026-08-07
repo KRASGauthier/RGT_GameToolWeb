@@ -48,6 +48,7 @@ export interface IThemeSpacing {
 	main: string;
 	searchTop: string;
 	grid: string;
+	medium: string;
 }
 
 export interface IThemeShape {
