@@ -42,6 +42,7 @@ TARGETS=(
 	".gitignore"
 	".env"
 	"frontend/rgt"
+	"backend/rgt"
 )
 addFiles "frontend"
 addFiles "backend"

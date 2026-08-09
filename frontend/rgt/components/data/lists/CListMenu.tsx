@@ -36,9 +36,10 @@ function CListMenu({
 
 	return (
 		<CList sx={sxMerger(style.main, sx ? sx : {})} {...other}>
-			{comps.map((comp: TListMenuCompData) => {
+			{comps.map((comp: TListMenuCompData, index: number) => {
 				return (
 					<CListMenuComp
+						key={comp.value + "-" + index}
 						small={small}
 						onValueChange={onValueChange}
 						value={value}
@@ -46,9 +47,10 @@ function CListMenu({
 					/>
 				);
 			})}
-			{groups.map((group: TListMenuGroupData) => {
+			{groups.map((group: TListMenuGroupData, index: number) => {
 				return (
 					<CListMenuGroup
+						key={group.value + "-" + index}
 						small={small}
 						onValueChange={onValueChange}
 						value={value}

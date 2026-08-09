@@ -66,10 +66,11 @@ function CListMenuGroup({ value, onValueChange, group, small, sx, ...other }: CL
 			</Stack>
 			<Collapse in={open}>
 				<CList sx={sxMerger(style.group, sx ? sx : {})} {...other}>
-					{group.comps.map((comp: TListMenuCompData) => {
+					{group.comps.map((comp: TListMenuCompData, index: number) => {
 						comp.color = comp.color ? comp.color : group.color;
 						return (
 							<CListMenuComp
+								key={comp.value + "-" + index}
 								onValueChange={onValueChange}
 								value={value}
 								comp={comp}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { sxMerger } from "../../../utils/UStyles";
 import {
 	CDrawerMiniStyle,
@@ -19,7 +19,11 @@ export interface CDrawerMiniProps extends GCompProps, BoxProps {
 	closedWidth?: number;
 
 	onOpen?: (open: boolean) => void;
+
+	saveStatus?: boolean;
 }
+
+const OPEN_STORAGE_KEY = "CDrawerMiniOpen";
 
 function CDrawerMini({
 	elevation,
@@ -28,13 +32,24 @@ function CDrawerMini({
 	closedWidth = 50,
 	onOpen,
 	children,
+	saveStatus,
 	sx,
 	...other
 }: CDrawerMiniProps) {
-	const [open, setOpen] = useState<boolean>(true);
+	const [open, setOpen] = useState<boolean>(() => {
+		return localStorage.getItem(OPEN_STORAGE_KEY) == null ||
+			localStorage.getItem(OPEN_STORAGE_KEY) == "closed"
+			? false
+			: true;
+	});
 	const style: IDrawerMiniStyle = useMemo(() => {
 		return CDrawerMiniStyle({ elevation, open, openWidth, closedWidth });
 	}, [elevation, open, openWidth, closedWidth]);
+
+	useEffect(() => {
+		if (saveStatus) localStorage.setItem(OPEN_STORAGE_KEY, open ? "open" : "closed");
+		onOpen?.(open);
+	}, [open, saveStatus, onOpen]);
 
 	return (
 		<Box sx={sxMerger(style.main, sx ? sx : {})} {...other}>

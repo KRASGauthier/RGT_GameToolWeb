@@ -17,14 +17,29 @@ export interface CDrawerMenuProps extends CDrawerMiniProps {
 	onValueChange?: (value: string) => void;
 }
 
-function CDrawerMenu({ value, onValueChange, comps, groups, sx, ...other }: CDrawerMenuProps) {
+function CDrawerMenu({
+	value,
+	onValueChange,
+	comps,
+	groups,
+	onOpen,
+	sx,
+	...other
+}: CDrawerMenuProps) {
 	const [open, setOpen] = useState<boolean>(true);
 	const style: IDrawerMenuStyle = useMemo(() => {
 		return CDrawerMenuStyle();
 	}, []);
 
 	return (
-		<CDrawerMini sx={sxMerger(style.main, sx ? sx : {})} onOpen={setOpen} {...other}>
+		<CDrawerMini
+			sx={sxMerger(style.main, sx ? sx : {})}
+			onOpen={(value: boolean) => {
+				setOpen(value);
+				onOpen?.(value);
+			}}
+			{...other}
+		>
 			<CListMenu
 				value={value}
 				onValueChange={onValueChange}

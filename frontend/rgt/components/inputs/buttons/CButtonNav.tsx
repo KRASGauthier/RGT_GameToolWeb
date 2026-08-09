@@ -7,12 +7,15 @@ import { appTheme } from "../../../../src/style/theme";
 
 interface CButtonNavProps extends CButtonIconProps {
 	path: string;
+	isGeneral?: boolean;
 }
 
-function CButtonNav({ path, sx, ...other }: CButtonNavProps) {
+function CButtonNav({ path, isGeneral, sx, ...other }: CButtonNavProps) {
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
-	const checked = pathname == path;
+	const checked = !isGeneral
+		? pathname == path
+		: pathname.toLowerCase().includes(path.toLocaleLowerCase());
 
 	const style: IButtonStyle = useMemo(() => {
 		return CButtonStyle({ checked });
