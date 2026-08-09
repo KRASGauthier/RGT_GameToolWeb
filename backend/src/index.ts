@@ -1,10 +1,9 @@
 import express from "express";
-import mongoose from "mongoose";
 import cors from "cors";
 import {
-	API_BASE_SIMPLE,
 	STATIC_IMAGES,
 } from "./consts.js";
+import { checkMongoDB } from "../rgt/middleware/db.js";
 
 const app = express();
 
@@ -22,20 +21,7 @@ app.use((req, _res, next) => {
 	next();
 });
 
-//DB CONNECTION
-mongoose
-	.connect(
-		`mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@mongo:27017/${process.env.DB_NAME}?authSource=admin`,
-	)
-	.then(() => {
-		"Node is connect to MongoDB";
-	})
-	.catch((error: unknown) => {
-		console.error("MongoDB connection failed:", error);
-		process.exit(1);
-	});
-
-
+checkMongoDB();
 
 app.listen(8080, () => {
 	console.log("Server is running on http://localhost:8080");

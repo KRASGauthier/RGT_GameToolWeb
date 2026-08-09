@@ -1,25 +1,40 @@
 #!/usr/bin/env bash
 TYPE_DIRS=()
 
-for type in api data; do
-	source="./frontend/src/types/$type"
-	destination="./backend/src/types/$type"
-
+updateFolder() {
+	source="./frontend/$1"
+	destination="./backend/$1"
+	
 	rm -rf "$destination"
 
 	if [[ -d "$source" ]]; then
-		mkdir -p ./backend/src/types
+		mkdir -p "$(dirname "$destination")"
 		cp -r "$source" "$destination"
 		TYPE_DIRS+=("$destination")
 	fi
-done
+}
 
-rm -rf ./backend/rgt/types/api
-mkdir -p ./backend/rgt/types
-cp -r ./frontend/rgt/types/api ./backend/rgt/types/
-TYPE_DIRS+=("./backend/rgt/types/api")
+updateFile() {
+	source="./frontend/$1"
+	destination="./backend/$1"
+
+	
+	if [[ -f "$source" ]]; then
+		mkdir -p "$(dirname "$destination")"
+		cp "$source" "$destination"
+		TYPE_DIRS+=("$destination")
+	fi
+}
+
+updateFolder "src/types/api"
+updateFolder "src/types/data"
+updateFolder "rgt/types/api"
+updateFolder "src/consts"
+updateFile "src/consts.ts"
 
 find "${TYPE_DIRS[@]}" -type f -name "*.ts" -exec sed -Ei \
 	-e '/^[[:space:]]*import[[:space:]]+type[[:space:]].*from[[:space:]]+["'\'']react["'\''];?[[:space:]]*$/d' \
 	-e 's/\bReactNode\b/string/g' \
-	-e 's|(from[[:space:]]+["'\''])(\.\.?/[^"'\'']+)(["'\''])|\1\2.js\3|g' {} +
+	-e 's|(from[[:space:]]+["'\''])(..?/[^"'\'']+)(["'\''])|\1\2.js\3|g' {} +
+
+sed -Ei 's/\{([^}]+)\}/:\1/g' ./backend/src/consts.ts
