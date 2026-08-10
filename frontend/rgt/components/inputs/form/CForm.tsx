@@ -12,7 +12,11 @@ import type { TSize } from "../../../types/TStyles";
 import CFormPasswordConfirm from "./CFormPasswordConfirm";
 import CFormText from "./CFormText";
 import CFormUser from "./CFormUser";
+import type { TErrorInfo } from "../../../types/api/TAPI";
 
+//--------------------------------------------------
+//                      TYPES
+//--------------------------------------------------
 export type TFormTypes = "text" | "user" | "email" | "password" | "password-confirm";
 export function getFormTypeDefaultField(type: TFormTypes): string {
 	switch (type) {
@@ -39,11 +43,16 @@ export interface IFormEntry {
 	max?: number;
 	multiLang?: boolean;
 }
+export type TFromDataType = Record<string, string | boolean>;
 
+//--------------------------------------------------
+//                   COMPONENT
+//--------------------------------------------------
 export interface CFormCompProps extends GCompProps {
 	entry: IFormEntry;
-	style: IFormStyle;
+	exists?: string;
 
+	style: IFormStyle;
 	outlinedStyling?: CInputOutlinedStyling;
 
 	onChange: (value: string | boolean, field: string) => void;
@@ -52,27 +61,42 @@ export interface CFormCompProps extends GCompProps {
 export interface CFormProps extends GCompProps {
 	entries: IFormEntry[];
 	buttonMessage?: string;
+	fieldExists?: TErrorInfo;
 
 	outlinedStyling?: CInputOutlinedStyling;
 	buttonStyling?: TButtonStylingTypes;
 
 	minWidth?: TSize;
+
+	onSend?: (data: TFromDataType) => void;
+	onUsernameCheck?: (username: string) => Promise<boolean>;
 }
 
-function CForm({ entries, buttonMessage, outlinedStyling, buttonStyling, minWidth }: CFormProps) {
+function CForm({
+	entries,
+	buttonMessage,
+	fieldExists,
+	outlinedStyling,
+	buttonStyling,
+	minWidth,
+	onSend,
+	onUsernameCheck,
+}: CFormProps) {
+	//====================== DATA ======================
 	const style: IFormStyle = useMemo(() => {
 		return CFormStyle({ minWidth });
 	}, [minWidth]);
 
-	const [valueObject, setValueObject] = useState<Record<string, string | boolean>>({});
+	const [valueObject, setValueObject] = useState<TFromDataType>({});
 
+	//====================== EVENT ======================
 	const onChange = (value: string | boolean, field: string) => {
-		const copy: Record<string, string | boolean> = structuredClone(valueObject);
+		const copy: TFromDataType = structuredClone(valueObject);
 		copy[field] = value;
 		setValueObject(copy);
 	};
 	const onMatch = (matched: boolean) => {
-		const copy: Record<string, string | boolean> = structuredClone(valueObject);
+		const copy: TFromDataType = structuredClone(valueObject);
 		copy.match = matched;
 		setValueObject(copy);
 	};
@@ -91,11 +115,12 @@ function CForm({ entries, buttonMessage, outlinedStyling, buttonStyling, minWidt
 
 	return (
 		<Stack spacing={appTheme.shapes.spacing.medium} sx={style.main}>
-			{entries.map((entry: IFormEntry) => {
+			{entries.map((entry: IFormEntry, index: number) => {
 				switch (entry.type) {
 					case "text":
 						return (
 							<CFormText
+								key={entry.type + "-" + index}
 								onChange={onChange}
 								entry={entry}
 								style={style}
@@ -105,15 +130,28 @@ function CForm({ entries, buttonMessage, outlinedStyling, buttonStyling, minWidt
 					case "user":
 						return (
 							<CFormUser
+								key={entry.type + "-" + index}
+								exists={
+									(entry.field ?? "username") in (fieldExists ?? {})
+										? (fieldExists ?? {})[entry.field ?? "username"]
+										: undefined
+								}
 								onChange={onChange}
 								entry={entry}
 								style={style}
 								outlinedStyling={outlinedStyling}
+								checkAvailable={onUsernameCheck}
 							/>
 						);
 					case "email":
 						return (
 							<CFormEmail
+								exists={
+									(entry.field ?? "email") in (fieldExists ?? {})
+										? (fieldExists ?? {})[entry.field ?? "email"]
+										: undefined
+								}
+								key={entry.type + "-" + index}
 								onChange={onChange}
 								entry={entry}
 								style={style}
@@ -123,6 +161,7 @@ function CForm({ entries, buttonMessage, outlinedStyling, buttonStyling, minWidt
 					case "password":
 						return (
 							<CFormPassword
+								key={entry.type + "-" + index}
 								onChange={onChange}
 								entry={entry}
 								style={style}
@@ -132,6 +171,7 @@ function CForm({ entries, buttonMessage, outlinedStyling, buttonStyling, minWidt
 					case "password-confirm":
 						return (
 							<CFormPasswordConfirm
+								key={entry.type + "-" + index}
 								valueObject={valueObject}
 								onChange={onChange}
 								entry={entry}
@@ -143,7 +183,13 @@ function CForm({ entries, buttonMessage, outlinedStyling, buttonStyling, minWidt
 				}
 				return null;
 			})}
-			<CButtonText disabled={!isValid()} styling={buttonStyling ?? "light"}>
+			<CButtonText
+				onClick={() => {
+					onSend?.(valueObject);
+				}}
+				disabled={!isValid()}
+				styling={buttonStyling ?? "light"}
+			>
 				{buttonMessage ?? "Validate"}
 			</CButtonText>
 		</Stack>

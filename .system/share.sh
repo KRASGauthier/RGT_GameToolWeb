@@ -29,8 +29,10 @@ updateFile() {
 updateFolder "src/types/api"
 updateFolder "src/types/data"
 updateFolder "rgt/types/api"
+updateFolder "rgt/types/data"
 updateFolder "src/consts"
 updateFile "src/consts.ts"
+updateFile "rgt/consts.ts"
 
 find "${TYPE_DIRS[@]}" -type f -name "*.ts" -exec sed -Ei \
 	-e '/^[[:space:]]*import[[:space:]]+type[[:space:]].*from[[:space:]]+["'\'']react["'\''];?[[:space:]]*$/d' \
@@ -38,3 +40,4 @@ find "${TYPE_DIRS[@]}" -type f -name "*.ts" -exec sed -Ei \
 	-e 's|(from[[:space:]]+["'\''])(..?/[^"'\'']+)(["'\''])|\1\2.js\3|g' {} +
 
 sed -Ei 's/\{([^}]+)\}/:\1/g' ./backend/src/consts.ts
+sed -Ei 's/\{([^}]+)\}/:\1/g' ./backend/rgt/consts.ts

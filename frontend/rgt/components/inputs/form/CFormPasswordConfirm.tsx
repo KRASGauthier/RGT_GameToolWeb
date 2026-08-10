@@ -61,6 +61,9 @@ function CFormPasswordConfirm({
 						),
 					},
 				}}
+				error={
+					valueObject.password && value && value !== valueObject.password ? true : false
+				}
 			/>
 			{valueObject.password && value && value !== valueObject.password && (
 				<CText size="xs" weight={5} sx={{ color: appTheme.colors.error[6], ml: "10px" }}>

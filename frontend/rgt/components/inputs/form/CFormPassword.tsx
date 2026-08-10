@@ -4,7 +4,7 @@ import type { CFormCompProps } from "./CForm";
 import { useCallback, useMemo, useState } from "react";
 import CText from "../../text/CText";
 import { appTheme } from "../../../../src/style/theme";
-import { PASSWORD_MAX, PASSWORD_MIN } from "../../../../src/consts";
+import { PASSWORD_MAX, PASSWORD_MIN } from "../../../../rgt/consts";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import CButtonIcon from "../buttons/CButtonIcon";
@@ -51,7 +51,7 @@ function CFormPassword({ entry, style, outlinedStyling, onChange }: CFormPasswor
 				}}
 				styling={outlinedStyling ?? "neutral"}
 				sx={style.shared}
-				type="password"
+				type={show ? "text" : "password"}
 				label={entry.label ?? "Password"}
 				slotProps={{
 					input: {
@@ -73,6 +73,7 @@ function CFormPassword({ entry, style, outlinedStyling, onChange }: CFormPasswor
 						),
 					},
 				}}
+				error={check(value, false) ? true : false}
 			/>
 			{error && (
 				<CText size="xs" weight={5} sx={{ color: appTheme.colors.error[6], ml: "10px" }}>

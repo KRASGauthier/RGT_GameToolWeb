@@ -1,6 +1,11 @@
 import { useTheme, type SxProps, type Theme } from "@mui/material";
 import { appTheme } from "../../../../src/style/theme";
-import { getLightColor, getNeutralColor, type CInputOutlinedColor } from "./sharedStyle";
+import {
+	getLightColor,
+	getNeutralColor,
+	getValidColor,
+	type CInputOutlinedColor,
+} from "./sharedStyle";
 import type { CTextFieldOutlinedProps } from "../../../components/inputs/text/CTextFieldOutlined";
 import { getQuadStyle, shadowGenerate } from "../../../utils/UStyles";
 
@@ -38,6 +43,7 @@ export const CTextFieldOutlinedStyle = ({
 
 	let colors: CInputOutlinedColor = getLightColor();
 	if (styling && styling == "neutral") colors = getNeutralColor();
+	if (styling && styling == "valid") colors = getValidColor();
 
 	return {
 		main: {
@@ -70,6 +76,10 @@ export const CTextFieldOutlinedStyle = ({
 				backgroundColor: colors.labelBG,
 				color: colors.labelActive,
 			},
+			"& .MuiInputLabel-root.Mui-error.MuiInputLabel-shrink": {
+				backgroundColor: colors.labelError,
+				color: colors.labelErrortext,
+			},
 
 			//Input root
 			"& .MuiOutlinedInput-root": {
@@ -84,21 +94,33 @@ export const CTextFieldOutlinedStyle = ({
 					borderRadius == undefined ? appTheme.shapes.radius.small : borderRadius,
 				boxShadow: shadowGenerate(getQuadStyle(elevation) ?? 0),
 			},
+			"& .MuiOutlinedInput-root.Mui-error ": {
+				backgroundColor: colors.bgError,
+			},
 
 			"&:hover .MuiOutlinedInput-root": {
 				backgroundColor: colors.bgHovered,
 				border: "none",
 				boxShadow: shadowGenerate(getQuadStyle(elevation, "hovered") ?? 15),
 			},
+			"&:hover .MuiOutlinedInput-root.Mui-error ": {
+				backgroundColor: colors.bgErrorHovered,
+			},
 
 			"& .MuiOutlinedInput-root.Mui-focused": {
 				backgroundColor: colors.bgFocus,
 				boxShadow: shadowGenerate(getQuadStyle(elevation, "focused") ?? 25),
 			},
+			"& .MuiOutlinedInput-root.Mui-focused.Mui-error ": {
+				backgroundColor: colors.bgErrorHovered,
+			},
 
 			"& .MuiOutlinedInput-root.Mui-disabled": {
 				backgroundColor: colors.bgDisabled,
 				boxShadow: shadowGenerate(getQuadStyle(elevation, "disabled") ?? 0),
+			},
+			"&:hover .MuiOutlinedInput-root.Mui-disabled.Mui-error ": {
+				backgroundColor: colors.bgErrorDisabled,
 			},
 
 			//INput objkect

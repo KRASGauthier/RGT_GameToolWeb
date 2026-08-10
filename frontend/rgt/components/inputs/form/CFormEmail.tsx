@@ -1,13 +1,13 @@
 import { Stack } from "@mui/material";
 import CTextFieldOutlined from "../text/CTextFieldOutlined";
 import { getFormTypeDefaultField, type CFormCompProps } from "./CForm";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CText from "../../text/CText";
 import { appTheme } from "../../../../src/style/theme";
 
 export interface CFormEmailProps extends CFormCompProps {}
 
-function CFormEmail({ entry, style, outlinedStyling, onChange }: CFormEmailProps) {
+function CFormEmail({ entry, style, exists, outlinedStyling, onChange }: CFormEmailProps) {
 	const [value, setValue] = useState<string>("");
 
 	const check = useCallback(
@@ -24,14 +24,24 @@ function CFormEmail({ entry, style, outlinedStyling, onChange }: CFormEmailProps
 				return (
 					"Too many characters (max: " + entry.max + ", current: " + trimed.length + ")"
 				);
+			if (exists === checkedValue)
+				return `This is ${entry.field ?? "email"} is already taken`;
 			return "";
 		},
-		[entry],
+		[entry, exists],
 	);
 
 	const error = useMemo((): string => {
 		return check(value);
 	}, [check, value]);
+
+	const prevExist: React.RefObject<string | undefined> = useRef<string | undefined>(exists);
+	useEffect(() => {
+		if (prevExist.current == exists) return;
+
+		prevExist.current = exists;
+		onChange(!check(value) ? value : false, entry.field ?? getFormTypeDefaultField(entry.type));
+	}, [exists, entry, prevExist, value, onChange, check]);
 
 	return (
 		<Stack direction={"column"}>
@@ -48,6 +58,7 @@ function CFormEmail({ entry, style, outlinedStyling, onChange }: CFormEmailProps
 				sx={style.shared}
 				type="email"
 				label={entry.label ?? "eMail"}
+				error={error ? true : false}
 			/>
 			{error && (
 				<CText size="xs" weight={5} sx={{ color: appTheme.colors.error[6], ml: "10px" }}>

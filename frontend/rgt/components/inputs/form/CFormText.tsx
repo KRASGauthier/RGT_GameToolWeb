@@ -48,6 +48,7 @@ function CFormText({ entry, style, outlinedStyling, onChange }: CFormTextProps) 
 				sx={style.shared}
 				type="text"
 				label={entry.label ?? "Value"}
+				error={error ? true : false}
 			/>
 			{error && (
 				<CText size="xs" weight={5} sx={{ color: appTheme.colors.error[6], ml: "10px" }}>

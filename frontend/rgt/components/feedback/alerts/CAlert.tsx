@@ -23,7 +23,6 @@ function CAlert({
 	const [opacity, setOpacity] = useState<number>(1);
 	const [to, setTO] = useState<number>(-1);
 
-	console.log(notif);
 	const closeAlert = useCallback(() => {
 		setOpacity(0);
 		setTimeout(() => {
