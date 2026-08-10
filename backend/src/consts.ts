@@ -16,7 +16,3 @@ export const API_BASE_SIMPLE = "/API";
 
 //--------------------- Shared ---------------------
 export const STATIC_IMAGES = "/images";
-
-//====================== CONST ======================
-export const PASSWORD_MIN = 8;
-export const PASSWORD_MAX = 20;

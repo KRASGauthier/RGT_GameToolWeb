@@ -2,8 +2,12 @@ import { Stack } from "@mui/material";
 import type { GPageProps } from "../../../rgt/pages/shared/pageCommon";
 import CPaperTitle from "../../../rgt/components/surfaces/CPaperTitle";
 import CTabs from "../../../rgt/components/navigation/tabs/CTabs";
-import CForm from "../../../rgt/components/inputs/form/CForm";
+import CForm, { type TFromDataType } from "../../../rgt/components/inputs/form/CForm";
 import { useState } from "react";
+import { apiUserCheckAvailable, apiUserRegister } from "../../../rgt/api/user/userAPI";
+import type { IUserRegister } from "../../../rgt/types/data/TUser";
+import { useNotif } from "../../../rgt/context/app/CAppNotifContext";
+import type { TErrorInfo } from "../../../rgt/types/api/TAPI";
 
 export interface PAuthProps extends GPageProps {}
 type TAuthTabs = "login" | "register";
@@ -11,10 +15,22 @@ type TAuthTabs = "login" | "register";
 function PAuth({}: PAuthProps) {
 	//====================== DATA ======================
 	const [currentTab, setCurrentTab] = useState<TAuthTabs>("login");
+	const { push } = useNotif();
+	const [errorInfo, setErrorInfo] = useState<TErrorInfo | undefined>(undefined);
+
+	//====================== HANDLERS ======================
+	const handleRegister = (data: TFromDataType) => {
+		apiUserRegister(data as unknown as IUserRegister, push, setErrorInfo);
+	};
+
+	const handleUserCheck = async (username: string): Promise<boolean> => {
+		return await apiUserCheckAvailable(username, push);
+	};
 
 	//====================== NODES ======================
 	const loginForm = (
 		<CForm
+			key={"login"}
 			outlinedStyling="light"
 			entries={[
 				{
@@ -31,6 +47,9 @@ function PAuth({}: PAuthProps) {
 
 	const registerForm = (
 		<CForm
+			fieldExists={errorInfo}
+			key={"register"}
+			onSend={handleRegister}
 			outlinedStyling="light"
 			entries={[
 				{
@@ -38,7 +57,7 @@ function PAuth({}: PAuthProps) {
 					label: "First name",
 					filter: /^[ \u3000]*[\p{L}\p{M}]+(?:[ '\-・\u3000][\p{L}\p{M}]+)*[ \u3000]*$/u,
 					max: 100,
-					field: "fname",
+					field: "firstName",
 					required: true,
 				},
 				{
@@ -46,7 +65,7 @@ function PAuth({}: PAuthProps) {
 					label: "Last name",
 					filter: /^[ \u3000]*[\p{L}\p{M}]+(?:[ '\-・\u3000][\p{L}\p{M}]+)*[ \u3000]*$/u,
 					max: 100,
-					field: "lname",
+					field: "lastName",
 					required: true,
 				},
 				{
@@ -54,22 +73,26 @@ function PAuth({}: PAuthProps) {
 					multiLang: true,
 					max: 30,
 					min: 3,
+					field: "username",
 					required: true,
 				},
 				{
 					type: "email",
 					required: true,
+					field: "email",
 				},
 				{
 					type: "password",
 					required: true,
+					field: "password",
 				},
 				{
 					type: "password-confirm",
 				},
 			]}
 			minWidth={"300px"}
-			buttonMessage="Log in"
+			buttonMessage="Register"
+			onUsernameCheck={handleUserCheck}
 		></CForm>
 	);
 

@@ -1,9 +1,10 @@
 import express from "express";
 import cors from "cors";
-import {
-	STATIC_IMAGES,
-} from "./consts.js";
+import { API_BASE_SIMPLE, STATIC_IMAGES } from "./consts.js";
 import { checkMongoDB } from "../rgt/middleware/db.js";
+import userRouter from "../rgt/users/router.js";
+import { API_USER } from "../rgt/consts.js";
+import { errorMiddleware } from "../rgt/middleware/error.js";
 
 const app = express();
 
@@ -20,6 +21,9 @@ app.use((req, _res, next) => {
 	console.log(`${req.method} ${req.originalUrl}`);
 	next();
 });
+app.use(API_BASE_SIMPLE + API_USER, userRouter);
+
+app.use(errorMiddleware);
 
 checkMongoDB();
 
