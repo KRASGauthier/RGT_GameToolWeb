@@ -80,6 +80,7 @@ export const CButtonStyle = ({
 			color: textColor,
 			borderRadius: appTheme.shapes.radius.large,
 			boxShadow: shadowGenerate(getQuadStyle(elevation) ?? 15),
+			p: padding ?? sizeToString(padding, "6px 16px"),
 
 			"& > *": {
 				zIndex: 1,

@@ -40,10 +40,10 @@ export const CTabsHeadStyle = ({
 			boxShadow: shadowGenerate(elevation),
 		},
 		tab: {
-			flex: 1,
+			flex: "1 0 auto",
 			color: color,
 			py: "10px",
-			px: "40px",
+			px: "20px",
 			minHeight: 0,
 
 			"&.Mui-selected": {
