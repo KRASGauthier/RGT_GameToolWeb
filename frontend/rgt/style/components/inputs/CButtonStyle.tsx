@@ -39,15 +39,51 @@ export const CButtonStyle = ({
 			bgColor = [appTheme.colors.primary[2], appTheme.colors.quaternary[3]];
 		else if (styling == "light")
 			bgColor = [appTheme.colors.primary[6], appTheme.colors.quaternary[7]];
+		else if (styling == "validate")
+			bgColor = [
+				appTheme.colors.valid[3],
+				appTheme.colors.valid[4],
+				appTheme.colors.valid[3],
+			];
+		else if (styling == "cancel")
+			bgColor = [
+				appTheme.colors.error[3],
+				appTheme.colors.error[4],
+				appTheme.colors.error[3],
+			];
 	}
 	const background = colorGetBackground(bgColor, undefined, "linear", 145);
 
 	if (!bgColorHover || bgColorHover.length == 0) {
-		bgColorHover = [appTheme.colors.secondary[4], appTheme.colors.quinary[5]];
+		bgColorHover = [
+			appTheme.colors.primary[4],
+			appTheme.colors.secondary[4],
+			appTheme.colors.quinary[5],
+		];
 		if (styling == "dark")
-			bgColorHover = [appTheme.colors.secondary[2], appTheme.colors.quinary[3]];
+			bgColorHover = [
+				appTheme.colors.primary[2],
+				appTheme.colors.secondary[2],
+				appTheme.colors.quinary[3],
+			];
 		else if (styling == "light")
-			bgColorHover = [appTheme.colors.secondary[6], appTheme.colors.quinary[7]];
+			bgColorHover = [
+				appTheme.colors.primary[6],
+				appTheme.colors.secondary[6],
+				appTheme.colors.quinary[7],
+			];
+		else if (styling == "validate")
+			bgColorHover = [
+				appTheme.colors.valid[5],
+				appTheme.colors.secondary[6],
+				appTheme.colors.quinary[5],
+			];
+		else if (styling == "cancel")
+			bgColorHover = [
+				appTheme.colors.error[5],
+				appTheme.colors.secondary[6],
+				appTheme.colors.quinary[5],
+			];
 	}
 	const backgroundHover = colorGetBackground(bgColorHover, undefined, "linear", 145);
 
@@ -57,6 +93,18 @@ export const CButtonStyle = ({
 			bgColorDisabled = [appTheme.colors.greys[2], appTheme.colors.greys[3]];
 		else if (styling == "light")
 			bgColorDisabled = [appTheme.colors.greys[6], appTheme.colors.greys[7]];
+		else if (styling == "validate")
+			bgColorDisabled = [
+				appTheme.colors.greys[5],
+				appTheme.colors.greys[6],
+				appTheme.colors.greys[5],
+			];
+		else if (styling == "cancel")
+			bgColorDisabled = [
+				appTheme.colors.greys[5],
+				appTheme.colors.greys[6],
+				appTheme.colors.greys[5],
+			];
 	}
 	const backgroundDisabled = colorGetBackground(bgColorDisabled, undefined, "linear", 145);
 

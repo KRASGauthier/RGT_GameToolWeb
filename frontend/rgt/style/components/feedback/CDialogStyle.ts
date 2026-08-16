@@ -1,6 +1,7 @@
 import type { SxProps, Theme } from "@mui/material";
-import { colorGetBackground } from "../../../utils/UStyles";
+import { colorGetBackground, sizeToString } from "../../../utils/UStyles";
 import { appTheme } from "../../../../src/style/theme";
+import type { TSize } from "../../../types/TStyles";
 
 export interface IDialogStyle {
 	main: SxProps<Theme>;
@@ -8,7 +9,11 @@ export interface IDialogStyle {
 	action: SxProps<Theme>;
 }
 
-export const CDialogStyle = (): IDialogStyle => {
+export interface CDialogStyleProps {
+	marginPaper?: TSize;
+}
+
+export const CDialogStyle = ({ marginPaper }: CDialogStyleProps): IDialogStyle => {
 	return {
 		main: {
 			background: colorGetBackground(
@@ -17,6 +22,10 @@ export const CDialogStyle = (): IDialogStyle => {
 				"linear",
 				150,
 			),
+
+			"& .MuiDialog-paper": {
+				margin: sizeToString(marginPaper) ?? "32px",
+			},
 		},
 		content: {
 			background: colorGetBackground(
@@ -52,10 +61,13 @@ export const CDialogImageStyle = ({
 	aspectRatio,
 	editable,
 }: CDialogImageStyleProps): IDialogImageStyle => {
+	const [x, y] = aspectRatio.split("/").map(Number);
+
 	return {
 		main: {
 			position: "relative",
 			width: "70vw",
+			maxWidth: `${85 * (x / y)}vh`,
 			aspectRatio: aspectRatio,
 		},
 		empty: {

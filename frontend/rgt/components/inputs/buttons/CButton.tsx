@@ -5,7 +5,7 @@ import { memo } from "react";
 import { sxMerger } from "../../../utils/UStyles";
 import type { TQuadStyle, TSize } from "../../../types/TStyles";
 
-export type TButtonStylingTypes = "dark" | "medium" | "light";
+export type TButtonStylingTypes = "dark" | "medium" | "light" | "validate" | "cancel";
 export interface CButtonGlobalProps extends GCompProps {
 	bgColor?: string[];
 	bgColorHover?: string[];

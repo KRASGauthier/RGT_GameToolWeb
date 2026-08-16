@@ -67,6 +67,7 @@ function CImage({
 	);
 	const expandePopup = (
 		<CDialogImage
+			aspectRatio={aspectRatio}
 			src={src}
 			editable={editable}
 			onEdit={onEdit}
