@@ -16,3 +16,10 @@ export const API_BASE_SIMPLE = "/API";
 
 //--------------------- Shared ---------------------
 export const STATIC_IMAGES = "/images";
+
+//====================== CONSTS ======================
+export const AUTH_MIN_USER = 3;
+export const AUTH_MAX_USER = 30;
+export const AUTH_USER_MULTI_LANG = true;
+export const AUTH_FIRST_NAME_MAX = 100;
+export const AUTH_LAST_NAME_MAX = 100;
