@@ -1,8 +1,8 @@
-import { Stack } from "@mui/material";
+import { Stack, type SxProps, type Theme } from "@mui/material";
 import type { GCompProps } from "../../shared/ccommon";
 import CFormEmail from "./CFormEmail";
 import CFormPassword from "./CFormPassword";
-import { useMemo, useState } from "react";
+import { cloneElement, isValidElement, useMemo, useState, type ReactNode } from "react";
 import { CFormStyle, type IFormStyle } from "../../../style/components/inputs/CFormStyle";
 import { appTheme } from "../../../../src/style/theme";
 import CButtonText from "../buttons/CButtonText";
@@ -38,6 +38,7 @@ export interface IFormEntry {
 	filter?: RegExp;
 	field?: string;
 	required?: boolean;
+	login?: boolean;
 
 	min?: number;
 	max?: number;
@@ -61,7 +62,9 @@ export interface CFormCompProps extends GCompProps {
 export interface CFormProps extends GCompProps {
 	entries: IFormEntry[];
 	buttonMessage?: string;
+	globalError?: ReactNode;
 	fieldExists?: TErrorInfo;
+	disable?: boolean;
 
 	outlinedStyling?: CInputOutlinedStyling;
 	buttonStyling?: TButtonStylingTypes;
@@ -75,10 +78,15 @@ export interface CFormProps extends GCompProps {
 function CForm({
 	entries,
 	buttonMessage,
+	globalError,
 	fieldExists,
+	disable,
+
 	outlinedStyling,
 	buttonStyling,
+
 	minWidth,
+
 	onSend,
 	onUsernameCheck,
 }: CFormProps) {
@@ -88,6 +96,15 @@ function CForm({
 	}, [minWidth]);
 
 	const [valueObject, setValueObject] = useState<TFromDataType>({});
+	let finalGlobalError: ReactNode | undefined = globalError;
+	if (finalGlobalError && isValidElement<{ sx?: SxProps<Theme> }>(finalGlobalError)) {
+		finalGlobalError = cloneElement(finalGlobalError, {
+			sx: {
+				...finalGlobalError.props.sx,
+				color: appTheme.colors.error[7],
+			},
+		});
+	}
 
 	//====================== EVENT ======================
 	const onChange = (value: string | boolean, field: string) => {
@@ -109,7 +126,11 @@ function CForm({
 				if (!valueObject[getFormTypeDefaultField(entries[i].type)]) return false;
 			}
 		}
-		if (!valueObject.match) return false;
+		if (
+			entries.find((entry: IFormEntry) => entry.type == "password-confirm") &&
+			!valueObject.match
+		)
+			return false;
 		return true;
 	};
 
@@ -183,11 +204,12 @@ function CForm({
 				}
 				return null;
 			})}
+			{finalGlobalError}
 			<CButtonText
 				onClick={() => {
 					onSend?.(valueObject);
 				}}
-				disabled={!isValid()}
+				disabled={disable || !isValid()}
 				styling={buttonStyling ?? "light"}
 			>
 				{buttonMessage ?? "Validate"}

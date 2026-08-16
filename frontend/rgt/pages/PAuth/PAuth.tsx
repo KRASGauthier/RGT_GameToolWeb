@@ -1,13 +1,15 @@
 import { Stack } from "@mui/material";
-import type { GPageProps } from "../../../rgt/pages/shared/pageCommon";
-import CPaperTitle from "../../../rgt/components/surfaces/CPaperTitle";
-import CTabs from "../../../rgt/components/navigation/tabs/CTabs";
-import CForm, { type TFromDataType } from "../../../rgt/components/inputs/form/CForm";
-import { useState } from "react";
-import { apiUserCheckAvailable, apiUserRegister } from "../../../rgt/api/user/userAPI";
-import type { IUserRegister } from "../../../rgt/types/data/TUser";
-import { useNotif } from "../../../rgt/context/app/CAppNotifContext";
-import type { TErrorInfo } from "../../../rgt/types/api/TAPI";
+import type { GPageProps } from "../shared/pageCommon";
+import CPaperTitle from "../../components/surfaces/CPaperTitle";
+import CTabs from "../../components/navigation/tabs/CTabs";
+import CForm, { type TFromDataType } from "../../components/inputs/form/CForm";
+import { useState, type ReactNode } from "react";
+import { apiUserCheckAvailable, apiUserRegister } from "../../api/user/userAPI";
+import type { IUserRegister } from "../../types/data/TUser";
+import { useNotif } from "../../context/app/CAppNotifContext";
+import type { TErrorInfo } from "../../types/api/TAPI";
+import { AUTH_MAX_USER, AUTH_MIN_USER } from "../../../src/consts";
+import { useAuth } from "../../context/auth/CAuthContext";
 
 export interface PAuthProps extends GPageProps {}
 type TAuthTabs = "login" | "register";
@@ -15,10 +17,21 @@ type TAuthTabs = "login" | "register";
 function PAuth({}: PAuthProps) {
 	//====================== DATA ======================
 	const [currentTab, setCurrentTab] = useState<TAuthTabs>("login");
-	const { push } = useNotif();
+
+	const [isLogin, setIsLogin] = useState<boolean>(false);
 	const [errorInfo, setErrorInfo] = useState<TErrorInfo | undefined>(undefined);
+	const [loginError, setLoginError] = useState<ReactNode | undefined>(undefined);
+
+	const { push } = useNotif();
+	const { login } = useAuth();
 
 	//====================== HANDLERS ======================
+	const handleLogin = async (data: TFromDataType) => {
+		setIsLogin(true);
+		await login(data, setLoginError);
+		setIsLogin(false);
+	};
+
 	const handleRegister = (data: TFromDataType) => {
 		apiUserRegister(data as unknown as IUserRegister, push, setErrorInfo);
 	};
@@ -31,13 +44,22 @@ function PAuth({}: PAuthProps) {
 	const loginForm = (
 		<CForm
 			key={"login"}
+			disable={isLogin}
+			globalError={loginError}
+			onSend={handleLogin}
 			outlinedStyling="light"
 			entries={[
 				{
 					type: "email",
+					required: true,
+					field: "email",
+					login: true,
 				},
 				{
 					type: "password",
+					required: true,
+					field: "password",
+					login: true,
 				},
 			]}
 			minWidth={"300px"}
@@ -71,8 +93,8 @@ function PAuth({}: PAuthProps) {
 				{
 					type: "user",
 					multiLang: true,
-					max: 30,
-					min: 3,
+					max: AUTH_MAX_USER,
+					min: AUTH_MIN_USER,
 					field: "username",
 					required: true,
 				},

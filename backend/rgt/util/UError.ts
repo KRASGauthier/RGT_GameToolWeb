@@ -42,3 +42,7 @@ export const handleError = (error: unknown, res: Response) => {
 	uErrorResponse("Unknown error", 500);
 	res.status(500).json({ error: ["Unknown error"] } as IAPIErrors);
 };
+
+export const checkField = (field: string, data: object) => {
+	if (!(field in data)) throw { code: 400, message: `Required field '${field}' is missing` };
+};

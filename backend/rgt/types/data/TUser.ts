@@ -2,8 +2,13 @@
 //                      HOLDERS
 //--------------------------------------------------
 export interface IUserBase {
+	uid: string;
 	username: string;
 	avatar?: string;
+}
+
+export interface IUserTokenMin {
+	uid: string;
 }
 
 export interface IUserFull extends IUserBase {

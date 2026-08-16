@@ -1,6 +1,6 @@
 import express from "express";
 import { postUser, postUserAvailable } from "./controller.js";
-import { API_USER_CHECK_AVAILABLE } from "../consts.js";
+import { API_USER_CHECK_AVAILABLE } from "../../consts.js";
 
 const userRouter = express.Router();
 

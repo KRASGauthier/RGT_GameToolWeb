@@ -17,6 +17,7 @@ function CFormPassword({ entry, style, outlinedStyling, onChange }: CFormPasswor
 
 	const check = useCallback(
 		(checkedValue: string, soft?: boolean) => {
+			if (entry.login) return "";
 			const trimed = checkedValue.trim();
 			if (!trimed) return "";
 			if (!trimed.match(entry.filter ?? /^[\x21-\x7E]+$/))
@@ -75,12 +76,12 @@ function CFormPassword({ entry, style, outlinedStyling, onChange }: CFormPasswor
 				}}
 				error={check(value, false) ? true : false}
 			/>
-			{error && (
+			{error && !entry.login && (
 				<CText size="xs" weight={5} sx={{ color: appTheme.colors.error[6], ml: "10px" }}>
 					{error}
 				</CText>
 			)}
-			{value && (
+			{value && !entry.login && (
 				<CText
 					size="xs"
 					weight={5}
@@ -96,7 +97,7 @@ function CFormPassword({ entry, style, outlinedStyling, onChange }: CFormPasswor
 					Must contain between 8 and 20 characters
 				</CText>
 			)}
-			{value && (
+			{value && !entry.login && (
 				<CText
 					size="xs"
 					weight={5}
@@ -108,7 +109,7 @@ function CFormPassword({ entry, style, outlinedStyling, onChange }: CFormPasswor
 					Must contain at least: 1 uppercase
 				</CText>
 			)}
-			{value && (
+			{value && !entry.login && (
 				<CText
 					size="xs"
 					weight={5}
@@ -120,7 +121,7 @@ function CFormPassword({ entry, style, outlinedStyling, onChange }: CFormPasswor
 					Must contain at least: 1 number
 				</CText>
 			)}
-			{value && (
+			{value && !entry.login && (
 				<CText
 					size="xs"
 					weight={5}
