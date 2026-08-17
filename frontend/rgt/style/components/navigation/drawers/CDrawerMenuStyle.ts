@@ -6,6 +6,6 @@ export interface IDrawerMenuStyle {
 
 export const CDrawerMenuStyle = (): IDrawerMenuStyle => {
 	return {
-		main: {position: "absolute", overflow: "hidden", inset: 0},
+		main: { position: "relative", overflow: "hidden", inset: 0 },
 	};
 };

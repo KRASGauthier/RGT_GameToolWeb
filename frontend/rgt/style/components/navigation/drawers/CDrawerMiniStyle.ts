@@ -52,7 +52,7 @@ export const CDrawerMiniStyle = ({
 			ml: open ? "5px" : "7px",
 			px: 0,
 			minWidth: 0,
-			width: open ? (openWidth - 10) + "px" : (closedWidth - 15) + "px",
+			width: open ? openWidth - 10 + "px" : closedWidth - 15 + "px",
 			transition: (theme: Theme) =>
 				theme.transitions.create(["width"], {
 					duration: appTheme.animations.timing.medium_fast,

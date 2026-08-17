@@ -18,21 +18,45 @@ export interface CListMenuProps extends CListProps {
 	value?: string;
 	onValueChange?: (value: string) => void;
 
-	small?: boolean
+	small?: boolean;
 }
 
-function CListMenu({ value = "", onValueChange, comps, groups, small, sx, ...other }: CListMenuProps) {
+function CListMenu({
+	value = "",
+	onValueChange,
+	comps,
+	groups,
+	small,
+	sx,
+	...other
+}: CListMenuProps) {
 	const style: IListMenuStyle = useMemo(() => {
 		return CListMenuStyle();
 	}, []);
 
 	return (
 		<CList sx={sxMerger(style.main, sx ? sx : {})} {...other}>
-			{comps.map((comp: TListMenuCompData) => {
-				return <CListMenuComp small={small} onValueChange={onValueChange} value={value} comp={comp} />;
+			{comps.map((comp: TListMenuCompData, index: number) => {
+				return (
+					<CListMenuComp
+						key={comp.value + "-" + index}
+						small={small}
+						onValueChange={onValueChange}
+						value={value}
+						comp={comp}
+					/>
+				);
 			})}
-			{groups.map((group: TListMenuGroupData) => {
-				return <CListMenuGroup small={small} onValueChange={onValueChange} value={value} group={group} />;
+			{groups.map((group: TListMenuGroupData, index: number) => {
+				return (
+					<CListMenuGroup
+						key={group.value + "-" + index}
+						small={small}
+						onValueChange={onValueChange}
+						value={value}
+						group={group}
+					/>
+				);
 			})}
 		</CList>
 	);

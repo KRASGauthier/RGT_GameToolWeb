@@ -1,5 +1,5 @@
 import { CButtonStyle, type IButtonStyle } from "../../../style/components/inputs/CButtonStyle";
-import { cloneElement, useMemo, type ReactElement, } from "react";
+import { cloneElement, useMemo, type ReactElement } from "react";
 import { sxMerger } from "../../../utils/UStyles";
 import type { CButtonProps } from "./CButton";
 import CButton from "./CButton";
@@ -23,14 +23,14 @@ function CButtonIconText({
 	justifyContent,
 	iconOnly,
 	children,
-	lighting = "light",
+	styling = "light",
 	textProps,
 	sx,
 	...other
 }: CButtonIconTextProps) {
 	const style: IButtonStyle = useMemo(() => {
-		return CButtonStyle({ lighting });
-	}, [lighting]);
+		return CButtonStyle({ styling });
+	}, [styling]);
 
 	const startIconFinal: ReactElement | undefined =
 		startIcon == undefined
@@ -47,7 +47,7 @@ function CButtonIconText({
 				});
 
 	return (
-		<CButton lighting={lighting} sx={sxMerger(style.text, sx ? sx : {})} {...other}>
+		<CButton styling={styling} sx={sxMerger(style.text, sx ? sx : {})} {...other}>
 			<Stack
 				direction={"row"}
 				sx={{

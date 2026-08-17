@@ -7,11 +7,15 @@ import { sxMerger } from "../../../utils/UStyles";
 import type { CTextFieldOutlinedProps } from "./CTextFieldOutlined";
 import CTextFieldOutlined from "./CTextFieldOutlined";
 
-export interface CTextFieldOutlinedMultilineProps extends CTextFieldOutlinedProps {}
+export interface CTextFieldOutlinedMultilineProps extends CTextFieldOutlinedProps {
+	rows?: number;
+}
 
 function CTextFieldOutlinedMultiline({
 	xPadding,
 	yPadding,
+
+	rows = 3,
 
 	sx,
 	...other
@@ -26,6 +30,8 @@ function CTextFieldOutlinedMultiline({
 			xPadding={xPadding}
 			yPadding={yPadding}
 			{...other}
+			multiline
+			rows={rows}
 		></CTextFieldOutlined>
 	);
 }

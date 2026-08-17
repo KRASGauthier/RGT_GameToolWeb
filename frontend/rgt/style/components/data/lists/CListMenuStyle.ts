@@ -31,10 +31,13 @@ export interface IListMenuCompStyle {
 }
 export interface CListMenuCompStyleProps {
 	comp: TListMenuCompData;
-	small?: boolean
+	small?: boolean;
 }
 
-export const CListMenuCompStyle = ({ comp, small}: CListMenuCompStyleProps): IListMenuCompStyle => {
+export const CListMenuCompStyle = ({
+	comp,
+	small,
+}: CListMenuCompStyleProps): IListMenuCompStyle => {
 	const elevation: TQuadStyle<number> = {
 		normal: 5,
 		hovered: 35,
@@ -43,12 +46,12 @@ export const CListMenuCompStyle = ({ comp, small}: CListMenuCompStyleProps): ILi
 	const color: TQuadStyle<string | keyof IThemeColor> = {
 		normal: getColor(2, getQuadStyle(comp.color, "normal")),
 		hovered: getColor(4, getQuadStyle(comp.color, "hovered")),
-		pressed: getColor(6, getQuadStyle(comp.color, "pressed")),
+		focused: getColor(6, getQuadStyle(comp.color, "focused")),
 	};
 
 	return {
 		component: {
-			overflow: "hidden"
+			overflow: "hidden",
 		},
 		itemButton: {
 			px: "7px",
@@ -85,14 +88,14 @@ export const CListMenuCompStyle = ({ comp, small}: CListMenuCompStyleProps): ILi
 			"&.Mui-selected": {
 				boxShadow:
 					"-4px 0px 0px 0px " +
-					(getQuadStyle(color, "pressed") ?? appTheme.colors.primary[2]) +
+					(getQuadStyle(color, "focused") ?? appTheme.colors.primary[2]) +
 					", " +
 					shadowGenerate(getQuadStyle(elevation, "normal") ?? elevation.normal),
 				ml: "8px",
 				background: colorGetBackground(
 					[
-						(getQuadStyle(color, "pressed") ?? appTheme.colors.primary[2]) + "2B",
-						(getQuadStyle(color, "pressed") ?? appTheme.colors.primary[2]) + "1B",
+						(getQuadStyle(color, "focused") ?? appTheme.colors.primary[2]) + "2B",
+						(getQuadStyle(color, "focused") ?? appTheme.colors.primary[2]) + "1B",
 					],
 					undefined,
 					"linear",
@@ -103,14 +106,14 @@ export const CListMenuCompStyle = ({ comp, small}: CListMenuCompStyleProps): ILi
 			"&:hover.Mui-selected": {
 				boxShadow:
 					"-4px 0px 0px 0px " +
-					(getQuadStyle(color, "pressed") ?? appTheme.colors.primary[2]) +
+					(getQuadStyle(color, "focused") ?? appTheme.colors.primary[2]) +
 					", " +
 					shadowGenerate(getQuadStyle(elevation, "normal") ?? elevation.normal),
 				ml: "8px",
 				background: colorGetBackground(
 					[
-						(getQuadStyle(color, "pressed") ?? appTheme.colors.primary[2]) + "2B",
-						(getQuadStyle(color, "pressed") ?? appTheme.colors.primary[2]) + "1B",
+						(getQuadStyle(color, "focused") ?? appTheme.colors.primary[2]) + "2B",
+						(getQuadStyle(color, "focused") ?? appTheme.colors.primary[2]) + "1B",
 					],
 					undefined,
 					"linear",
@@ -123,7 +126,7 @@ export const CListMenuCompStyle = ({ comp, small}: CListMenuCompStyleProps): ILi
 				position: "absolute",
 				width: "2px",
 				height: "80%",
-				right: small ? "5px" :"10px",
+				right: small ? "5px" : "10px",
 				backgroundColor: getQuadStyle(color, "normal") ?? appTheme.colors.primary[2],
 				borderRadius: appTheme.shapes.radius.medium,
 
@@ -148,7 +151,7 @@ export const CListMenuCompStyle = ({ comp, small}: CListMenuCompStyleProps): ILi
 			},
 		},
 		itemText: {
-			opacity: small? 0 : 1,
+			opacity: small ? 0 : 1,
 			transition: (theme: Theme): string =>
 				theme.transitions.create(["opacity"], {
 					duration: appTheme.animations.timing.fast,
@@ -165,20 +168,22 @@ export interface IListMenuGroupStyle {
 }
 export interface CListMenuGroupStyleProps {
 	group: TListMenuGroupData;
-	small?: boolean
+	small?: boolean;
 }
 
-export const CListMenuGroupStyle = ({ group, small }: CListMenuGroupStyleProps): IListMenuGroupStyle => {
+export const CListMenuGroupStyle = ({
+	group,
+	small,
+}: CListMenuGroupStyleProps): IListMenuGroupStyle => {
 	const color: TQuadStyle<string | keyof IThemeColor> = {
 		normal: getColor(2, getQuadStyle(group.color, "normal")),
 		hovered: getColor(4, getQuadStyle(group.color, "hovered")),
-		pressed: getColor(6, getQuadStyle(group.color, "pressed")),
+		focused: getColor(6, getQuadStyle(group.color, "focused")),
 	};
 
 	return {
 		group: {},
 		groupItemButton: {
-
 			overflow: "hidden",
 
 			px: "4px",
@@ -215,7 +220,7 @@ export const CListMenuGroupStyle = ({ group, small }: CListMenuGroupStyleProps):
 		groupItemIcon: {
 			my: "3px",
 			color: getQuadStyle(color, "hovered") ?? appTheme.colors.primary[2],
-			justifyContent: small ? "center" : undefined
+			justifyContent: small ? "center" : undefined,
 		},
 		groupItemText: {},
 	};

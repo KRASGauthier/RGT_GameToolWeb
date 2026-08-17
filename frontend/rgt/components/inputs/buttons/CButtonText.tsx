@@ -9,13 +9,13 @@ export interface CButtonTextProps extends CButtonProps {
 	textProps?: CTextProps;
 }
 
-function CButtonText({ children, lighting = "light", textProps, sx, ...other }: CButtonTextProps) {
+function CButtonText({ children, styling = "light", textProps, sx, ...other }: CButtonTextProps) {
 	const style: IButtonStyle = useMemo(() => {
-		return CButtonStyle({ lighting });
-	}, [lighting]);
+		return CButtonStyle({ styling });
+	}, [styling]);
 
 	return (
-		<CButton lighting={lighting} sx={sxMerger(style.text, sx ? sx : {})} {...other}>
+		<CButton styling={styling} sx={sxMerger(style.text, sx ? sx : {})} {...other}>
 			<CText
 				size={textProps == undefined ? "sm" : textProps.size}
 				weight={textProps == undefined ? 5 : textProps.weight}

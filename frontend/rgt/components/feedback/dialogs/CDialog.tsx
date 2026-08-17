@@ -5,17 +5,21 @@ import { CDialogStyle, type IDialogStyle } from "../../../style/components/feedb
 import { useMemo } from "react";
 import CButtonText from "../../inputs/buttons/CButtonText";
 import { appTheme } from "../../../../src/style/theme";
+import type { TSize } from "../../../types/TStyles";
 
 export interface CDialogProps extends GCompProps, DialogProps {
 	actions?: ("yes" | "no")[];
+
 	onYes?: () => void;
 	onNo?: () => void;
+
+	marginPaper?: TSize;
 }
 
-function CDialog({ actions, onYes, onNo, children, sx, ...other }: CDialogProps) {
+function CDialog({ actions, onYes, onNo, children, marginPaper, sx, ...other }: CDialogProps) {
 	const style: IDialogStyle = useMemo(() => {
-		return CDialogStyle();
-	}, []);
+		return CDialogStyle({ marginPaper });
+	}, [marginPaper]);
 
 	return (
 		<Dialog sx={sxMerger(style.main, sx ? sx : {})} {...other}>

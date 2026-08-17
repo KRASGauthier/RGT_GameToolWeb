@@ -11,3 +11,7 @@ export type TErrorReturn =
 			type: Extract<TErrorReturnTypes, "notif">;
 			handler: (notif: IAppNotif) => void;
 	  };
+
+export interface IErrorReturnOptions {
+	noStatus?: boolean;
+}

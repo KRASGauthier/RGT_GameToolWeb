@@ -68,7 +68,7 @@ function CDialogImage({
 	);
 
 	return (
-		<CDialog {...other} maxWidth={false}>
+		<CDialog marginPaper={0} {...other} maxWidth={false}>
 			<Stack direction={"column"}>
 				{src && coreNode}
 				{!src && emptyNode}

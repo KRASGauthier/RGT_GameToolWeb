@@ -2,11 +2,11 @@ import axios from "axios";
 import { API_BASE } from "../../src/consts";
 import { type IAPIData, type IAPIErrors } from "../types/api/TAPI";
 import { apiMakeError } from "./errors";
-import type { ReactNode } from "react";
-import type { TErrorReturn, TErrorReturnTypes } from "../types/TError";
+import type { IErrorReturnOptions, TErrorReturn, TErrorReturnTypes } from "../types/TError";
 
 export const api = axios.create({
 	baseURL: API_BASE,
+	withCredentials: true,
 });
 
 //--------------------------------------------------
@@ -24,35 +24,50 @@ export const apiCheckReponse = <_T extends object>(
 				severity: "error",
 				message: data.error,
 			});
-
 		return false;
 	}
 	if (!data.data) {
-		const error: ReactNode = apiMakeError(
+		const error: IAPIData<_T> = apiMakeError(
 			-1,
 			{ error: ["No data collected"] },
 			errorCallback.type,
 		);
-		if (errorCallback.type == "error") errorCallback.handler(error);
+		if (errorCallback.type == "error") errorCallback.handler(error.error);
 		else
 			errorCallback.handler({
 				severity: "error",
-				message: error,
+				message: error.error,
 			});
 		return false;
 	}
 	if (!(target in data.data)) {
-		const error: ReactNode = apiMakeError(
+		const error: IAPIData<_T> = apiMakeError(
 			-1,
 			{ error: ["Data doesn't contain the field: " + target.toString()] },
 			errorCallback.type,
 		);
-		if (errorCallback.type == "error") errorCallback.handler(error);
+		if (errorCallback.type == "error") errorCallback.handler(error.error);
 		else
 			errorCallback.handler({
 				severity: "error",
-				message: error,
+				message: error.error,
 			});
+		return false;
+	}
+	return true;
+};
+export const apiCheckReponseError = <_T extends object>(
+	data: IAPIData<_T>,
+	errorCallback: TErrorReturn,
+): boolean => {
+	if (data.error) {
+		if (errorCallback.type == "error") errorCallback.handler(data.error);
+		else
+			errorCallback.handler({
+				severity: "error",
+				message: data.error,
+			});
+
 		return false;
 	}
 	return true;
@@ -64,14 +79,15 @@ export const apiCheckReponse = <_T extends object>(
 export const apiGetData = async <_T>(
 	path: string,
 	type?: TErrorReturnTypes,
+	options?: IErrorReturnOptions,
 ): Promise<IAPIData<_T>> => {
 	try {
 		const response = await api.get<_T>(path);
-		return { data: response.data };
+		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))
-			return { error: apiMakeError(e.response?.status, e.response?.data, type) };
-		return { error: apiMakeError(undefined, undefined, type) };
+			return { ...apiMakeError(e.response?.status, e.response?.data, type, options) };
+		return { ...apiMakeError(undefined, undefined, type, options) };
 	}
 };
 
@@ -79,14 +95,15 @@ export const apiPostData = async <_Req, _Res>(
 	path: string,
 	request: _Req,
 	type?: TErrorReturnTypes,
+	options?: IErrorReturnOptions,
 ): Promise<IAPIData<_Res>> => {
 	try {
 		const response = await api.post<_Res>(path, request);
-		return { data: response.data };
+		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))
-			return { error: apiMakeError(e.response?.status, e.response?.data, type) };
-		return { error: apiMakeError(undefined, undefined, type) };
+			return { ...apiMakeError(e.response?.status, e.response?.data, type, options) };
+		return { ...apiMakeError(undefined, undefined, type, options) };
 	}
 };
 
@@ -94,14 +111,15 @@ export const apiPutData = async <_Req, _Res>(
 	path: string,
 	request: _Req,
 	type?: TErrorReturnTypes,
+	options?: IErrorReturnOptions,
 ): Promise<IAPIData<_Res>> => {
 	try {
 		const response = await api.put<_Res>(path, request);
-		return { data: response.data };
+		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))
-			return { error: apiMakeError(e.response?.status, e.response?.data, type) };
-		return { error: apiMakeError(undefined, undefined, type) };
+			return { ...apiMakeError(e.response?.status, e.response?.data, type, options) };
+		return { ...apiMakeError(undefined, undefined, type, options) };
 	}
 };
 
@@ -109,14 +127,15 @@ export const apiPatchData = async <_Req, _Res>(
 	path: string,
 	request: _Req,
 	type?: TErrorReturnTypes,
+	options?: IErrorReturnOptions,
 ): Promise<IAPIData<_Res>> => {
 	try {
 		const response = await api.patch<_Res>(path, request);
-		return { data: response.data };
+		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))
-			return { error: apiMakeError(e.response?.status, e.response?.data, type) };
-		return { error: apiMakeError(undefined, undefined, type) };
+			return { ...apiMakeError(e.response?.status, e.response?.data, type, options) };
+		return { ...apiMakeError(undefined, undefined, type, options) };
 	}
 };
 
@@ -124,13 +143,14 @@ export const apiDeleteData = async <_Req, _Res>(
 	path: string,
 	request: _Req,
 	type?: TErrorReturnTypes,
+	options?: IErrorReturnOptions,
 ): Promise<IAPIData<_Res>> => {
 	try {
 		const response = await api.delete<_Res>(path, { data: request });
-		return { data: response.data };
+		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))
-			return { error: apiMakeError(e.response?.status, e.response?.data, type) };
-		return { error: apiMakeError(undefined, undefined, type) };
+			return { ...apiMakeError(e.response?.status, e.response?.data, type, options) };
+		return { ...apiMakeError(undefined, undefined, type, options) };
 	}
 };

@@ -13,31 +13,30 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import CText from "../../../text/CText";
 
-
 export type TListMenuGroupData = {
 	value: string;
 	display?: string;
 	comps: TListMenuCompData[];
 	color?: TQuadStyle<string | keyof IThemeColor>;
-	icon?: ReactElement
+	icon?: ReactElement;
 };
 
 export interface CListMenuGroupProps extends CListProps {
 	value: string;
 	group: TListMenuGroupData;
 	onValueChange?: (value: string) => void;
-	small?: boolean
+	small?: boolean;
 }
 
 function CListMenuGroup({ value, onValueChange, group, small, sx, ...other }: CListMenuGroupProps) {
 	const [open, setOpen] = useState<boolean>(true);
 	const style: IListMenuGroupStyle = useMemo(() => {
-		return CListMenuGroupStyle({ group , small});
+		return CListMenuGroupStyle({ group, small });
 	}, [group, small]);
 
-	const iconFinal: ReactElement | undefined = group.icon ? cloneElement(group.icon, {
-
-	}) : undefined
+	const iconFinal: ReactElement | undefined = group.icon
+		? cloneElement(group.icon, {})
+		: undefined;
 
 	return (
 		<>
@@ -48,9 +47,9 @@ function CListMenuGroup({ value, onValueChange, group, small, sx, ...other }: CL
 					}}
 					sx={style.groupItemButton}
 				>
-					{iconFinal && small && ( <CListItemIcon sx={style.groupItemIcon}>
-						{iconFinal}
-					</CListItemIcon>)}
+					{iconFinal && small && (
+						<CListItemIcon sx={style.groupItemIcon}>{iconFinal}</CListItemIcon>
+					)}
 					{group.display && !small && (
 						<CListItemText
 							sx={style.groupItemText}
@@ -67,10 +66,11 @@ function CListMenuGroup({ value, onValueChange, group, small, sx, ...other }: CL
 			</Stack>
 			<Collapse in={open}>
 				<CList sx={sxMerger(style.group, sx ? sx : {})} {...other}>
-					{group.comps.map((comp: TListMenuCompData) => {
+					{group.comps.map((comp: TListMenuCompData, index: number) => {
 						comp.color = comp.color ? comp.color : group.color;
 						return (
 							<CListMenuComp
+								key={comp.value + "-" + index}
 								onValueChange={onValueChange}
 								value={value}
 								comp={comp}
