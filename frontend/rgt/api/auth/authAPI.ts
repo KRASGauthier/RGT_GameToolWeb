@@ -8,7 +8,7 @@ import type { IUserBase } from "../../types/data/TUser";
 
 const handleAuthAnswer = (
 	data: IAPIData<IAPIAccess>,
-	setToken: React.Dispatch<React.SetStateAction<string | null>>,
+	setToken: (token: string | null) => void,
 	setUser: React.Dispatch<React.SetStateAction<IUserBase | null>>,
 	setStatus: React.Dispatch<React.SetStateAction<TAuthStatus>>,
 	setError: React.Dispatch<React.SetStateAction<ReactNode>>,
@@ -40,7 +40,7 @@ const handleAuthAnswer = (
 export const apiAuthLogin = async (
 	email: string,
 	password: string,
-	setToken: React.Dispatch<React.SetStateAction<string | null>>,
+	setToken: (token: string | null) => void,
 	setUser: React.Dispatch<React.SetStateAction<IUserBase | null>>,
 	setStatus: React.Dispatch<React.SetStateAction<TAuthStatus>>,
 	setError: React.Dispatch<React.SetStateAction<ReactNode>>,
@@ -55,7 +55,7 @@ export const apiAuthLogin = async (
 };
 
 export const apiAuthRefresh = async (
-	setToken: React.Dispatch<React.SetStateAction<string | null>>,
+	setToken: (token: string | null) => void,
 	setUser: React.Dispatch<React.SetStateAction<IUserBase | null>>,
 	setStatus: React.Dispatch<React.SetStateAction<TAuthStatus>>,
 	setError: React.Dispatch<React.SetStateAction<ReactNode>>,

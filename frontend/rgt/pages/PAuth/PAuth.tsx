@@ -10,6 +10,7 @@ import { useNotif } from "../../context/app/CAppNotifContext";
 import type { TErrorInfo } from "../../types/api/TAPI";
 import { AUTH_MAX_USER, AUTH_MIN_USER } from "../../../src/consts";
 import { useAuth } from "../../context/auth/CAuthContext";
+import { Navigate } from "react-router";
 
 export interface PAuthProps extends GPageProps {}
 type TAuthTabs = "login" | "register";
@@ -23,7 +24,7 @@ function PAuth({}: PAuthProps) {
 	const [loginError, setLoginError] = useState<ReactNode | undefined>(undefined);
 
 	const { push } = useNotif();
-	const { login } = useAuth();
+	const { user, status, login } = useAuth();
 
 	//====================== HANDLERS ======================
 	const handleLogin = async (data: TFromDataType) => {
@@ -32,8 +33,11 @@ function PAuth({}: PAuthProps) {
 		setIsLogin(false);
 	};
 
-	const handleRegister = (data: TFromDataType) => {
-		apiUserRegister(data as unknown as IUserRegister, push, setErrorInfo);
+	const handleRegister = async (data: TFromDataType) => {
+		setIsLogin(true);
+		await apiUserRegister(data as unknown as IUserRegister, push, setErrorInfo);
+		await login(data, setLoginError);
+		setIsLogin(false);
 	};
 
 	const handleUserCheck = async (username: string): Promise<boolean> => {
@@ -71,6 +75,7 @@ function PAuth({}: PAuthProps) {
 		<CForm
 			fieldExists={errorInfo}
 			key={"register"}
+			disable={isLogin}
 			onSend={handleRegister}
 			outlinedStyling="light"
 			entries={[
@@ -117,6 +122,9 @@ function PAuth({}: PAuthProps) {
 			onUsernameCheck={handleUserCheck}
 		></CForm>
 	);
+
+	if(user || status == "authed")
+		return <Navigate to={"/"} />
 
 	return (
 		<Stack direction={"column"} sx={{ alignItems: "center" }}>

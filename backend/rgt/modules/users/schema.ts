@@ -10,11 +10,12 @@ import {
 	AUTH_MIN_USER,
 	AUTH_USER_MULTI_LANG,
 } from "../../../src/consts.js";
-import { IUserBase } from "../../types/data/TUser.js";
+import { IUserBase, IUserFull } from "../../types/data/TUser.js";
 
 export interface IUserBackendDB extends Omit<IUserBackend, "uid">, IDBData {}
 export interface IUserBackendDBMethods {
 	getUserBase(): IUserBase;
+	getUserFull(): IUserFull;
 }
 export const userCurrentVersion: number = 0;
 
@@ -80,6 +81,17 @@ userSchema.method("getUserBase", function (): IUserBase {
 		uid: this._id.toString(),
 		username: this.username,
 		avatar: this.avatar,
+	};
+});
+
+userSchema.method("getUserFull", function (): IUserFull {
+	return {
+		uid: this._id.toString(),
+		username: this.username,
+		email: this.email,
+		firstName: this.firstName ? this.firstName : undefined,
+		lastName: this.lastName ? this.lastName : undefined,
+		avatar: this.avatar ? this.avatar : undefined,
 	};
 });
 

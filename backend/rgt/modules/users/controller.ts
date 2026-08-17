@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { User } from "./schema.js";
-import { IAPIUserCheckAvailableRcv, IAPIUserRegister } from "../../types/api/users/TAPIUsers.js";
+import { IAPIUserCheckAvailableRcv, IAPIUserGetSelfFull, IAPIUserRegister } from "../../types/api/users/TAPIUsers.js";
 import argon2 from "argon2";
 import { PASSWORD_MAX, PASSWORD_MIN } from "../../consts.js";
 
@@ -42,4 +42,22 @@ export const postUserAvailable = async (req: Request, res: Response) => {
 	res.status(200).json({
 		available: (await User.exists({ username: req.body.username })) === null,
 	} as IAPIUserCheckAvailableRcv);
+};
+
+//--------------------------------------------------
+//                      INFO
+//--------------------------------------------------
+export const getUserSelfFull = async (req: Request, res: Response) => {
+	
+	if(!req.user)
+		throw { code: 400, message: "Missing user id" }
+
+	const user = await User.findById(req.user);
+	if(!user)
+		throw { code: 404, message: "User not found" }
+
+
+	res.status(200).json({
+		user: user.getUserFull(),
+	} as IAPIUserGetSelfFull);
 };

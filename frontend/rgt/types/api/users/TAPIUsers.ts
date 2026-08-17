@@ -1,4 +1,4 @@
-import type { IUserRegister } from "../../data/TUser";
+import type { IUserFull, IUserRegister } from "../../data/TUser";
 
 //--------------------------------------------------
 //                    SEND
@@ -17,3 +17,9 @@ export interface IAPIUserCheckAvailable {
 export interface IAPIUserCheckAvailableRcv {
 	available: boolean;
 }
+
+export interface IAPIUserGetSelfFull {
+	user: IUserFull;
+}
+
+

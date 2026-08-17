@@ -6,6 +6,7 @@ export const API_AUTH_LOGOUT = "/logout";
 
 //USER
 export const API_USER = "/users";
+export const API_USER_SELF = "/self";
 export const API_USER_CHECK_AVAILABLE = "/available";
 
 //====================== COMMON ======================
