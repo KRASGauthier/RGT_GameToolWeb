@@ -10,7 +10,6 @@ import type { IUserFull, IUserRegister } from "../../types/data/TUser";
 import type { IAppNotif } from "../../types/TEvents";
 import { apiCheckReponse, apiCheckReponseError, apiGetData, apiPostData } from "../shared";
 
-
 //--------------------------------------------------
 //                   REGISTERING
 //--------------------------------------------------
@@ -39,7 +38,6 @@ export const apiUserCheckAvailable = async (
 	return data.data.available;
 };
 
-
 //--------------------------------------------------
 //                      INFOS
 //--------------------------------------------------
@@ -47,9 +45,10 @@ export const apiUserGetFullSelf = async (
 	setUser: React.Dispatch<React.SetStateAction<IUserFull | undefined>>,
 	push: (notif: IAppNotif) => void,
 ) => {
-	const data: IAPIData<IAPIUserGetSelfFull> = await apiGetData<
-		IAPIUserGetSelfFull
-	>(API_USER + API_USER_SELF, "notif");
+	const data: IAPIData<IAPIUserGetSelfFull> = await apiGetData<IAPIUserGetSelfFull>(
+		API_USER + API_USER_SELF,
+		"notif",
+	);
 	if (!apiCheckReponse(data, "user", { type: "notif", handler: push })) return false;
 	if (!data.data) return false;
 	setUser(data.data.user);

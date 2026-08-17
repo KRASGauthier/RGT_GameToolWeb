@@ -22,8 +22,8 @@ import { API_AUTH, API_AUTH_REFRESH } from "../../consts";
 //                      LOCAL OVERRIDE
 //--------------------------------------------------
 type TRetryConfig = InternalAxiosRequestConfig & {
-	retry?: boolean
-}
+	retry?: boolean;
+};
 
 //--------------------------------------------------
 //                      CONTEXT
@@ -68,10 +68,13 @@ function CAuthContext({ children }: CAuthContextProps) {
 	const [error, setError] = useState<ReactNode | undefined>(undefined);
 
 	//====================== FUNCTIONS ======================
-	const changeToken = useCallback((token: string | null) => {
-		tokenRef.current = token;
-		setToken(token);
-	}, [setToken, tokenRef])
+	const changeToken = useCallback(
+		(token: string | null) => {
+			tokenRef.current = token;
+			setToken(token);
+		},
+		[setToken, tokenRef],
+	);
 
 	const login = useCallback(
 		async (
@@ -108,33 +111,37 @@ function CAuthContext({ children }: CAuthContextProps) {
 	}, [status, refresh]);
 
 	useEffect(() => {
-		const requestInterceptor = api.interceptors.request.use((config) => {
-			if(tokenRef.current)
-				config.headers.Authorization = `Bearer ${tokenRef.current}`
-			return config;
-		},
-		(error) => Promise.reject(error)
-		)
+		const requestInterceptor = api.interceptors.request.use(
+			(config) => {
+				if (tokenRef.current) config.headers.Authorization = `Bearer ${tokenRef.current}`;
+				return config;
+			},
+			(error) => Promise.reject(error),
+		);
 
-		const responseIntercaptor = api.interceptors.response.use((response) => response, async (error?: AxiosError) => {
-			if(!error || !error.config)
+		const responseIntercaptor = api.interceptors.response.use(
+			(response) => response,
+			async (error?: AxiosError) => {
+				if (!error || !error.config) return Promise.reject(error);
+				const request = error.config as TRetryConfig;
+				if (
+					error.response?.status == 401 &&
+					!request.retry &&
+					request.url != API_AUTH + API_AUTH_REFRESH
+				) {
+					request.retry = true;
+					await refresh();
+					return api(request);
+				}
 				return Promise.reject(error);
-			const request = error.config as TRetryConfig;
-			if(error.response?.status == 401 && !request.retry && request.url != API_AUTH + API_AUTH_REFRESH)
-			{
- 				request.retry = true;
-				await refresh()
-				return api(request);
-			}
-			return Promise.reject(error)
-		})
+			},
+		);
 
 		return () => {
 			api.interceptors.request.eject(requestInterceptor);
 			api.interceptors.response.eject(responseIntercaptor);
-		}
+		};
 	}, [refresh]);
-
 
 	return (
 		<authContext.Provider value={{ token, user, status, login, refresh }}>

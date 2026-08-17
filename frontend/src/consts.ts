@@ -10,9 +10,15 @@ export const EAppMenus: Record<string, string> = {
 //AUth
 export const ROUTE_AUTH = "/auth";
 
+//Users
+export const ROUTE_USERS_ME = "/users/me";
+
 //====================== API ======================
 export const API_BASE = "http://localhost:8082/API/";
 export const API_BASE_SIMPLE = "/API";
+
+//--------------------- Users ---------------------
+//Profile
 
 //--------------------- Shared ---------------------
 export const STATIC_IMAGES = "/images";

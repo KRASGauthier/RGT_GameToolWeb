@@ -21,5 +21,3 @@ export interface IAPIUserCheckAvailableRcv {
 export interface IAPIUserGetSelfFull {
 	user: IUserFull;
 }
-
-

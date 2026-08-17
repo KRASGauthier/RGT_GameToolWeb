@@ -1,5 +1,5 @@
 import express from "express";
-import { postUser, postUserAvailable, getUserSelfFull} from "./controller.js";
+import { postUser, postUserAvailable, getUserSelfFull } from "./controller.js";
 import { API_USER_CHECK_AVAILABLE, API_USER_SELF } from "../../consts.js";
 import { verifyJWT } from "../../middleware/jwt.js";
 

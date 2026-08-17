@@ -12,6 +12,5 @@
 	},
 	"include": ["src/**/*.ts", "rgt/**/*.ts"],
 	"exclude": ["node_modules", "dist"],
- 	 "files":["rgt/types/system/types.d.ts"]
-
+	"files": ["rgt/types/system/types.d.ts"]
 }

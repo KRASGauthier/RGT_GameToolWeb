@@ -17,7 +17,6 @@ function App() {
 				<CAuthContext>
 					<Routes>
 						<Route path={ROUTE_AUTH} element={<PAuth />} />
-						
 						<Route element={<CProtectedRoute />}>
 							<Route element={<PBasePage />}>
 								<Route index element={<PHome />} />

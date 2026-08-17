@@ -6,27 +6,25 @@ import { type IUserFull } from "../../../rgt/types/data/TUser";
 import { apiUserGetFullSelf } from "../../../rgt/api/user/userAPI";
 import { useNotif } from "../../../rgt/context/app/CAppNotifContext";
 
-export interface PHomeProps extends GCompProps {
-
-}
+export interface PHomeProps extends GCompProps {}
 
 function PHome({}: PHomeProps) {
-
-	const [userFull, setUserFull] = useState<IUserFull | undefined>(undefined)
+	const [userFull, setUserFull] = useState<IUserFull | undefined>(undefined);
 	const { push } = useNotif();
 
 	useEffect(() => {
-		apiUserGetFullSelf(setUserFull, push)
-	}, [setUserFull, push])
+		apiUserGetFullSelf(setUserFull, push);
+	}, [setUserFull, push]);
 
-	if(!userFull)
-		return <CText>No user</CText>
-	return <Stack>
-		<CText>{userFull.firstName}</CText>
-		<CText>{userFull.lastName}</CText>
-		<CText>{userFull.email}</CText>
-		<CText>{userFull.username}</CText>
-	</Stack>
+	if (!userFull) return <CText>No user</CText>;
+	return (
+		<Stack>
+			<CText>{userFull.firstName}</CText>
+			<CText>{userFull.lastName}</CText>
+			<CText>{userFull.email}</CText>
+			<CText>{userFull.username}</CText>
+		</Stack>
+	);
 }
 
 export default PHome;

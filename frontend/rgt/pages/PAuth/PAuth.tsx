@@ -123,8 +123,7 @@ function PAuth({}: PAuthProps) {
 		></CForm>
 	);
 
-	if(user || status == "authed")
-		return <Navigate to={"/"} />
+	if (user || status == "authed") return <Navigate to={"/"} />;
 
 	return (
 		<Stack direction={"column"} sx={{ alignItems: "center" }}>
