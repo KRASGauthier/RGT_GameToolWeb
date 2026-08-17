@@ -1,219 +1,270 @@
 # Game Tool
 
-<!-- TOC START -->
+> **A full-stack utility application for managing game projects, production, assets, source structure, and game data from one place.**
+
+---
+
 ## Table of contents
 
-- [About the project](#about-the-project)
-- [Product structure](#product-structure)
-  - [User home and projects](#user-home-and-projects)
-  - [Project management](#project-management)
-  - [Asset management](#asset-management)
-  - [Code and data management](#code-and-data-management)
-- [Planned code/data workflow](#planned-codedata-workflow)
-- [Roadmap](#roadmap)
-- [Start here](#start-here)
-- [Core repository rules](#core-repository-rules)
-- [Current development topology](#current-development-topology)
-- [Documentation philosophy](#documentation-philosophy)
-<!-- TOC END -->
+- [Overview](#overview)
+- [Documentation](#documentation)
+- [Main Features](#main-features)
+- [Project Status](#project-status)
+- [Project Structure](#project-structure)
+- [Development](#development)
+- [Important Project Principles](#important-project-principles)
 
-## About the project
+## Overview
 
-**Game Tool** is a full-stack utility application intended to support the development and organization of game projects from one centralized interface.
+### Purpose
 
-The application is designed around two broad needs:
+**Game Tool** is designed to centralize the tools and information needed to develop and maintain a video game project.
 
-1. **Project and production management** — users, projects, teams, tasks, bugs, roadmap targets, settings, and general project organization.
-2. **Game content management** — assets, source-code structure, game-data definitions, registries, synchronization, validation, and eventually higher-level consistency/balance analysis.
+The goal is to replace scattered spreadsheets, disconnected project-management tools, manually maintained references, and difficult-to-edit game data with a single application built specifically around game-development workflows.
 
-A user may belong to or work on multiple projects. The application therefore begins at a personal/home level where projects can be created, selected, and managed before entering project-specific tooling.
+It is intended to cover both:
 
-The long-term goal is not to replace the game engine. It is to provide a better environment for data-heavy and organization-heavy work that is cumbersome to maintain directly in engine editors, hard-coded values, spreadsheets, or disconnected external tools.
+- **production and project management**;
+- **technical code and game-data management**.
 
-> [!NOTE]
-> The product roadmap describes intended functionality. Some systems described below are planned and are not necessarily implemented yet. See [Roadmap](Roadmap.md) for the current target sequence.
+The application is designed to support **multiple users, teams, and projects**.
 
-## Product structure
+### Scope
 
-### User home and projects
+Game Tool is built around several major areas:
 
-The application operates above the individual game project so one user can work with multiple projects.
+- project and team management;
+- tasks, bugs, milestones, and roadmaps;
+- asset tracking and provenance;
+- source-code structure visualization;
+- structured game-data creation and editing;
+- synchronization with the game repository;
+- validation and conflict detection.
 
-Planned responsibilities include:
+---
 
-- personal account and application settings;
-- a user home menu;
-- project creation;
-- project selection;
-- project settings and general management;
-- project members and team management.
+## Documentation
 
-### Project management
+### Start Here
 
-Each project is intended to provide its own production-management tools, including:
+| Document | Purpose |
+|---|---|
+| [`Important.md`](./Important.md) | Quick reference for starting the project, structure, shared contracts, API infrastructure, component/style patterns, and finishing work. |
+| [`GettingStarted.md`](./.info/GettingStarted.md) | Setup, main development commands, services, validation, and destructive-command warnings. |
 
-- to-do/task management;
-- bug tracking with detailed information, references, and images/attachments;
-- roadmap targets and milestones;
-- project-level settings and organization;
-- team/member management.
+### Architecture
 
-The roadmap is intended to structure goals and targets rather than act only as a static list.
+| Document | Purpose |
+|---|---|
+| [`Architecture.md`](./.info/Architecture.md) | High-level repository architecture and relationships between the main systems. |
+| [`Frontend.md`](./.info/Frontend.md) | Frontend structure, folders, application architecture, shared contracts, and development flow. |
+| [`Backend.md`](./.info/Backend.md) | Backend structure, modules, request flow, database architecture, contracts, and development flow. |
+| [`RGT.md`](./.info/RGT.md) | Shared RGT ownership, integration, defaults, and synchronization infrastructure. |
 
-### Asset management
+### Conventions
 
-The asset manager is intended to maintain a registry of assets used by the game and, importantly, their provenance and release status.
+| Document | Purpose |
+|---|---|
+| [`SharedConventions.md`](./.info/SharedConventions.md) | Naming, TypeScript, imports, control flow, code organization, and other shared conventions. |
+| [`FrontendConventions.md`](./.info/FrontendConventions.md) | Components, styling, React, MUI, frontend API, forms, and frontend validation conventions. |
+| [`BackendConventions.md`](./.info/BackendConventions.md) | Backend modules, Mongoose, constants, middleware, errors, logging, API, and validation conventions. |
 
-This includes tracking information such as:
+---
 
-- what an asset is and where it is used;
-- where the asset came from;
-- whether it is temporary or a placeholder;
-- whether it was AI-generated;
-- whether the project currently has the commercial rights required to ship it;
-- whether it must be replaced before release.
+## Main Features
 
-The purpose is to prevent temporary, unlicensed, or otherwise unsuitable production assets from being forgotten and accidentally surviving into a commercial release.
+### Project Management
 
-### Code and data management
+Each user has a personal home area from which they can access and manage multiple projects.
 
-The code/data side of Game Tool is intended to solve a common game-development problem: large amounts of structured gameplay data are awkward to maintain directly in source code, engine inspectors, or generic spreadsheets.
+Planned project-management features include:
 
-The planned **Code Manager** parses the game project's source and builds a navigable representation of relevant code structures, including concepts such as:
+- user account and personal settings;
+- project creation and selection;
+- project configuration;
+- team and member management;
+- to-do and task management;
+- bug tracking;
+- bug details, references, and images;
+- project roadmaps;
+- milestones and development targets.
+
+### Asset Management
+
+The asset manager maintains a registry of assets used by the game and records where they came from.
+
+A major purpose is to ensure that temporary or legally restricted assets remain visible throughout development.
+
+Assets can be tracked using information such as:
+
+- source and origin;
+- licensing status;
+- placeholder status;
+- AI-generated status;
+- commercial-use eligibility;
+- replacement requirement before release.
+
+The objective is to avoid reaching release with forgotten placeholders or assets that cannot legally ship.
+
+### Code Manager
+
+The code manager will analyze the game project's source code and build a structured representation of it.
+
+This representation may include:
 
 - classes and structures;
 - inheritance;
-- includes/dependencies;
+- includes and dependencies;
 - available properties and data types;
-- relationships between relevant game concepts.
+- relationships between game systems.
 
-This parsed model can then drive the **Data Registry**. Instead of manually reproducing the structure of game objects in a spreadsheet, registry entries are created against structures understood from the game's code.
+Its purpose is not to replace the source code itself, but to provide a clearer overview of the technical structure of the game and make inconsistencies easier to identify.
 
-For example, a concrete game entry can expose the fields required by its parsed type, reference other registry entries, and represent structured gameplay values such as loot definitions, ranges, resources, or related objects.
+### Data Registry
 
-The goal is to make large game-data sets easier to understand, edit, validate, and keep coherent with the actual game code.
+The data registry will use the structures discovered by the code manager to provide a dedicated editor for game data.
 
-## Planned code/data workflow
+Instead of maintaining large spreadsheets or manually editing large amounts of data through the game engine, Game Tool will allow data entries to be created from parsed code structures.
 
-Because Game Tool runs as a web application, the browser is not expected to work directly against a developer's local game-project filesystem.
+Examples include:
 
-The intended synchronization model is Git-based:
+- items;
+- interactable objects;
+- pickable objects;
+- loot tables;
+- resources;
+- ranges and configurable values;
+- references between registry entries.
+
+The registry should remain consistent with the structures defined by the game code.
+
+### Repository Synchronization
+
+Because the application runs through a server and cannot directly access each user's local game-project folder, the intended synchronization layer is the project's **Git repository**.
+
+The general workflow is expected to be:
 
 ```text
-Game Git repository
-        |
-        v
+Git repository
+      ↓
 Backend checkout / pull
-        |
-        v
-Code + existing-data parsing
-        |
-        v
-Game Tool structural model + registry
-        |
-        v
-Editing / validation / conflict resolution
-        |
-        v
+      ↓
+Code and data parsing
+      ↓
+Game Tool registry editing
+      ↓
 Generated game data
-        |
-        v
+      ↓
 Commit / push
 ```
 
-This gives the backend a controlled working copy from which it can parse code and current game data, while also providing a route for generated data to return to the game repository.
+This gives Game Tool controlled access to the current project state without requiring users to manually copy data between the application and the game engine.
 
-A core requirement of this system is **structural conflict detection**. When the game code evolves, existing registry data must not silently become invalid. The tool should eventually surface conflicts such as removed fields, changed types, removed classes, changed inheritance, invalid references, or other incompatibilities between stored data and the latest parsed structures.
+### Validation & Conflict Detection
 
-A later goal is higher-level **game-design validation**: programmable rules and smarter analysis able to identify suspicious, inconsistent, or potentially unbalanced data. This is a long-term capability, not a currently defined implementation architecture.
+When the source-code structure changes, existing data may no longer match it.
 
-## Roadmap
+Game Tool is intended to detect structural conflicts such as:
 
-The development plan is maintained in [Roadmap.md](Roadmap.md).
+- removed fields;
+- renamed or unknown fields;
+- field type changes;
+- removed classes or structures;
+- inheritance changes;
+- broken references;
+- existing registry entries that no longer conform to the parsed code.
 
-The roadmap is intentionally a **living document**. Targets can be reordered, expanded, split, removed, or added as the project evolves. It describes product direction rather than an immutable specification.
+A later goal is to add higher-level analysis capable of detecting suspicious, inconsistent, or potentially unbalanced game data.
 
-## Start here
+---
 
-This repository is developed with a deliberately structured environment. Some files belong to the application itself, while others are part of the **RGT shared project system** used across multiple repositories.
+## Project Status
 
-This documentation is written for both **human contributors** and **coding agents**. Its purpose is not only to explain what exists, but also to make the rules of the repository explicit so that changes remain compatible with the rest of the project and with the shared RGT infrastructure.
+Game Tool is currently under active development.
 
-> [!IMPORTANT]
-> Before changing infrastructure, shared types, constants, Docker configuration, or frontend styling conventions, read the corresponding document in [`.info/`](.info/).
+The current focus is establishing the application foundation and project-management layer before progressing into the code manager, data registry, synchronization, and analysis systems.
 
-| Document | Purpose |
-| --- | --- |
-| [Roadmap](Roadmap.md) | Living product roadmap and major implementation targets. |
-| [Shared system](.info/System.md) | Explains RGT, `.system`, project synchronization, and frontend-to-backend shared contracts. |
-| [Development environment](.info/DevelopmentEnvironment.md) | Explains the Makefile, Docker development environment, services, ports, and development-only infrastructure. |
-| [Code quality](.info/CodeQuality.md) | Defines the required formatting, linting, and build checks for frontend and backend work. |
-| [Frontend](.info/Frontend.md) | Defines the frontend stack, `rgt/` versus `src/` ownership, folder organization, API/component/page/type/style rules, and the custom theme architecture. |
-| [Backend](.info/Backend.md) | Defines the backend `rgt/`/`src/` structure, middleware placement, module organization, controller/router/schema responsibilities, and backend type rules. |
-| [Code conventions](.info/Conventions.md) | Defines naming, exports, component structure, state updates, callbacks, constants, typing, comparisons, comments, memoization, wrappers, validation, logging, API delegation, and route conventions. |
+## Project Structure
 
-## Core repository rules
-
-These rules should be understood before making changes:
-
-1. **Do not manually maintain backend copies of shared frontend contracts.** Shared API types, data types, and constants flow from the frontend to the backend through `.system/share.sh`. Backend copies may be deleted and replaced.
-2. **Do not treat RGT infrastructure as ordinary project-specific code.** RGT exists to keep shared infrastructure synchronized between multiple projects.
-3. **The current Docker setup is development-only by design.** The `.dev` files are not incomplete production files. Production infrastructure will be introduced separately when needed.
-4. **Do not redesign the development containers into production-style images.** The current source folders are intentionally mounted into Node containers so normal source changes do not require rebuilding the environment.
-5. **Validate modified TypeScript applications with formatting, linting, and a full build.** A successful lint alone is not enough.
-6. **Existing project conventions take precedence over generic framework habits.** Treat the documentation as the intended direction when older or unfinished code differs from it, but do not proactively refactor unrelated code solely to make it conform. When an area is already being changed or refactored, follow the documented convention.
-7. **Preserve the `src -> rgt` dependency direction.** Code inside `rgt/` must not import arbitrary application-specific `src/` code; only documented/guaranteed integration points or deliberate exceptional dependencies are allowed.
-8. **Prefer RGT for genuinely reusable code.** New code that is reusable across projects belongs in `rgt/`; project-specific code belongs in `src/`. Code may move from `src/` to `rgt/` when it becomes genuinely reusable.
-9. **Frontend API calls belong in the API layer.** Components and pages should call domain API handlers rather than performing direct Axios/HTTP work.
-10. **Backend middleware and functionality follow dedicated folders.** Middleware belongs in `middleware/`; backend feature/domain logic belongs in `modules/`, using the established module structure when applicable.
-11. **The custom frontend theme is authoritative.** `src/style/theme.ts` defines the project visual system; the MUI theme is an integration layer, not a competing source of truth.
-12. **Follow the documented code conventions.** Semantic prefixes, direct parameter destructuring, relative imports, event naming, the `any` prohibition, and the project equality convention are intentional and should not be normalized to unrelated ecosystem defaults.
-13. **Use project UI wrappers for application UI.** Structural/layout primitives are direct-use exceptions; MUI icons are treated as assets, and wrapper implementations may use the raw MUI family pieces needed to build the abstraction. See [Frontend](.info/Frontend.md) for the narrow exceptions.
-14. **Keep backend errors centralized.** Controllers and middleware normally throw errors and let the common error middleware build the response.
-15. **Treat schema serialization as part of the data contract.** Mongoose schemas define `toJSON` normalization by default so MongoDB-native values match shared application data structures.
-16. **Preserve the frontend API delegation model.** Domain API functions may receive setters, callbacks, navigation, and other UI dependencies so request logic stays out of pages/contexts.
-17. **Use centralized API-path constants.** Do not scatter raw backend endpoint strings through frontend or backend code.
-18. **Use `ULog` for permanent backend logging.** Raw `console.*` calls in backend application code are temporary debugging, not the logging convention.
-19. **Do not invent unresolved architecture.** Service/repository layers, complex-router rules, middleware ordering beyond technical requirements, and the future migration framework are intentionally undefined until a real need is designed.
-20. **Keep control flow shallow.** Prefer guard clauses/early returns over deep nesting, and omit braces for single-statement `if` blocks.
-21. **Do not impose import cleanup conventions that do not exist.** Relative imports are tooling-driven; there is no manual import-order/grouping rule.
-
-## Current development topology
+At a high level, the repository is organized around:
 
 ```text
-Browser
-  |
-  +-- http://localhost:8081  -> Frontend / Vite
-  |
-  +-- http://localhost:8082  -> Backend API
-  |
-  +-- http://localhost:8083  -> Mongo Express
-
-Docker development network
-  |
-  +-- frontend       (Node)
-  +-- backend-node   (Node)
-  +-- mongo          (MongoDB)
-  +-- mongo-express  (MongoDB administration UI)
+frontend/
+backend/
+.system/
+.info/
+README.md
+Important.md
 ```
 
-The frontend uses the actual backend during normal development. There is no separate frontend mock backend in this development setup.
+### `src/` vs `rgt/`
 
-## Documentation philosophy
+Both frontend and backend contain `src/` and `rgt/` structures.
 
-The authoritative project documentation lives in the root documentation files (`README.md`, `Roadmap.md`) and `.info/*.md`. Markdown files elsewhere in the repository are not part of the authoritative project documentation unless they are deliberately incorporated into this structure and linked from the root README.
+| Folder | Ownership |
+|---|---|
+| `rgt/` | Shared, reusable cross-project infrastructure and code. |
+| `src/` | Game Tool-specific application code. |
 
-The root documentation explains **what the project is and where it is going**. The `.info/` documentation defines **how the repository is structured and how contributors/agents are expected to work inside it**.
+Reusable code should generally prefer `rgt/`.
 
-Contributors and agents should use the documentation to answer questions such as:
+Project-specific code belongs in `src/`.
 
-- What is this project trying to achieve?
-- What is planned versus currently implemented?
-- Where should a change be made?
-- Which copy of a file is authoritative?
-- Which files are generated or synchronized?
-- Which commands are safe to run?
-- Which architectural choices are intentional?
-- Which validation steps are expected before a change is considered complete?
+Code may move from `src/` to `rgt/` later when it becomes genuinely reusable.
 
-When the documentation and an assumption based on a framework's usual conventions disagree, do not silently normalize the project. Follow the documented project convention unless a change to that convention is explicitly requested. Existing non-conforming code may be older or unfinished and does not establish a new convention by itself; unrelated cleanup is not required.
+---
+
+## Development
+
+The project is currently developed using:
+
+- **TypeScript**
+- **React**
+- **Vite**
+- **MUI / Emotion**
+- **Node.js**
+- **Express**
+- **MongoDB / Mongoose**
+- **Docker**
+- **npm**
+- **Make**
+
+The development environment is Docker-based.
+
+Use the **Makefile** as the normal command interface whenever an equivalent command exists.
+
+Common entry points include:
+
+```bash
+make dev run
+make dev rund
+make dev down
+make share
+make help
+```
+
+Detailed setup and environment information belongs in:
+
+**[`GettingStarted.md`](./.info/GettingStarted.md)**
+
+---
+
+## Important Project Principles
+
+Before working on the codebase, read:
+
+**[`Important.md`](./Important.md)**
+
+It contains the compact operational reference for:
+
+- starting and stopping the project;
+- `rgt/` vs `src/`;
+- frontend and backend structure;
+- shared contract synchronization;
+- frontend/backend API infrastructure;
+- standard component and style patterns;
+- validation before pushing;
+- critical destructive-command warnings.
+
+> [!CAUTION]
+> `make dev clean` currently removes **all Docker images and volumes on the host**, not only resources belonging to this project.
