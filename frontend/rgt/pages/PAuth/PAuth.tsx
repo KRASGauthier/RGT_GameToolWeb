@@ -35,8 +35,8 @@ function PAuth({}: PAuthProps) {
 
 	const handleRegister = async (data: TFromDataType) => {
 		setIsLogin(true);
-		await apiUserRegister(data as unknown as IUserRegister, push, setErrorInfo);
-		await login(data, setLoginError);
+		if (await apiUserRegister(data as unknown as IUserRegister, push, setErrorInfo))
+			await login(data, setLoginError);
 		setIsLogin(false);
 	};
 

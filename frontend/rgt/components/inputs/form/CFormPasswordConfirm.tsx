@@ -7,6 +7,7 @@ import { appTheme } from "../../../../src/style/theme";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import CButtonIcon from "../buttons/CButtonIcon";
+import { keyboartdIsSubmit } from "../../../utils/UKeyboard";
 
 export interface CFormPasswordConfirmProps extends CFormCompProps {
 	valueObject: Record<string, string | boolean>;
@@ -20,6 +21,7 @@ function CFormPasswordConfirm({
 	style,
 	outlinedStyling,
 	onMatch,
+	onEnter,
 }: CFormPasswordConfirmProps) {
 	const [value, setValue] = useState<string>("");
 	const [show, setShow] = useState<boolean>(false);
@@ -36,6 +38,9 @@ function CFormPasswordConfirm({
 							e.target.value !== valueObject.password
 						),
 					);
+				}}
+				onKeyUp={(event) => {
+					if (keyboartdIsSubmit(event)) onEnter();
 				}}
 				styling={outlinedStyling ?? "neutral"}
 				sx={style.shared}

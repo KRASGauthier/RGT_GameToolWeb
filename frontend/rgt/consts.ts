@@ -3,6 +3,7 @@
 export const API_AUTH = "/auth";
 export const API_AUTH_REFRESH = "/refresh";
 export const API_AUTH_LOGOUT = "/logout";
+export const API_AUTH_LOGOUT_EVERYWHERE = "/logout-everywhere";
 
 //USER
 export const API_USER = "/users";

@@ -9,7 +9,12 @@ import {
 	type ReactNode,
 } from "react";
 import type { IUserBase } from "../../types/data/TUser";
-import { apiAuthLogin, apiAuthRefresh } from "../../api/auth/authAPI";
+import {
+	apiAuthLogin,
+	apiAuthLogout,
+	apiAuthLogoutEverywhere,
+	apiAuthRefresh,
+} from "../../api/auth/authAPI";
 import CText from "../../components/text/CText";
 import CCard from "../../components/surfaces/CCard";
 import { Stack } from "@mui/material";
@@ -38,6 +43,8 @@ export interface IAuthContext {
 		setRemoteError?: React.Dispatch<React.SetStateAction<ReactNode>>,
 	) => Promise<void>;
 	refresh: () => Promise<void>;
+	logout: () => Promise<void>;
+	logoutEverywhere: () => Promise<void>;
 }
 
 const authContext: Context<IAuthContext> = createContext<IAuthContext>({
@@ -46,6 +53,8 @@ const authContext: Context<IAuthContext> = createContext<IAuthContext>({
 	status: "loading",
 	login: async ({}) => {},
 	refresh: async () => {},
+	logout: async () => {},
+	logoutEverywhere: async () => {},
 });
 
 export const useAuth = (): IAuthContext => {
@@ -66,6 +75,7 @@ function CAuthContext({ children }: CAuthContextProps) {
 	const [user, setUser] = useState<IUserBase | null>(null);
 	const [status, setStatus] = useState<TAuthStatus>("loading");
 	const [error, setError] = useState<ReactNode | undefined>(undefined);
+	const currentRefresh = useRef<Promise<void> | null>(null);
 
 	//====================== FUNCTIONS ======================
 	const changeToken = useCallback(
@@ -101,7 +111,21 @@ function CAuthContext({ children }: CAuthContextProps) {
 	);
 
 	const refresh = useCallback(async () => {
-		await apiAuthRefresh(changeToken, setUser, setStatus, setError);
+		if (currentRefresh.current != null) return currentRefresh.current;
+		currentRefresh.current = apiAuthRefresh(changeToken, setUser, setStatus, setError).finally(
+			() => {
+				currentRefresh.current = null;
+			},
+		);
+		return currentRefresh.current;
+	}, [changeToken]);
+
+	const logout = useCallback(async () => {
+		await apiAuthLogout(changeToken, setUser, setStatus, setError);
+	}, [changeToken]);
+
+	const logoutEverywhere = useCallback(async () => {
+		await apiAuthLogoutEverywhere(changeToken, setUser, setStatus, setError);
 	}, [changeToken]);
 
 	//====================== EFFECT ======================
@@ -127,7 +151,8 @@ function CAuthContext({ children }: CAuthContextProps) {
 				if (
 					error.response?.status == 401 &&
 					!request.retry &&
-					request.url != API_AUTH + API_AUTH_REFRESH
+					request.url != API_AUTH + API_AUTH_REFRESH &&
+					request.url != API_AUTH
 				) {
 					request.retry = true;
 					await refresh();
@@ -144,7 +169,9 @@ function CAuthContext({ children }: CAuthContextProps) {
 	}, [refresh]);
 
 	return (
-		<authContext.Provider value={{ token, user, status, login, refresh }}>
+		<authContext.Provider
+			value={{ token, user, status, login, refresh, logout, logoutEverywhere }}
+		>
 			{status == "loading" && (
 				<Stack direction="column" sx={{ mt: "20px", alignItems: "center" }}>
 					<CCard>

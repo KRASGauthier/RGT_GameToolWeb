@@ -4,10 +4,11 @@ import type { CFormCompProps } from "./CForm";
 import CText from "../../text/CText";
 import { appTheme } from "../../../../src/style/theme";
 import { useCallback, useMemo, useState } from "react";
+import { keyboartdIsSubmit } from "../../../utils/UKeyboard";
 
 export interface CFormTextProps extends CFormCompProps {}
 
-function CFormText({ entry, style, outlinedStyling, onChange }: CFormTextProps) {
+function CFormText({ entry, style, outlinedStyling, onChange, onEnter }: CFormTextProps) {
 	const [value, setValue] = useState<string>("");
 
 	const check = useCallback(
@@ -43,6 +44,9 @@ function CFormText({ entry, style, outlinedStyling, onChange }: CFormTextProps) 
 						!check(e.target.value) ? e.target.value : false,
 						entry.field ?? "value",
 					);
+				}}
+				onKeyUp={(event) => {
+					if (keyboartdIsSubmit(event)) onEnter();
 				}}
 				styling={outlinedStyling ?? "neutral"}
 				sx={style.shared}

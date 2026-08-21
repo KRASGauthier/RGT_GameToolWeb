@@ -7,13 +7,16 @@ import {
 } from "../../types/api/users/TAPIUsers.js";
 import argon2 from "argon2";
 import { PASSWORD_MAX, PASSWORD_MIN } from "../../consts.js";
+import { checkField } from "../../util/UError.js";
 
 //--------------------------------------------------
 //                   HELPERS
 //--------------------------------------------------
 function checkPassword(pwd: string) {
+	if (typeof pwd != "string") throw { code: 400, message: "Wrong password type" };
+
 	const trimed = pwd.trim();
-	if (!trimed) return;
+	if (!trimed) throw { code: 400, message: "Empty password" };
 	if (!trimed.match(/^[\x21-\x7E]+$/))
 		throw { code: 400, message: "Unallowed charcter is begin used" };
 	if (trimed.length < PASSWORD_MIN || trimed.length > PASSWORD_MAX)
@@ -28,11 +31,12 @@ function checkPassword(pwd: string) {
 //                    MANAGE
 //--------------------------------------------------
 export const postUser = async (req: Request, res: Response) => {
+	checkField("user", req.body);
 	const data: IAPIUserRegister = req.body as IAPIUserRegister;
 	checkPassword(data.user.password);
 	await User.create({
 		...data.user,
-		password: await argon2.hash(data.user.password),
+		password: await argon2.hash(data.user.password.trim()),
 	});
 	res.status(201).json({});
 };

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { appTheme } from "../../../../src/style/theme";
 import CText from "../../text/CText";
 import { useDebounced } from "../../../hooks/useDebounced";
+import { keyboartdIsSubmit } from "../../../utils/UKeyboard";
 
 export interface CFormUserProps extends CFormCompProps {
 	checkAvailable?: (username: string) => Promise<boolean>;
@@ -18,6 +19,7 @@ function CFormUser({
 	outlinedStyling,
 	onChange,
 	checkAvailable,
+	onEnter,
 }: CFormUserProps) {
 	const [value, setValue] = useState<string>("");
 	const [localExists, setLocalExists] = useState<string | undefined>(undefined);
@@ -107,6 +109,9 @@ function CFormUser({
 				value={value}
 				onChange={(e) => {
 					handleChange(e.target.value);
+				}}
+				onKeyUp={(event) => {
+					if (keyboartdIsSubmit(event)) onEnter();
 				}}
 				styling={checking == "available" ? "valid" : (outlinedStyling ?? "neutral")}
 				sx={style.shared}

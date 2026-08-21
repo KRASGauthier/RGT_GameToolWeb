@@ -37,12 +37,16 @@ export const handleError = (error: unknown, res: Response) => {
 				: 500;
 		uErrorResponse(error.message, code);
 		res.status(code).json({ error: [error.message] } as IAPIErrors);
+		console.log(error);
+		if ("mutex" in error) (error.mutex as () => void)();
 		return;
 	}
 	uErrorResponse("Unknown error", 500);
 	res.status(500).json({ error: ["Unknown error"] } as IAPIErrors);
 };
 
-export const checkField = (field: string, data: object) => {
+export const checkField = (field: string, data: Record<string, unknown>, type?: string) => {
 	if (!(field in data)) throw { code: 400, message: `Required field '${field}' is missing` };
+	if (type && typeof data[field] != type)
+		throw { code: 400, message: `Field '${field}' is not of type ${type}` };
 };
