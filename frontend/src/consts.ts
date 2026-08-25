@@ -1,6 +1,7 @@
 //====================== ROOTING ======================
 export const EAppMenus: Record<string, string> = {
 	HOME: "home",
+	PROFILE: "profile",
 
 	MANAGEMENT_TODO: "todo",
 	MANAGEMENT_ROADMAP: "roadmap",
@@ -21,6 +22,10 @@ export const ROUTE_USERS_ME = "/users/me";
 //====================== API ======================
 export const API_BASE = "http://localhost:8082/API/";
 export const API_BASE_SIMPLE = "/API";
+
+//--------------------- Users ---------------------
+//Profile
+export const ROUTE_PROFILE = "/profile";
 
 //--------------------- Shared ---------------------
 export const STATIC_IMAGES = "/images";
