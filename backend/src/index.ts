@@ -7,6 +7,7 @@ import { API_AUTH, API_USER } from "../rgt/consts.js";
 import { errorMiddleware } from "../rgt/middleware/error.js";
 import authRouter from "../rgt/modules/auth/router.js";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(
 	}),
 );
 app.use(express.json());
+app.use(helmet());
 app.use(
 	STATIC_IMAGES,
 	express.static(process.env.BACKEND_UPLOADE_LOCATION ?? "/home/app/uploaded-dev"),

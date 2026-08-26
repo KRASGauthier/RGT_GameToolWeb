@@ -19,11 +19,9 @@ export interface CDrawerMiniProps extends GCompProps, BoxProps {
 	closedWidth?: number;
 
 	onOpen?: (open: boolean) => void;
-
-	saveStatus?: boolean;
 }
 
-const OPEN_STORAGE_KEY = "CDrawerMiniOpen";
+const LS_OPEN_STORAGE_KEY = "CDrawerMini-{SAVEID}-State";
 
 function CDrawerMini({
 	elevation,
@@ -32,13 +30,14 @@ function CDrawerMini({
 	closedWidth = 50,
 	onOpen,
 	children,
-	saveStatus,
+	saveID,
 	sx,
 	...other
 }: CDrawerMiniProps) {
 	const [open, setOpen] = useState<boolean>(() => {
-		return localStorage.getItem(OPEN_STORAGE_KEY) == null ||
-			localStorage.getItem(OPEN_STORAGE_KEY) == "closed"
+		return !saveID ||
+			localStorage.getItem(LS_OPEN_STORAGE_KEY.replaceAll("{SAVEID}", saveID)) == null ||
+			localStorage.getItem(LS_OPEN_STORAGE_KEY.replaceAll("{SAVEID}", saveID)) == "closed"
 			? false
 			: true;
 	});
@@ -47,9 +46,13 @@ function CDrawerMini({
 	}, [elevation, open, openWidth, closedWidth]);
 
 	useEffect(() => {
-		if (saveStatus) localStorage.setItem(OPEN_STORAGE_KEY, open ? "open" : "closed");
+		if (saveID)
+			localStorage.setItem(
+				LS_OPEN_STORAGE_KEY.replaceAll("{SAVEID}", saveID),
+				open ? "open" : "closed",
+			);
 		onOpen?.(open);
-	}, [open, saveStatus, onOpen]);
+	}, [open, saveID, onOpen]);
 
 	return (
 		<Box sx={sxMerger(style.main, sx ? sx : {})} {...other}>

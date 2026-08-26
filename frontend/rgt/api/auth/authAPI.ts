@@ -1,7 +1,12 @@
 import type { ReactNode } from "react";
-import { API_AUTH, API_AUTH_REFRESH } from "../../consts";
+import {
+	API_AUTH,
+	API_AUTH_LOGOUT,
+	API_AUTH_LOGOUT_EVERYWHERE,
+	API_AUTH_REFRESH,
+} from "../../consts";
 import type { IAPIData } from "../../types/api/TAPI";
-import { apiCheckReponse, apiGetData, apiPostData } from "../shared";
+import { apiCheckReponse, apiCheckReponseError, apiGetData, apiPostData } from "../shared";
 import type { IAPIAccess, IAPIAuthLogin } from "../../types/api/auth/TAPIAuth";
 import type { TAuthStatus } from "../../context/auth/CAuthContext";
 import type { IUserBase } from "../../types/data/TUser";
@@ -65,4 +70,33 @@ export const apiAuthRefresh = async (
 		"error",
 	);
 	handleAuthAnswer(data, setToken, setUser, setStatus, setError);
+};
+
+export const apiAuthLogout = async (
+	setToken: (token: string | null) => void,
+	setUser: React.Dispatch<React.SetStateAction<IUserBase | null>>,
+	setStatus: React.Dispatch<React.SetStateAction<TAuthStatus>>,
+	setError: React.Dispatch<React.SetStateAction<ReactNode>>,
+) => {
+	const data: IAPIData<{}> = await apiPostData<{}, {}>(API_AUTH + API_AUTH_LOGOUT, "error");
+	apiCheckReponseError(data, { type: "error", handler: setError });
+	setToken(null);
+	setUser(null);
+	setStatus("loading");
+};
+
+export const apiAuthLogoutEverywhere = async (
+	setToken: (token: string | null) => void,
+	setUser: React.Dispatch<React.SetStateAction<IUserBase | null>>,
+	setStatus: React.Dispatch<React.SetStateAction<TAuthStatus>>,
+	setError: React.Dispatch<React.SetStateAction<ReactNode>>,
+) => {
+	const data: IAPIData<{}> = await apiPostData<{}, {}>(
+		API_AUTH + API_AUTH_LOGOUT_EVERYWHERE,
+		"error",
+	);
+	apiCheckReponseError(data, { type: "error", handler: setError });
+	setToken(null);
+	setUser(null);
+	setStatus("loading");
 };

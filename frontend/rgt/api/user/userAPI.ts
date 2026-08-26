@@ -17,12 +17,13 @@ export const apiUserRegister = async (
 	user: IUserRegister,
 	push: (notif: IAppNotif) => void,
 	onErrorInfo: (info: TErrorInfo) => void,
-) => {
+): Promise<boolean> => {
 	const data: IAPIData<{}> = await apiPostData<IAPIUserRegister, {}>(API_USER, { user }, "notif");
 	if (!apiCheckReponseError(data, { type: "notif", handler: push })) {
 		if (data.errorInfo) onErrorInfo(data.errorInfo);
-		return;
+		return false;
 	}
+	return true;
 };
 
 export const apiUserCheckAvailable = async (

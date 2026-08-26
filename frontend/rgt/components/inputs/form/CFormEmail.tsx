@@ -4,10 +4,11 @@ import { getFormTypeDefaultField, type CFormCompProps } from "./CForm";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CText from "../../text/CText";
 import { appTheme } from "../../../../src/style/theme";
+import { keyboartdIsSubmit } from "../../../utils/UKeyboard";
 
 export interface CFormEmailProps extends CFormCompProps {}
 
-function CFormEmail({ entry, style, exists, outlinedStyling, onChange }: CFormEmailProps) {
+function CFormEmail({ entry, style, exists, outlinedStyling, onChange, onEnter }: CFormEmailProps) {
 	const [value, setValue] = useState<string>("");
 
 	const check = useCallback(
@@ -53,6 +54,9 @@ function CFormEmail({ entry, style, exists, outlinedStyling, onChange }: CFormEm
 						!check(e.target.value) ? e.target.value : false,
 						entry.field ?? getFormTypeDefaultField(entry.type),
 					);
+				}}
+				onKeyUp={(event) => {
+					if (keyboartdIsSubmit(event)) onEnter();
 				}}
 				styling={outlinedStyling ?? "neutral"}
 				sx={style.shared}

@@ -35,6 +35,7 @@ export interface IThemeColor {
 //                    SHAPE
 //--------------------------------------------------
 export interface IThemeRadius {
+	tiny: number | string;
 	small: number | string;
 	medium: number | string;
 	large: number | string;
@@ -85,6 +86,7 @@ export interface IThemeAnimation {
 //--------------------------------------------------
 export interface IThemeLayer {
 	absolute: number;
+	aboveAbsolute: number;
 }
 
 //--------------------------------------------------

@@ -1,19 +1,13 @@
 import { Tab, Tabs, type SvgIconProps, type TabsProps } from "@mui/material";
 import type { GCompProps } from "../../shared/ccommon";
-import { cloneElement, useMemo, type ReactElement, type ReactNode } from "react";
+import { cloneElement, useMemo, type ReactElement } from "react";
 import { CTabsHeadStyle } from "../../../style/components/navigation/tabs/CTabsHeadStyles";
 import { sxMerger } from "../../../utils/UStyles";
 import CText from "../../text/CText";
 import type { TFontSize } from "../../../types/themeType";
 import { appTheme } from "../../../../src/style/theme";
+import type { ITabEntry } from "./CTabs";
 
-export interface ITabEntry {
-	value: string;
-	display?: string;
-	icon?: ReactElement<SvgIconProps>;
-
-	content?: ReactNode;
-}
 export interface CTabsHeadProps extends GCompProps, Omit<TabsProps, "onChange"> {
 	tabs: ITabEntry[];
 	onChange?: (value: string, entry: ITabEntry) => void;

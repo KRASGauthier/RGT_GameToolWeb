@@ -8,10 +8,11 @@ import { PASSWORD_MAX, PASSWORD_MIN } from "../../../../rgt/consts";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import CButtonIcon from "../buttons/CButtonIcon";
+import { keyboartdIsSubmit } from "../../../utils/UKeyboard";
 
 export interface CFormPasswordProps extends CFormCompProps {}
 
-function CFormPassword({ entry, style, outlinedStyling, onChange }: CFormPasswordProps) {
+function CFormPassword({ entry, style, outlinedStyling, onChange, onEnter }: CFormPasswordProps) {
 	const [value, setValue] = useState<string>("");
 	const [show, setShow] = useState<boolean>(false);
 
@@ -49,6 +50,9 @@ function CFormPassword({ entry, style, outlinedStyling, onChange }: CFormPasswor
 						!check(e.target.value) ? e.target.value : false,
 						entry.field ?? "password",
 					);
+				}}
+				onKeyUp={(event) => {
+					if (keyboartdIsSubmit(event)) onEnter();
 				}}
 				styling={outlinedStyling ?? "neutral"}
 				sx={style.shared}

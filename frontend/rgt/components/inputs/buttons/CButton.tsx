@@ -5,12 +5,9 @@ import { memo } from "react";
 import { sxMerger } from "../../../utils/UStyles";
 import type { TQuadStyle, TSize } from "../../../types/TStyles";
 
-export type TButtonStylingTypes = "dark" | "medium" | "light" | "validate" | "cancel";
+export type TButtonStylingTypes =
+	"dark" | "medium" | "light" | "validate" | "cancel" | "transparent";
 export interface CButtonGlobalProps extends GCompProps {
-	bgColor?: string[];
-	bgColorHover?: string[];
-	bgColorDisabled?: string[];
-
 	elevation?: TQuadStyle<number>;
 
 	textColor?: string;
@@ -25,17 +22,7 @@ export interface CButtonGlobalProps extends GCompProps {
 export const CButtonPropCleaner = <_In extends CButtonGlobalProps>(other: _In) => {
 	const cleanedVersion = other;
 
-	[
-		"bgColor",
-		"bgColorHover",
-		"bgColorDisabled",
-		"elevation",
-		"textColor",
-		"textHoverColor",
-		"styling",
-		"padding",
-		"checked",
-	].forEach((key) => {
+	["elevation", "textColor", "textHoverColor", "styling", "padding", "checked"].forEach((key) => {
 		Reflect.deleteProperty(cleanedVersion, key);
 	});
 	return cleanedVersion;

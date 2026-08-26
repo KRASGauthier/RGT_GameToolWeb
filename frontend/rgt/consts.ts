@@ -3,6 +3,7 @@
 export const API_AUTH = "/auth";
 export const API_AUTH_REFRESH = "/refresh";
 export const API_AUTH_LOGOUT = "/logout";
+export const API_AUTH_LOGOUT_EVERYWHERE = "/logout-everywhere";
 
 //USER
 export const API_USER = "/users";
@@ -24,3 +25,4 @@ export const PASSWORD_MAX = 20;
 export const DEFAULT_DEBOUNCED_TIME = 300;
 
 export const LIMITER_LOGIN = TIME_1M;
+export const LIMITER_REGISTER = TIME_1M;

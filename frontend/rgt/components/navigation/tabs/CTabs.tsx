@@ -14,7 +14,6 @@ export interface ITabEntry {
 	display?: string;
 	icon?: ReactElement<SvgIconProps>;
 
-	sub?: ITabEntry[];
 	content?: ReactNode;
 }
 

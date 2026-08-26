@@ -57,6 +57,7 @@ export interface CFormCompProps extends GCompProps {
 	outlinedStyling?: CInputOutlinedStyling;
 
 	onChange: (value: string | boolean, field: string) => void;
+	onEnter: () => void;
 }
 
 export interface CFormProps extends GCompProps {
@@ -107,15 +108,18 @@ function CForm({
 	}
 
 	//====================== EVENT ======================
-	const onChange = (value: string | boolean, field: string) => {
+	const handleOnChange = (value: string | boolean, field: string) => {
 		const copy: TFromDataType = structuredClone(valueObject);
 		copy[field] = value;
 		setValueObject(copy);
 	};
-	const onMatch = (matched: boolean) => {
+	const handleOnMatch = (matched: boolean) => {
 		const copy: TFromDataType = structuredClone(valueObject);
 		copy.match = matched;
 		setValueObject(copy);
+	};
+	const handleOnSend = () => {
+		onSend?.(valueObject);
 	};
 	const isValid = (): boolean => {
 		for (let i = 0; i < entries.length; i++) {
@@ -142,10 +146,11 @@ function CForm({
 						return (
 							<CFormText
 								key={entry.type + "-" + index}
-								onChange={onChange}
+								onChange={handleOnChange}
 								entry={entry}
 								style={style}
 								outlinedStyling={outlinedStyling}
+								onEnter={handleOnSend}
 							/>
 						);
 					case "user":
@@ -157,11 +162,12 @@ function CForm({
 										? (fieldExists ?? {})[entry.field ?? "username"]
 										: undefined
 								}
-								onChange={onChange}
+								onChange={handleOnChange}
 								entry={entry}
 								style={style}
 								outlinedStyling={outlinedStyling}
 								checkAvailable={onUsernameCheck}
+								onEnter={handleOnSend}
 							/>
 						);
 					case "email":
@@ -173,20 +179,22 @@ function CForm({
 										: undefined
 								}
 								key={entry.type + "-" + index}
-								onChange={onChange}
+								onChange={handleOnChange}
 								entry={entry}
 								style={style}
 								outlinedStyling={outlinedStyling}
+								onEnter={handleOnSend}
 							/>
 						);
 					case "password":
 						return (
 							<CFormPassword
 								key={entry.type + "-" + index}
-								onChange={onChange}
+								onChange={handleOnChange}
 								entry={entry}
 								style={style}
 								outlinedStyling={outlinedStyling}
+								onEnter={handleOnSend}
 							/>
 						);
 					case "password-confirm":
@@ -194,11 +202,12 @@ function CForm({
 							<CFormPasswordConfirm
 								key={entry.type + "-" + index}
 								valueObject={valueObject}
-								onChange={onChange}
+								onChange={handleOnChange}
 								entry={entry}
 								style={style}
 								outlinedStyling={outlinedStyling}
-								onMatch={onMatch}
+								onMatch={handleOnMatch}
+								onEnter={handleOnSend}
 							/>
 						);
 				}
@@ -206,9 +215,7 @@ function CForm({
 			})}
 			{finalGlobalError}
 			<CButtonText
-				onClick={() => {
-					onSend?.(valueObject);
-				}}
+				onClick={handleOnSend}
 				disabled={disable || !isValid()}
 				styling={buttonStyling ?? "light"}
 			>

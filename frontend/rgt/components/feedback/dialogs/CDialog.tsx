@@ -4,7 +4,6 @@ import { sxMerger } from "../../../utils/UStyles";
 import { CDialogStyle, type IDialogStyle } from "../../../style/components/feedback/CDialogStyle";
 import { useMemo } from "react";
 import CButtonText from "../../inputs/buttons/CButtonText";
-import { appTheme } from "../../../../src/style/theme";
 import type { TSize } from "../../../types/TStyles";
 
 export interface CDialogProps extends GCompProps, DialogProps {
@@ -28,20 +27,20 @@ function CDialog({ actions, onYes, onNo, children, marginPaper, sx, ...other }: 
 				<DialogActions sx={style.action}>
 					{actions.findIndex((action) => action == "yes") != -1 && (
 						<CButtonText
+							styling="validate"
 							onClick={() => {
 								if (onYes) onYes();
 							}}
-							bgColor={[appTheme.colors.valid[4], appTheme.colors.valid[5]]}
 						>
 							Yes
 						</CButtonText>
 					)}
 					{actions.findIndex((action) => action == "no") != -1 && (
 						<CButtonText
+							styling="cancel"
 							onClick={() => {
 								if (onNo) onNo();
 							}}
-							bgColor={[appTheme.colors.error[4], appTheme.colors.error[5]]}
 						>
 							No
 						</CButtonText>

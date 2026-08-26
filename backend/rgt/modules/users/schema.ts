@@ -39,6 +39,7 @@ const userSchema = new Schema<IUserBackendDB, Model<IUserBackendDB>, IUserBacken
 			trim: true,
 			unique: true,
 			match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "invalid email format"],
+			lowercase: true,
 		},
 		password: {
 			type: String,
@@ -58,6 +59,10 @@ const userSchema = new Schema<IUserBackendDB, Model<IUserBackendDB>, IUserBacken
 		avatar: {
 			type: String,
 		},
+		refreshTokens: {
+			type: [String],
+			defaul: [],
+		},
 		...getDefaultSchema(userCurrentVersion),
 	},
 	{
@@ -73,6 +78,7 @@ userSchema.set("toJSON", {
 		firstName: ret.firstName ? ret.firstName : undefined,
 		lastName: ret.lastName ? ret.lastName : undefined,
 		avatar: ret.avatar ? ret.avatar : undefined,
+		refreshTokens: ret.refreshTokens,
 	}),
 });
 

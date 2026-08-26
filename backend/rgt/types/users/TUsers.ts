@@ -7,4 +7,5 @@ export interface IUserBackend {
 	firstName?: string;
 	lastName?: string;
 	avatar?: string;
+	refreshTokens: string[];
 }

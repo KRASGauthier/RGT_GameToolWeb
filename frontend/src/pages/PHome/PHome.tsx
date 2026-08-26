@@ -5,12 +5,15 @@ import { useEffect, useState } from "react";
 import { type IUserFull } from "../../../rgt/types/data/TUser";
 import { apiUserGetFullSelf } from "../../../rgt/api/user/userAPI";
 import { useNotif } from "../../../rgt/context/app/CAppNotifContext";
+import CButtonText from "../../../rgt/components/inputs/buttons/CButtonText";
+import { useAuth } from "../../../rgt/context/auth/CAuthContext";
 
 export interface PHomeProps extends GCompProps {}
 
 function PHome({}: PHomeProps) {
 	const [userFull, setUserFull] = useState<IUserFull | undefined>(undefined);
 	const { push } = useNotif();
+	const { logout, logoutEverywhere } = useAuth();
 
 	useEffect(() => {
 		apiUserGetFullSelf(setUserFull, push);
@@ -23,6 +26,8 @@ function PHome({}: PHomeProps) {
 			<CText>{userFull.lastName}</CText>
 			<CText>{userFull.email}</CText>
 			<CText>{userFull.username}</CText>
+			<CButtonText onClick={logout}>Logout</CButtonText>
+			<CButtonText onClick={logoutEverywhere}>Logout Everywhere</CButtonText>
 		</Stack>
 	);
 }
