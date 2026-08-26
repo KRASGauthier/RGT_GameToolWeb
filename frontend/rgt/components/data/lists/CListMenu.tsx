@@ -27,6 +27,7 @@ function CListMenu({
 	comps,
 	groups,
 	small,
+	saveID,
 	sx,
 	...other
 }: CListMenuProps) {
@@ -55,6 +56,7 @@ function CListMenu({
 						onValueChange={onValueChange}
 						value={value}
 						group={group}
+						saveID={saveID}
 					/>
 				);
 			})}

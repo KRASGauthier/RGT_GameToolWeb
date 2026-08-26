@@ -9,8 +9,8 @@ import {
 } from "react";
 import type { IAppNotif, IAppNotifContext } from "../../types/TEvents";
 import { Stack } from "@mui/material";
-import CAlert from "../../components/feedback/alerts/CAlert";
 import { appTheme } from "../../../src/style/theme";
+import CAlertNotif from "../../components/feedback/alerts/CAlertNotif";
 
 //====================== CONTEXT ======================
 const notifContext: Context<IAppNotifContext> = createContext<IAppNotifContext>({
@@ -33,7 +33,7 @@ function CAppNotifContext({ children }: CAppNotifContextProps) {
 	const notifs: ReactNode[] = useMemo((): ReactNode[] => {
 		return notifications.map((notif: IAppNotif) => {
 			if (!notif.uid) notif.uid = crypto.randomUUID();
-			return <CAlert sx={{ mt: "5px" }} time={6000} key={notif.uid} notif={notif} />;
+			return <CAlertNotif sx={{ mt: "5px" }} time={6000} key={notif.uid} notif={notif} />;
 		});
 	}, [notifications]);
 

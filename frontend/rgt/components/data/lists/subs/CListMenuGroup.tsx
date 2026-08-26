@@ -13,6 +13,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import CText from "../../../text/CText";
 
+//====================== TYPES ======================
 export type TListMenuGroupData = {
 	value: string;
 	display?: string;
@@ -21,6 +22,24 @@ export type TListMenuGroupData = {
 	icon?: ReactElement;
 };
 
+//====================== LOCAL STORAGE ======================
+const LS_GROUP_OPEN_SUFFIX = "-Opens";
+type TLSListOpens = Record<string, boolean>;
+function setGroupState(saveID: string, name: string, status: boolean) {
+	const data: TLSListOpens = JSON.parse(
+		localStorage.getItem(saveID + LS_GROUP_OPEN_SUFFIX) ?? "{}",
+	);
+	data[name] = status;
+	localStorage.setItem(saveID + LS_GROUP_OPEN_SUFFIX, JSON.stringify(data));
+}
+function getGroupState(saveID: string, name: string): boolean {
+	const data: TLSListOpens = JSON.parse(
+		localStorage.getItem(saveID + LS_GROUP_OPEN_SUFFIX) ?? "{}",
+	);
+	return data[name] ?? false;
+}
+
+//====================== NODE ======================
 export interface CListMenuGroupProps extends CListProps {
 	value: string;
 	group: TListMenuGroupData;
@@ -28,8 +47,16 @@ export interface CListMenuGroupProps extends CListProps {
 	small?: boolean;
 }
 
-function CListMenuGroup({ value, onValueChange, group, small, sx, ...other }: CListMenuGroupProps) {
-	const [open, setOpen] = useState<boolean>(true);
+function CListMenuGroup({
+	value,
+	onValueChange,
+	group,
+	small,
+	saveID,
+	sx,
+	...other
+}: CListMenuGroupProps) {
+	const [open, setOpen] = useState<boolean>(saveID ? getGroupState(saveID, group.value) : true);
 	const style: IListMenuGroupStyle = useMemo(() => {
 		return CListMenuGroupStyle({ group, small });
 	}, [group, small]);
@@ -44,6 +71,7 @@ function CListMenuGroup({ value, onValueChange, group, small, sx, ...other }: CL
 				<CListItemButton
 					onClick={() => {
 						setOpen(!open);
+						if (saveID) setGroupState(saveID, group.value, !open);
 					}}
 					sx={style.groupItemButton}
 				>

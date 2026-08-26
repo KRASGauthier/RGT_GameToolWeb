@@ -23,6 +23,7 @@ function CDrawerMenu({
 	comps,
 	groups,
 	onOpen,
+	saveID,
 	sx,
 	...other
 }: CDrawerMenuProps) {
@@ -38,6 +39,7 @@ function CDrawerMenu({
 				setOpen(value);
 				onOpen?.(value);
 			}}
+			saveID={saveID}
 			{...other}
 		>
 			<CListMenu
@@ -47,6 +49,7 @@ function CDrawerMenu({
 				groups={groups}
 				sx={{ mt: "10px" }}
 				small={!open}
+				saveID={saveID}
 			></CListMenu>
 		</CDrawerMini>
 	);

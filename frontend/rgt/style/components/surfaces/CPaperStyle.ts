@@ -8,7 +8,7 @@ import {
 } from "../../../utils/UStyles";
 import type { TQuadStyle } from "../../../types/TStyles";
 
-export type TPaperStyling = "normal" | "normal-wavy";
+export type TPaperStyling = "normal" | "normal-wavy" | "grey";
 
 export interface TPaperStyle {
 	main: SxProps<Theme>;
@@ -35,6 +35,13 @@ export const CPaperStyle = ({ elevation, styling, padding }: CPaperStyleProps): 
 				appTheme.colors.quaternary[3],
 				appTheme.colors.quaternary[4],
 			],
+			undefined,
+			"linear",
+			165,
+		);
+	if (styling == "grey")
+		background = colorGetBackground(
+			[appTheme.colors.greys[4], appTheme.colors.greys[3]],
 			undefined,
 			"linear",
 			165,

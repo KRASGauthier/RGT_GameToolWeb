@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, type ReactNode } from "react";
 import type { CDialogProps } from "./CDialog";
 import CDialog from "./CDialog";
 import {
@@ -8,19 +8,22 @@ import {
 import { sxMerger } from "../../../utils/UStyles";
 import { Box, Stack } from "@mui/material";
 import HideImageIcon from "@mui/icons-material/HideImage";
-
 export interface CDialogImageProps extends CDialogProps {
 	src: string;
 	editable?: boolean;
 	aspectRatio?: string;
 	onEdit?: (file: File) => void;
+
+	extras?: ReactNode | ReactNode[];
 }
 
 function CDialogImage({
 	src,
+	open,
 	editable = false,
 	aspectRatio = "16 / 9",
 	onEdit,
+	extras,
 	sx,
 	...other
 }: CDialogImageProps) {
@@ -68,19 +71,22 @@ function CDialogImage({
 	);
 
 	return (
-		<CDialog marginPaper={0} {...other} maxWidth={false}>
-			<Stack direction={"column"}>
-				{src && coreNode}
-				{!src && emptyNode}
-				<input
-					ref={inputRef}
-					type="file"
-					accept="image/*"
-					hidden
-					onChange={handleImageSelected}
-				/>
-			</Stack>
-		</CDialog>
+		<>
+			<CDialog marginPaper={0} open={open} {...other} maxWidth={false}>
+				{extras}
+				<Stack direction={"column"}>
+					{src && coreNode}
+					{!src && emptyNode}
+					<input
+						ref={inputRef}
+						type="file"
+						accept="image/*"
+						hidden
+						onChange={handleImageSelected}
+					/>
+				</Stack>
+			</CDialog>
+		</>
 	);
 }
 

@@ -4,14 +4,8 @@ export interface ICAlertStyle {
 	main: SxProps<Theme>;
 }
 
-export const CAlertStyle = (fadeoutSpeed: number): ICAlertStyle => {
+export const CAlertStyle = (): ICAlertStyle => {
 	return {
-		main: {
-			transition: (theme) => {
-				return theme.transitions.create(["opacity"], {
-					duration: fadeoutSpeed,
-				});
-			},
-		},
+		main: {},
 	};
 };

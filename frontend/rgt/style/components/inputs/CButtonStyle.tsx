@@ -6,8 +6,85 @@ import {
 	sizeToString,
 } from "../../../utils/UStyles";
 import { appTheme } from "../../../../src/style/theme";
-import type { CButtonGlobalProps } from "../../../components/inputs/buttons/CButton";
+import type {
+	CButtonGlobalProps,
+	TButtonStylingTypes,
+} from "../../../components/inputs/buttons/CButton";
 
+//--------------------------------------------------
+//                    STYLING
+//--------------------------------------------------
+interface IButtonStyling {
+	normal: string[];
+	hovered: string[];
+	disabled: string[];
+	type?: "linear" | "radial";
+}
+type TButtonStyling = Record<TButtonStylingTypes, IButtonStyling>;
+
+const stylingContent: TButtonStyling = {
+	dark: {
+		normal: [appTheme.colors.primary[2], appTheme.colors.quaternary[3]],
+		hovered: [
+			appTheme.colors.primary[2],
+			appTheme.colors.secondary[2],
+			appTheme.colors.quinary[3],
+		],
+		disabled: [appTheme.colors.greys[2], appTheme.colors.greys[3]],
+	},
+	medium: {
+		normal: [appTheme.colors.primary[4], appTheme.colors.quaternary[5]],
+		hovered: [
+			appTheme.colors.primary[4],
+			appTheme.colors.secondary[4],
+			appTheme.colors.quinary[5],
+		],
+		disabled: [appTheme.colors.greys[4], appTheme.colors.greys[5]],
+	},
+	light: {
+		normal: [appTheme.colors.primary[6], appTheme.colors.quaternary[7]],
+		hovered: [
+			appTheme.colors.primary[6],
+			appTheme.colors.secondary[6],
+			appTheme.colors.quinary[7],
+		],
+		disabled: [appTheme.colors.greys[6], appTheme.colors.greys[7]],
+	},
+	validate: {
+		normal: [appTheme.colors.valid[3], appTheme.colors.valid[4], appTheme.colors.valid[3]],
+		hovered: [
+			appTheme.colors.valid[5],
+			appTheme.colors.secondary[6],
+			appTheme.colors.quinary[5],
+		],
+		disabled: [appTheme.colors.greys[5], appTheme.colors.greys[6], appTheme.colors.greys[5]],
+	},
+	cancel: {
+		normal: [appTheme.colors.error[3], appTheme.colors.error[4], appTheme.colors.error[3]],
+		hovered: [
+			appTheme.colors.error[5],
+			appTheme.colors.secondary[6],
+			appTheme.colors.quinary[5],
+		],
+		disabled: [appTheme.colors.greys[5], appTheme.colors.greys[6], appTheme.colors.greys[5]],
+	},
+	transparent: {
+		normal: [
+			appTheme.colors.black + Math.trunc(255 * 0.1).toString(16),
+			appTheme.colors.black + "00",
+		],
+		hovered: [
+			appTheme.colors.black + Math.trunc(255 * 0.35).toString(16),
+			appTheme.colors.black + Math.trunc(255 * 0.25).toString(16),
+		],
+		disabled: [appTheme.colors.greys[5], appTheme.colors.greys[6]],
+		type: "radial",
+	},
+};
+
+//--------------------------------------------------
+//                      SX
+//--------------------------------------------------
 export interface IButtonStyle {
 	main: SxProps<Theme>;
 	text: SxProps<Theme>;
@@ -18,10 +95,6 @@ export interface IButtonStyle {
 export interface IButtonStyleProps extends CButtonGlobalProps {}
 
 export const CButtonStyle = ({
-	bgColor,
-	bgColorHover,
-	bgColorDisabled,
-
 	elevation,
 
 	textColor,
@@ -33,80 +106,24 @@ export const CButtonStyle = ({
 	styling = "light",
 }: IButtonStyleProps): IButtonStyle => {
 	//====================== COLOR ======================
-	if (!bgColor || bgColor.length == 0) {
-		bgColor = [appTheme.colors.primary[4], appTheme.colors.quaternary[5]];
-		if (styling == "dark")
-			bgColor = [appTheme.colors.primary[2], appTheme.colors.quaternary[3]];
-		else if (styling == "light")
-			bgColor = [appTheme.colors.primary[6], appTheme.colors.quaternary[7]];
-		else if (styling == "validate")
-			bgColor = [
-				appTheme.colors.valid[3],
-				appTheme.colors.valid[4],
-				appTheme.colors.valid[3],
-			];
-		else if (styling == "cancel")
-			bgColor = [
-				appTheme.colors.error[3],
-				appTheme.colors.error[4],
-				appTheme.colors.error[3],
-			];
-	}
-	const background = colorGetBackground(bgColor, undefined, "linear", 145);
-
-	if (!bgColorHover || bgColorHover.length == 0) {
-		bgColorHover = [
-			appTheme.colors.primary[4],
-			appTheme.colors.secondary[4],
-			appTheme.colors.quinary[5],
-		];
-		if (styling == "dark")
-			bgColorHover = [
-				appTheme.colors.primary[2],
-				appTheme.colors.secondary[2],
-				appTheme.colors.quinary[3],
-			];
-		else if (styling == "light")
-			bgColorHover = [
-				appTheme.colors.primary[6],
-				appTheme.colors.secondary[6],
-				appTheme.colors.quinary[7],
-			];
-		else if (styling == "validate")
-			bgColorHover = [
-				appTheme.colors.valid[5],
-				appTheme.colors.secondary[6],
-				appTheme.colors.quinary[5],
-			];
-		else if (styling == "cancel")
-			bgColorHover = [
-				appTheme.colors.error[5],
-				appTheme.colors.secondary[6],
-				appTheme.colors.quinary[5],
-			];
-	}
-	const backgroundHover = colorGetBackground(bgColorHover, undefined, "linear", 145);
-
-	if (!bgColorDisabled || bgColorDisabled.length == 0) {
-		bgColorDisabled = [appTheme.colors.greys[4], appTheme.colors.greys[5]];
-		if (styling == "dark")
-			bgColorDisabled = [appTheme.colors.greys[2], appTheme.colors.greys[3]];
-		else if (styling == "light")
-			bgColorDisabled = [appTheme.colors.greys[6], appTheme.colors.greys[7]];
-		else if (styling == "validate")
-			bgColorDisabled = [
-				appTheme.colors.greys[5],
-				appTheme.colors.greys[6],
-				appTheme.colors.greys[5],
-			];
-		else if (styling == "cancel")
-			bgColorDisabled = [
-				appTheme.colors.greys[5],
-				appTheme.colors.greys[6],
-				appTheme.colors.greys[5],
-			];
-	}
-	const backgroundDisabled = colorGetBackground(bgColorDisabled, undefined, "linear", 145);
+	const background = colorGetBackground(
+		stylingContent[styling].normal,
+		undefined,
+		stylingContent[styling].type ?? "linear",
+		145,
+	);
+	const backgroundHover = colorGetBackground(
+		stylingContent[styling].hovered,
+		undefined,
+		stylingContent[styling].type ?? "linear",
+		145,
+	);
+	const backgroundDisabled = colorGetBackground(
+		stylingContent[styling].disabled,
+		undefined,
+		stylingContent[styling].type ?? "linear",
+		145,
+	);
 
 	//====================== TEXT ======================
 	if (!textHoverColor && textColor) textHoverColor = textColor;
@@ -199,6 +216,42 @@ export const CButtonStyle = ({
 
 			"&:hover::before": {
 				opacity: 0,
+			},
+		},
+	};
+};
+
+//--------------------------------------------------
+//                     PRE-MADE
+//------------------------------------------------	--
+export interface IButtonCopyStyle {
+	main: SxProps<Theme>;
+	button: SxProps<Theme>;
+	over: SxProps<Theme>;
+}
+
+export interface CButtonCopyStyleProps {
+	copied: boolean;
+}
+
+export const CButtonCopyStyle = ({ copied }: CButtonCopyStyleProps): IButtonCopyStyle => {
+	return {
+		main: {
+			position: "relative",
+		},
+		button: {},
+		over: {
+			pointerEvents: copied ? "auto" : "none",
+			opacity: copied ? 1 : 0,
+			position: "absolute",
+			inset: 0,
+			p: 0,
+			zIndex: 1,
+
+			transition: (theme: Theme) => {
+				return theme.transitions.create(["opacity"], {
+					duration: appTheme.animations.timing.medium_slow,
+				});
 			},
 		},
 	};

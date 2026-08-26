@@ -1,7 +1,7 @@
 import { Box, Stack, type BoxProps } from "@mui/material";
 import type { GCompProps } from "../shared/ccommon";
 import { CImageStyle, type IImageStyle } from "../../style/components/images/CImageStyle";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { sxMerger } from "../../utils/UStyles";
 import HideImageIcon from "@mui/icons-material/HideImage";
 import CDialogImage from "../feedback/dialogs/CDialogImage";
@@ -15,6 +15,7 @@ export interface CImageProps extends GCompProps, BoxProps {
 	editable?: boolean;
 	onEdit?: (file: File) => void;
 	expandable?: boolean;
+	extras?: ReactNode | ReactNode[];
 }
 
 function CImage({
@@ -27,6 +28,7 @@ function CImage({
 	expandable = false,
 
 	onEdit,
+	extras,
 	sx,
 	...other
 }: CImageProps) {
@@ -75,6 +77,7 @@ function CImage({
 				setExpended(false);
 			}}
 			open={expended}
+			extras={extras}
 		></CDialogImage>
 	);
 

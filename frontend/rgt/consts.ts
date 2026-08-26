@@ -25,3 +25,4 @@ export const PASSWORD_MAX = 20;
 export const DEFAULT_DEBOUNCED_TIME = 300;
 
 export const LIMITER_LOGIN = TIME_1M;
+export const LIMITER_REGISTER = TIME_1M;
