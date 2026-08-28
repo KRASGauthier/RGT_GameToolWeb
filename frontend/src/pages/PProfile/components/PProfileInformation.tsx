@@ -10,6 +10,7 @@ import type { IUserFull } from "../../../../rgt/types/data/TUser";
 import { PProfileStyle } from "../../../style/pages/profiles/PProfileStyle";
 import { API_PROFILE } from "../../../consts";
 import { apiCheckReponse, apiPatchData } from "../../../../rgt/api/shared";
+import { appTheme } from "../../../style/theme";
 
 export interface PProfileInformationProps extends GCompProps {}
 
@@ -54,33 +55,33 @@ function PProfileInformation({}: PProfileInformationProps) {
 	return (
 		<Stack sx={style.main}>
 
-			<CText>First Name:</CText>
 			<CTextFieldOutlined
-				//label="First Name"
+				label="First Name"
 				value={isEditing ? firstName : user?.firstName || ""}
 				onChange={(e) => setFirstName(e.target.value)}
 				disabled={!isEditing}
 				sx={style.input}
+				styling="neutral"		
 				fullWidth
 			/>
 
-			<CText>Last Name:</CText>
 			<CTextFieldOutlined
-				//label="Last Name"
+				label="Last Name"
 				value={isEditing ? lastName : user?.lastName || ""}
 				onChange={(e) => setLastName(e.target.value)}
 				disabled={!isEditing}
 				sx={style.input}
+				styling="neutral"		
 				fullWidth
 			/>
 
-			<CText>Username:</CText>
 			<CTextFieldOutlined
-				//label="Username"
+				label="Username"
 				value={isEditing ? username : user?.username || ""}
 				onChange={(e) => setUsername(e.target.value)}
 				disabled={!isEditing}
 				sx={style.input}
+				styling="neutral"		
 				fullWidth
 			/>
 			
@@ -91,10 +92,10 @@ function PProfileInformation({}: PProfileInformationProps) {
 					</CButtonText>
 				) : (
 					<>
-						<CButtonText onClick={handleCancel} sx={{ color: "error.main" }}>
+						<CButtonText onClick={handleCancel} styling="cancel">
 							Cancel
 						</CButtonText>
-						<CButtonText onClick={handleSave} sx={{ color: "primary.main" }}>
+						<CButtonText onClick={handleSave}>
 							Save Changes
 						</CButtonText>
 					</>
