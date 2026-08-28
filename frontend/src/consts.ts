@@ -21,6 +21,7 @@ export const ROUTE_USERS_ME = "/users/me";
 //====================== API ======================
 export const API_BASE = "http://localhost:8082/API/";
 export const API_BASE_SIMPLE = "/API";
+export const API_PROFILE = "/profile";
 
 //--------------------- Shared ---------------------
 export const STATIC_IMAGES = "/images";
