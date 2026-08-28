@@ -1,33 +1,70 @@
-import { Stack } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 import type { GCompProps } from "../../../rgt/components/shared/ccommon";
-import CText from "../../../rgt/components/text/CText";
-import { useEffect, useState } from "react";
-import { type IUserFull } from "../../../rgt/types/data/TUser";
-import { apiUserGetFullSelf } from "../../../rgt/api/user/userAPI";
-import { useNotif } from "../../../rgt/context/app/CAppNotifContext";
-import CButtonText from "../../../rgt/components/inputs/buttons/CButtonText";
+import CAvatar from "../../../rgt/components/images/CAvatar";
+import CButtonIcon from "../../../rgt/components/inputs/buttons/CButtonIcon";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PersonIcon from "@mui/icons-material/Person";
+import { appTheme } from "../../style/theme";
+import CTitle from "../../../rgt/components/text/CTitle";
 import { useAuth } from "../../../rgt/context/auth/CAuthContext";
+import CSplitterRow from "../../../rgt/components/splitters/CSplitterRow";
+import AddIcon from "@mui/icons-material/Add";
+import type { ReactNode } from "react";
 
 export interface PHomeProps extends GCompProps {}
 
 function PHome({}: PHomeProps) {
-	const [userFull, setUserFull] = useState<IUserFull | undefined>(undefined);
-	const { push } = useNotif();
-	const { logout, logoutEverywhere } = useAuth();
+	const { user, logout } = useAuth();
 
-	useEffect(() => {
-		apiUserGetFullSelf(setUserFull, push);
-	}, [setUserFull, push]);
+	const addButton: ReactNode = (
+		<Grid>
+			<CButtonIcon icon={<AddIcon />} />
+		</Grid>
+	);
 
-	if (!userFull) return <CText>No user</CText>;
+	if (!user) return <>No user</>;
+
 	return (
-		<Stack>
-			<CText>{userFull.firstName}</CText>
-			<CText>{userFull.lastName}</CText>
-			<CText>{userFull.email}</CText>
-			<CText>{userFull.username}</CText>
-			<CButtonText onClick={logout}>Logout</CButtonText>
-			<CButtonText onClick={logoutEverywhere}>Logout Everywhere</CButtonText>
+		<Stack sx={{ flex: 1 }}>
+			<Stack
+				sx={{ mx: "15px", mt: "10px", alignItems: "center" }}
+				spacing={appTheme.shapes.spacing.main}
+				direction={"row"}
+			>
+				<CAvatar user={user} />
+				<CTitle size="sm" weight={5}>
+					Welcome back:{" "}
+				</CTitle>
+				<CTitle size="sm" weight={7} sx={{ color: appTheme.colors.tertiary[7] }}>
+					{user.username}{" "}
+				</CTitle>
+				<CButtonIcon
+					styling="light"
+					sx={{ ml: "auto !important" }}
+					padding={"5px"}
+					icon={<PersonIcon sx={{ fontSize: appTheme.fonts.title.size.sm }} />}
+				/>
+				<CButtonIcon
+					styling="cancel"
+					onClick={logout}
+					padding={"5px"}
+					icon={<LogoutIcon sx={{ fontSize: appTheme.fonts.title.size.sm }} />}
+				/>
+			</Stack>
+			<Stack direction="row" sx={{ mx: "15px", flex: 1 }}>
+				<Stack direction={"column"} sx={{ mt: "20px", flex: 1 }}>
+					<CTitle size="sm" weight={7}>
+						Projects
+					</CTitle>
+					<Grid sx={{ flex: 1 }}>{addButton}</Grid>
+				</Stack>
+				<CSplitterRow
+					color={appTheme.colors.primary[2]}
+					elevation={20}
+					sx={{ my: "auto" }}
+				/>
+				<Stack sx={{ flex: 1 }} direction={"row"}></Stack>
+			</Stack>
 		</Stack>
 	);
 }
