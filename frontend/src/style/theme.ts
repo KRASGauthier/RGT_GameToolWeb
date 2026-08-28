@@ -127,6 +127,7 @@ export const appTheme: IAppTheme = {
 
 	shapes: {
 		radius: {
+			tiny: "5px",
 			small: "10px",
 			medium: "20px",
 			large: "30px",
@@ -194,6 +195,7 @@ export const appTheme: IAppTheme = {
 
 	layers: {
 		absolute: 10000,
+		aboveAbsolute: 1000000,
 	},
 };
 

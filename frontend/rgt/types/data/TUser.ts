@@ -5,6 +5,7 @@ export interface IUserBase {
 	uid: string;
 	username: string;
 	avatar?: string;
+	initials?: string;
 }
 
 export interface IUserTokenMin {

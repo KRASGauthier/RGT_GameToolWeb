@@ -83,10 +83,16 @@ userSchema.set("toJSON", {
 });
 
 userSchema.method("getUserBase", function (): IUserBase {
+	let initials: string = "";
+	if (this.firstName) initials += this.firstName.charAt(0).toUpperCase();
+	if (this.lastName) initials += this.lastName.charAt(0).toUpperCase();
+	if (!initials) initials = this.username.charAt(0).toUpperCase();
+
 	return {
 		uid: this._id.toString(),
 		username: this.username,
 		avatar: this.avatar,
+		initials: initials,
 	};
 });
 

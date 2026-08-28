@@ -1,18 +1,29 @@
 import type { SxProps, Theme } from "@mui/material";
 import type { CSplitterPosition } from "../../../components/splitters/CSplitter";
 import { appTheme } from "../../../../src/style/theme";
+import { shadowGenerate } from "../../../utils/UStyles";
 
 export interface TSplitterStyle {
 	main: SxProps<Theme>;
 }
 
-export const CSplitterStyle = (
-	position: CSplitterPosition,
-	size: number,
-	secondSize: string | number,
-	spacing: string | number,
-	color?: string,
-): TSplitterStyle => {
+export interface CSplitterStyleProps {
+	position: CSplitterPosition;
+	size: number;
+	secondSize: string | number;
+	spacing: string | number;
+	color?: string;
+	elevation: number;
+}
+
+export const CSplitterStyle = ({
+	position,
+	size,
+	secondSize,
+	spacing,
+	color,
+	elevation,
+}: CSplitterStyleProps): TSplitterStyle => {
 	if (position == "row") {
 		return {
 			main: {
@@ -22,6 +33,8 @@ export const CSplitterStyle = (
 
 				backgroundColor: color ? color : appTheme.colors.greys[5],
 				borderRadius: appTheme.shapes.radius.small,
+				boxShadow: shadowGenerate(elevation),
+				overflow: "visible",
 			},
 		};
 	}
@@ -33,6 +46,8 @@ export const CSplitterStyle = (
 
 			backgroundColor: color ? color : appTheme.colors.greys[5],
 			borderRadius: appTheme.shapes.radius.small,
+			boxShadow: shadowGenerate(elevation),
+			overflow: "visible",
 		},
 	};
 };
