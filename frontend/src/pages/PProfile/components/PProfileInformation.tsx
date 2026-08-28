@@ -1,6 +1,5 @@
 import type { GCompProps } from "../../../../rgt/components/shared/ccommon";
 import { Stack } from "@mui/material";
-import CText from "../../../../rgt/components/text/CText";
 import CTextFieldOutlined from "../../../../rgt/components/inputs/text/CTextFieldOutlined";
 import CButtonText from "../../../../rgt/components/inputs/buttons/CButtonText";
 import { useState, useEffect } from "react";
@@ -10,12 +9,10 @@ import type { IUserFull } from "../../../../rgt/types/data/TUser";
 import { PProfileStyle } from "../../../style/pages/profiles/PProfileStyle";
 import { API_PROFILE } from "../../../consts";
 import { apiCheckReponse, apiPatchData } from "../../../../rgt/api/shared";
-import { appTheme } from "../../../style/theme";
 
 export interface PProfileInformationProps extends GCompProps {}
 
 function PProfileInformation({}: PProfileInformationProps) {
-
 	const { push } = useNotif();
 	const [user, setUser] = useState<IUserFull | undefined>(undefined);
 	const [firstName, setFirstName] = useState("");
@@ -36,8 +33,10 @@ function PProfileInformation({}: PProfileInformationProps) {
 		setUsername(user.username);
 		setIsEditing(true);
 	};
-	
-	const handleCancel = () => {setIsEditing(false)};
+
+	const handleCancel = () => {
+		setIsEditing(false);
+	};
 
 	const handleSave = async () => {
 		if (!user) return;
@@ -54,14 +53,13 @@ function PProfileInformation({}: PProfileInformationProps) {
 
 	return (
 		<Stack sx={style.main}>
-
 			<CTextFieldOutlined
 				label="First Name"
 				value={isEditing ? firstName : user?.firstName || ""}
 				onChange={(e) => setFirstName(e.target.value)}
 				disabled={!isEditing}
 				sx={style.input}
-				styling="neutral"		
+				styling="neutral"
 				fullWidth
 			/>
 
@@ -71,7 +69,7 @@ function PProfileInformation({}: PProfileInformationProps) {
 				onChange={(e) => setLastName(e.target.value)}
 				disabled={!isEditing}
 				sx={style.input}
-				styling="neutral"		
+				styling="neutral"
 				fullWidth
 			/>
 
@@ -81,23 +79,19 @@ function PProfileInformation({}: PProfileInformationProps) {
 				onChange={(e) => setUsername(e.target.value)}
 				disabled={!isEditing}
 				sx={style.input}
-				styling="neutral"		
+				styling="neutral"
 				fullWidth
 			/>
-			
+
 			<Stack direction="row" sx={style.buttons}>
 				{!isEditing ? (
-					<CButtonText onClick={handleEdit}>
-						Edit Profile
-					</CButtonText>
+					<CButtonText onClick={handleEdit}>Edit Profile</CButtonText>
 				) : (
 					<>
 						<CButtonText onClick={handleCancel} styling="cancel">
 							Cancel
 						</CButtonText>
-						<CButtonText onClick={handleSave}>
-							Save Changes
-						</CButtonText>
+						<CButtonText onClick={handleSave}>Save Changes</CButtonText>
 					</>
 				)}
 			</Stack>

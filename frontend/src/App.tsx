@@ -32,7 +32,6 @@ function App() {
 									element={<PProject />}
 								/>
 							</Route>
-							<Route path={EAppMenus.PROFILE} element={<PProfile />} />
 						</Route>
 					</Routes>
 				</CAuthContext>

@@ -13,21 +13,21 @@ import { apiCheckReponse, apiPatchData } from "../../../../rgt/api/shared";
 
 export interface PProfileInformationProps extends GCompProps {}
 
-
 function PProfileContact({}: PProfileInformationProps) {
+	const { push } = useNotif();
+	const [user, setUser] = useState<IUserFull | undefined>(undefined);
+	const style = PProfileStyle();
+	const [email, setEmail] = useState("");
+	const [isEditing, setIsEditing] = useState(false);
 
-    const { push } = useNotif();
-    const [user, setUser] = useState<IUserFull | undefined>(undefined);
-    const style = PProfileStyle();
-    const [email, setEmail] = useState("");
-    const [isEditing, setIsEditing] = useState(false);
+	useEffect(() => {
+		apiUserGetFullSelf(setUser, push);
+	}, [push]);
 
-    useEffect(() => {
-            apiUserGetFullSelf(setUser, push);
-        }, [push]);
-
-    const handleCancel = () => {setIsEditing(false)};
-    const handleEdit = () => {
+	const handleCancel = () => {
+		setIsEditing(false);
+	};
+	const handleEdit = () => {
 		if (!user) return;
 		setEmail(user.email || "");
 		setIsEditing(true);
@@ -47,8 +47,8 @@ function PProfileContact({}: PProfileInformationProps) {
 		push({ severity: "success", message: "Email updated." });
 	};
 
-    return (
-        <Stack sx={style.main}>
+	return (
+		<Stack sx={style.main}>
 			<CText>Email:</CText>
 			<CTextFieldOutlined
 				value={isEditing ? email : user?.email || ""}
@@ -58,11 +58,9 @@ function PProfileContact({}: PProfileInformationProps) {
 				fullWidth
 			/>
 
-            <Stack direction="row" sx={style.buttons}>
+			<Stack direction="row" sx={style.buttons}>
 				{!isEditing ? (
-					<CButtonText onClick={handleEdit}>
-						Edit Profile
-					</CButtonText>
+					<CButtonText onClick={handleEdit}>Edit Profile</CButtonText>
 				) : (
 					<>
 						<CButtonText onClick={handleCancel} sx={{ color: "error.main" }}>
@@ -74,8 +72,7 @@ function PProfileContact({}: PProfileInformationProps) {
 					</>
 				)}
 			</Stack>
-
-        </Stack>
-    );
+		</Stack>
+	);
 }
 export default PProfileContact;

@@ -1,11 +1,7 @@
 import type { GPageProps } from "../../../rgt/pages/shared/pageCommon";
 import { Stack } from "@mui/material";
 import CDrawerMenu from "../../../rgt/components/navigation/drawers/CDrawerMenu";
-import {
-	InfoRounded,
-	ContactMailRounded,
-	SecurityRounded,
-} from "@mui/icons-material";
+import { InfoRounded, ContactMailRounded, SecurityRounded } from "@mui/icons-material";
 import { useState } from "react";
 import PProfileInformation from "./components/PProfileInformation";
 import PProfileContact from "./components/PProfileContact";
@@ -36,11 +32,10 @@ const profileMenuItems = [
 ];
 
 function PProfile({}: PProfileProps) {
-	
 	const [currentMenu, setCurrentMenu] = useState<string>("Profile Page");
 
 	return (
-		<Stack direction="row" sx={{ position: "fixed", inset: 0 }}>
+		<Stack direction="row" sx={{ flex: 1 }}>
 			<CDrawerMenu
 				value={currentMenu}
 				onValueChange={setCurrentMenu}
@@ -48,10 +43,12 @@ function PProfile({}: PProfileProps) {
 				groups={[]}
 			/>
 			<Stack sx={{ flex: 1, p: 2 }}>
-				<CTitle size="md" weight={6} sx={{textTransform: "capitalize"}}>{currentMenu}</CTitle>
+				<CTitle size="md" weight={6} sx={{ textTransform: "capitalize" }}>
+					{currentMenu}
+				</CTitle>
 				{currentMenu === "information" && <PProfileInformation />}
 				{currentMenu === "contact" && <PProfileContact />}
-				{currentMenu === "security" && <PProfileSecurity/>}
+				{currentMenu === "security" && <PProfileSecurity />}
 			</Stack>
 		</Stack>
 	);

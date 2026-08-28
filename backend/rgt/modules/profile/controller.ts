@@ -16,25 +16,10 @@ export const getUserSelfFull = async (req: Request, res: Response) => {
 export const patchUserSelf = async (req: Request, res: Response) => {
 	if (!req.user) throw { code: 400, message: "Missing user id" };
 
-	const { firstName, lastName, username, email } = req.body;
-
-	const update: {
-		firstName?: string;
-		lastName?: string;
-		username?: string;
-		email?: string;
-	} = {};
-
-	if (firstName !== undefined) update.firstName = firstName.trim();
-	if (lastName !== undefined) update.lastName = lastName.trim();
-	if (username !== undefined) update.username = username.trim();
-	if (email !== undefined) update.email = email.trim();
-
-	const updatedUser = await User.findByIdAndUpdate(
-		req.user,
-		update,
-		{ new: true, runValidators: true }
-	);
+	const updatedUser = await User.findByIdAndUpdate(req.user, req.body, {
+		new: true,
+		runValidators: true,
+	});
 
 	if (!updatedUser) throw { code: 404, message: "User not found" };
 

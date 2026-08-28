@@ -8,7 +8,9 @@ export interface PProfileSecurityProps extends GCompProps {}
 function PProfileSecurity({}: PProfileSecurityProps) {
 	return (
 		<Stack sx={{ p: 2, gap: 2 }}>
-			<CText size="lg" weight="bold">Security Settings</CText>
+			<CText size="lg" weight={6}>
+				Security Settings
+			</CText>
 			<CText>Last password change: 2024-01-15</CText>
 			<CButtonText>Change Password</CButtonText>
 			<CButtonText>Save</CButtonText>
