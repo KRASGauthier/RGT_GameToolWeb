@@ -49,6 +49,9 @@ function PHome({}: PHomeProps) {
 					{user.username}{" "}
 				</CTitle>
 				<CButtonIcon
+					onClick={() => {
+						navigate(ROUTE_PROFILE);
+					}}
 					styling="light"
 					sx={{ ml: "auto !important" }}
 					padding={"5px"}

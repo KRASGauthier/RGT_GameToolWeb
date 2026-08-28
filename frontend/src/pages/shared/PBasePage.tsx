@@ -13,7 +13,6 @@ import {
 import type { TListMenuGroupData } from "../../../rgt/components/data/lists/subs/CListMenuGroup";
 import { EAppMenus } from "../../consts";
 
-
 export interface PBasePageProps extends GPageProps {}
 
 const groups: TListMenuGroupData[] = [

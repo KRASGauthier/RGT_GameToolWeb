@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { API_BASE_SIMPLE, API_PROFILE, STATIC_IMAGES } from "./consts.js";
+import { API_BASE_SIMPLE, STATIC_IMAGES } from "./consts.js";
 import { checkMongoDB } from "../rgt/middleware/db.js";
 import userRouter from "../rgt/modules/users/router.js";
 import profileRouter from "../rgt/modules/profile/router.js";
@@ -34,7 +34,7 @@ app.use((req, _res, next) => {
 });
 app.use(API_BASE_SIMPLE + API_AUTH, authRouter);
 app.use(API_BASE_SIMPLE + API_USER, userRouter);
-app.use(API_BASE_SIMPLE + API_PROFILE, profileRouter);
+app.use(API_BASE_SIMPLE + "/profile", profileRouter);
 
 app.use(errorMiddleware);
 
