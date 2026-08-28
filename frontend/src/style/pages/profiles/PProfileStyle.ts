@@ -1,4 +1,5 @@
 import type { SxProps, Theme } from "@mui/material";
+import { appTheme } from "../../theme";
 
 export interface IPProfileStyle {
 	main: SxProps<Theme>;
@@ -10,8 +11,8 @@ export interface IPProfileStyle {
 export const PProfileStyle = (): IPProfileStyle => {
 	return {
 		main: {
-			p: 2,
-			gap: 2,
+			p: appTheme.shapes.spacing.medium,
+			gap: "20px",
 		},
 		form: {
 			gap: 2,

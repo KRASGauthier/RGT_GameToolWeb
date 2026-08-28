@@ -10,24 +10,25 @@ import { useState } from "react";
 import PProfileInformation from "./components/PProfileInformation";
 import PProfileContact from "./components/PProfileContact";
 import PProfileSecurity from "./components/PProfileSecurity";
+import CTitle from "../../../rgt/components/text/CTitle";
 
 export interface PProfileProps extends GPageProps {}
 
 const profileMenuItems = [
 	{
-		value: "Information",
+		value: "information",
 		display: "Information",
 		icon: <InfoRounded />,
 		color: { normal: "secondary" },
 	},
 	{
-		value: "Contact",
+		value: "contact",
 		display: "Contact",
 		icon: <ContactMailRounded />,
 		color: { normal: "secondary" },
 	},
 	{
-		value: "Security",
+		value: "security",
 		display: "Security",
 		icon: <SecurityRounded />,
 		color: { normal: "secondary" },
@@ -47,10 +48,10 @@ function PProfile({}: PProfileProps) {
 				groups={[]}
 			/>
 			<Stack sx={{ flex: 1, p: 2 }}>
-				<h1>{currentMenu}</h1>
-				{currentMenu === "Information" && <PProfileInformation />}
-				{currentMenu === "Contact" && <PProfileContact />}
-				{currentMenu === "Security" && <PProfileSecurity/>}
+				<CTitle size="md" weight={6} sx={{textTransform: "capitalize"}}>{currentMenu}</CTitle>
+				{currentMenu === "information" && <PProfileInformation />}
+				{currentMenu === "contact" && <PProfileContact />}
+				{currentMenu === "security" && <PProfileSecurity/>}
 			</Stack>
 		</Stack>
 	);
