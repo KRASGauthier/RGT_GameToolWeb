@@ -55,6 +55,16 @@ export const postUserAvailable = async (req: Request, res: Response) => {
 //--------------------------------------------------
 //                      INFO
 //--------------------------------------------------
+export const getUserSelf = async (req: Request, res: Response) => {
+	if (!req.user) throw { code: 400, message: "Missing user id" };
+
+	const user = await User.findById(req.user);
+	if (!user) throw { code: 404, message: "User not found" };
+
+	res.status(200).json({
+		user: user.getUserFull(),
+	} as IAPIUserGetSelfFull);
+};
 export const getUserSelfFull = async (req: Request, res: Response) => {
 	if (!req.user) throw { code: 400, message: "Missing user id" };
 

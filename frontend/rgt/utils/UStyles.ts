@@ -267,8 +267,8 @@ export function shadowGenerate(value: number, inset?: boolean, invert?: boolean)
 	value = value / 100;
 
 	return (
-		`${inset ? "inset" : ""} 0px ${(invert ? -1 : 1) * 10 * value}px ${24 * value}px -2px rgba(0, 0, 0, ${value}), ` +
-		`${inset ? "inset" : ""} 0px ${(invert ? -1 : 1) * 6 * value}px ${42 * value}px 0px rgba(0, 0, 0, ${0.45 * value}), ` +
-		`${inset ? "inset" : ""} 0px ${(invert ? -1 : 1) * 2 * value}px ${70 * value}px 0px rgba(0, 0, 0, ${0.35 * value})`
+		`${inset ? "inset " : ""}0px ${(invert ? -1 : 1) * 10 * value}px ${24 * value}px -2px rgba(0, 0, 0, ${value}), ` +
+		`${inset ? "inset " : ""}0px ${(invert ? -1 : 1) * 6 * value}px ${42 * value}px 0px rgba(0, 0, 0, ${0.45 * value}), ` +
+		`${inset ? "inset " : ""}0px ${(invert ? -1 : 1) * 2 * value}px ${70 * value}px 0px rgba(0, 0, 0, ${0.35 * value})`
 	);
 }
