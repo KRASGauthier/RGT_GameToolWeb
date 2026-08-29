@@ -19,10 +19,14 @@ interface IButtonStyling {
 	hovered: string[];
 	disabled: string[];
 	type?: "linear" | "radial";
+	text?: string;
+	textHover?: string;
 }
 type TButtonStyling = Record<TButtonStylingTypes, IButtonStyling>;
 
 const stylingContent: TButtonStyling = {
+
+	//--------------------- Checked ---------------------
 	dark: {
 		normal: [appTheme.colors.primary[2], appTheme.colors.quaternary[3]],
 		hovered: [
@@ -80,6 +84,19 @@ const stylingContent: TButtonStyling = {
 		disabled: [appTheme.colors.greys[5], appTheme.colors.greys[6]],
 		type: "radial",
 	},
+
+
+	//--------------------- Checked ---------------------,
+	checkedLight: {
+		normal: [appTheme.colors.secondary[6], appTheme.colors.quinary[7]],
+		hovered: [
+			appTheme.colors.secondary[6],
+			appTheme.colors.primary[6],
+			appTheme.colors.quaternary[7],
+		],
+		disabled: [appTheme.colors.greys[6], appTheme.colors.greys[7]],
+		text:appTheme.colors.black
+	},
 };
 
 //--------------------------------------------------
@@ -97,47 +114,41 @@ export interface IButtonStyleProps extends CButtonGlobalProps {}
 export const CButtonStyle = ({
 	elevation,
 
-	textColor,
-	textHoverColor,
-
 	padding,
 
 	checked = false,
 	styling = "light",
+	checkedStyling,
 }: IButtonStyleProps): IButtonStyle => {
+
+	let currentStyling: TButtonStylingTypes = styling;
+	if(checked)
+		currentStyling = checkedStyling ?? `checked${styling.charAt(0).toUpperCase()}${styling.slice(1)}` as TButtonStylingTypes
+
+
 	//====================== COLOR ======================
 	const background = colorGetBackground(
-		stylingContent[styling].normal,
+		stylingContent[currentStyling].normal,
 		undefined,
-		stylingContent[styling].type ?? "linear",
+		stylingContent[currentStyling].type ?? "linear",
 		145,
 	);
 	const backgroundHover = colorGetBackground(
-		stylingContent[styling].hovered,
+		stylingContent[currentStyling].hovered,
 		undefined,
-		stylingContent[styling].type ?? "linear",
+		stylingContent[currentStyling].type ?? "linear",
 		145,
 	);
 	const backgroundDisabled = colorGetBackground(
-		stylingContent[styling].disabled,
+		stylingContent[currentStyling].disabled,
 		undefined,
-		stylingContent[styling].type ?? "linear",
+		stylingContent[currentStyling].type ?? "linear",
 		145,
 	);
 
 	//====================== TEXT ======================
-	if (!textHoverColor && textColor) textHoverColor = textColor;
-	else if (!textHoverColor && !textColor) {
-		textHoverColor = appTheme.colors.white;
-		if (styling == "dark") textHoverColor = appTheme.colors.white;
-		else if (styling == "light") textHoverColor = appTheme.colors.black;
-	}
-
-	if (!textColor) {
-		textColor = appTheme.colors.white;
-		if (styling == "dark") textColor = appTheme.colors.white;
-		else if (styling == "light") textColor = appTheme.colors.black;
-	}
+	const textColor = stylingContent[currentStyling].text ?? appTheme.colors.white;
+	const textHoverColor = stylingContent[currentStyling].textHover ?? stylingContent[currentStyling].text ?? appTheme.colors.white;
 
 	return {
 		main: {

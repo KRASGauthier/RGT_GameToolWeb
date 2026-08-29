@@ -190,3 +190,24 @@ export const CTextFieldOutlinedMultilineStyle = ({
 		},
 	};
 };
+
+
+export interface IVersionFieldOutlinedStyle {
+	main: SxProps<Theme>;
+	inputs: SxProps<Theme>;
+}
+
+export interface CVersionFieldOutlinedStyleProps {
+	filled?: boolean
+}
+
+export const CVersionFieldOutlinedStyle = ({filled}: CVersionFieldOutlinedStyleProps): IVersionFieldOutlinedStyle => {
+
+	return {
+		main: {
+		},
+		inputs: {
+			flex: filled ? 1 : undefined
+		}
+	};
+};
