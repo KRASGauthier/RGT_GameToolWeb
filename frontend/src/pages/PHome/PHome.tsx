@@ -10,15 +10,18 @@ import { useAuth } from "../../../rgt/context/auth/CAuthContext";
 import CSplitterRow from "../../../rgt/components/splitters/CSplitterRow";
 import AddIcon from "@mui/icons-material/Add";
 import type { ReactNode } from "react";
+import { useNavigate } from "react-router";
+import { ROUTE_PROJECT, ROUTE_PROJECT_NEW } from "../../consts";
 
 export interface PHomeProps extends GCompProps {}
 
 function PHome({}: PHomeProps) {
 	const { user, logout } = useAuth();
+	const navigate = useNavigate();
 
 	const addButton: ReactNode = (
 		<Grid>
-			<CButtonIcon icon={<AddIcon />} />
+			<CButtonIcon icon={<AddIcon />} onClick={() =>navigate(ROUTE_PROJECT + ROUTE_PROJECT_NEW)}/>
 		</Grid>
 	);
 
@@ -27,7 +30,7 @@ function PHome({}: PHomeProps) {
 	return (
 		<Stack sx={{ flex: 1 }}>
 			<Stack
-				sx={{ mx: "15px", mt: "10px", alignItems: "center" }}
+				sx={{ mx: appTheme.shapes.spacing.medium, mt: appTheme.shapes.spacing.small, alignItems: "center" }}
 				spacing={appTheme.shapes.spacing.main}
 				direction={"row"}
 			>
@@ -51,7 +54,7 @@ function PHome({}: PHomeProps) {
 					icon={<LogoutIcon sx={{ fontSize: appTheme.fonts.title.size.sm }} />}
 				/>
 			</Stack>
-			<Stack direction="row" sx={{ mx: "15px", flex: 1 }}>
+			<Stack direction="row" sx={{ mx: appTheme.shapes.spacing.medium, flex: 1 }}>
 				<Stack direction={"column"} sx={{ mt: "20px", flex: 1 }}>
 					<CTitle size="sm" weight={7}>
 						Projects

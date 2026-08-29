@@ -7,8 +7,12 @@ export const EAppMenus: Record<string, string> = {
 	MANAGEMENT_BUGS: "bugs",
 };
 
-//AUth
+//Auth
 export const ROUTE_AUTH = "/auth";
+
+//Project
+export const ROUTE_PROJECT = "/project"
+export const ROUTE_PROJECT_NEW = "/new"
 
 //Users
 export const ROUTE_USERS_ME = "/users/me";
