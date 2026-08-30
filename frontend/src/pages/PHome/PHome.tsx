@@ -21,7 +21,10 @@ function PHome({}: PHomeProps) {
 
 	const addButton: ReactNode = (
 		<Grid>
-			<CButtonIcon icon={<AddIcon />} onClick={() =>navigate(ROUTE_PROJECT + ROUTE_PROJECT_NEW)}/>
+			<CButtonIcon
+				icon={<AddIcon />}
+				onClick={() => navigate(ROUTE_PROJECT + ROUTE_PROJECT_NEW)}
+			/>
 		</Grid>
 	);
 
@@ -30,7 +33,11 @@ function PHome({}: PHomeProps) {
 	return (
 		<Stack sx={{ flex: 1 }}>
 			<Stack
-				sx={{ mx: appTheme.shapes.spacing.medium, mt: appTheme.shapes.spacing.small, alignItems: "center" }}
+				sx={{
+					mx: appTheme.shapes.spacing.medium,
+					mt: appTheme.shapes.spacing.small,
+					alignItems: "center",
+				}}
 				spacing={appTheme.shapes.spacing.main}
 				direction={"row"}
 			>

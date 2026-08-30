@@ -7,20 +7,21 @@ export interface IProjectNewStyle {
 	addIcon: SxProps<Theme>;
 }
 
-export interface PProjectNewStyleProps {
-
-}
+export interface PProjectNewStyleProps {}
 
 export const PProjectNewStyle = ({}: PProjectNewStyleProps): IProjectNewStyle => {
 	return {
-		main: {
-
-		},
+		main: {},
 		addIcon: {
 			mr: appTheme.shapes.spacing.main,
 			borderRadius: appTheme.shapes.radius.tiny,
-			background: colorGetBackground([appTheme.colors.secondary[6], appTheme.colors.quinary[7]], undefined, "linear", 180),
-			color: appTheme.colors.white
-		}
-	}
-}
+			background: colorGetBackground(
+				[appTheme.colors.secondary[6], appTheme.colors.quinary[7]],
+				undefined,
+				"linear",
+				180,
+			),
+			color: appTheme.colors.white,
+		},
+	};
+};

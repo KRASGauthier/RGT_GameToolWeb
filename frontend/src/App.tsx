@@ -21,7 +21,10 @@ function App() {
 						<Route element={<CProtectedRoute />}>
 							<Route element={<PBaseTabPage />}>
 								<Route index element={<PHome />} />
-								<Route path={ROUTE_PROJECT + ROUTE_PROJECT_NEW} element={<PProjectNew />} />
+								<Route
+									path={ROUTE_PROJECT + ROUTE_PROJECT_NEW}
+									element={<PProjectNew />}
+								/>
 							</Route>
 						</Route>
 					</Routes>
