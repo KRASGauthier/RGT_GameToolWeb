@@ -13,21 +13,25 @@ import CFormPasswordConfirm from "./CFormPasswordConfirm";
 import CFormText from "./CFormText";
 import CFormUser from "./CFormUser";
 import type { TErrorInfo } from "../../../types/api/TAPI";
+import type { IVersion } from "../../../types/TShared";
+import CFormVersion from "./CFormVersion";
 
 //--------------------------------------------------
 //                      TYPES
 //--------------------------------------------------
-export type TFormTypes = "text" | "user" | "email" | "password" | "password-confirm";
-export function getFormTypeDefaultField(type: TFormTypes): string {
+export type TFormTypes = "text" | "user" | "email" | "password" | "password-confirm" | "version";
+export function getFormTypeDefaultField(type: TFormTypes, display?: boolean): string {
 	switch (type) {
 		case "text":
-			return "value";
+			return display ? "Value" : "value";
 		case "email":
-			return "email";
+			return display ? "Email" : "email";
 		case "password":
-			return "password";
+			return display ? "Password" : "password";
 		case "user":
-			return "username";
+			return display ? "Username" : "username";
+		case "version":
+			return display ? "Version" : "version";
 	}
 	return "value";
 }
@@ -43,25 +47,19 @@ export interface IFormEntry {
 	min?: number;
 	max?: number;
 	multiLang?: boolean;
+
+	checkTarget?: string;
 }
-export type TFromDataType = Record<string, string | boolean>;
+export type TFromDataType = Record<string, string | boolean | IVersion>;
 
 //--------------------------------------------------
 //                   COMPONENT
 //--------------------------------------------------
-export interface CFormCompProps extends GCompProps {
-	entry: IFormEntry;
-	exists?: string;
 
-	style: IFormStyle;
-	outlinedStyling?: CInputOutlinedStyling;
-
-	onChange: (value: string | boolean, field: string) => void;
-	onEnter: () => void;
-}
 
 export interface CFormProps extends GCompProps {
 	entries: IFormEntry[];
+	defaultValues?: TFromDataType;
 	buttonMessage?: string;
 	globalError?: ReactNode;
 	fieldExists?: TErrorInfo;
@@ -73,11 +71,13 @@ export interface CFormProps extends GCompProps {
 	minWidth?: TSize;
 
 	onSend?: (data: TFromDataType) => void;
+	onSendEdit?: (data: TFromDataType) => Promise<boolean>;
 	onUsernameCheck?: (username: string) => Promise<boolean>;
 }
 
 function CForm({
 	entries,
+	defaultValues,
 	buttonMessage,
 	globalError,
 	fieldExists,
@@ -108,7 +108,7 @@ function CForm({
 	}
 
 	//====================== EVENT ======================
-	const handleOnChange = (value: string | boolean, field: string) => {
+	const handleOnChange = (value: string | boolean | IVersion, field: string) => {
 		const copy: TFromDataType = structuredClone(valueObject);
 		copy[field] = value;
 		setValueObject(copy);
@@ -118,7 +118,7 @@ function CForm({
 		copy.match = matched;
 		setValueObject(copy);
 	};
-	const handleOnSend = () => {
+	const handleOnSend = async () => {
 		onSend?.(valueObject);
 	};
 	const isValid = (): boolean => {
@@ -146,6 +146,7 @@ function CForm({
 						return (
 							<CFormText
 								key={entry.type + "-" + index}
+								defaultValue={defaultValues}
 								onChange={handleOnChange}
 								entry={entry}
 								style={style}
@@ -157,6 +158,7 @@ function CForm({
 						return (
 							<CFormUser
 								key={entry.type + "-" + index}
+								defaultValue={defaultValues}
 								exists={
 									(entry.field ?? "username") in (fieldExists ?? {})
 										? (fieldExists ?? {})[entry.field ?? "username"]
@@ -179,6 +181,7 @@ function CForm({
 										: undefined
 								}
 								key={entry.type + "-" + index}
+								defaultValue={defaultValues}
 								onChange={handleOnChange}
 								entry={entry}
 								style={style}
@@ -191,6 +194,7 @@ function CForm({
 							<CFormPassword
 								key={entry.type + "-" + index}
 								onChange={handleOnChange}
+								defaultValue={defaultValues}
 								entry={entry}
 								style={style}
 								outlinedStyling={outlinedStyling}
@@ -207,6 +211,18 @@ function CForm({
 								style={style}
 								outlinedStyling={outlinedStyling}
 								onMatch={handleOnMatch}
+								onEnter={handleOnSend}
+							/>
+						);
+					case "version":
+						return (
+							<CFormVersion
+								key={entry.type + "-" + index}
+								defaultValue={defaultValues}
+								onChange={handleOnChange}
+								entry={entry}
+								style={style}
+								outlinedStyling={outlinedStyling}
 								onEnter={handleOnSend}
 							/>
 						);
