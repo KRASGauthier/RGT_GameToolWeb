@@ -3,61 +3,59 @@ import { Stack } from "@mui/material";
 import CTextFieldOutlined from "../../../../rgt/components/inputs/text/CTextFieldOutlined";
 import CButtonText from "../../../../rgt/components/inputs/buttons/CButtonText";
 import { useState, useEffect } from "react";
-import { apiUserGetFullSelf } from "../../../../rgt/api/user/userAPI";
+import { apiUserGetFullSelf, apiUserPatchSelf } from "../../../../rgt/api/user/userAPI";
 import { useNotif } from "../../../../rgt/context/app/CAppNotifContext";
 import type { IUserFull } from "../../../../rgt/types/data/TUser";
 import { PProfileStyle } from "../../../style/pages/profiles/PProfileStyle";
-import { API_PROFILE } from "../../../consts";
-import { apiCheckReponse, apiPatchData } from "../../../../rgt/api/shared";
 
 export interface PProfileInformationProps extends GCompProps {}
 
 function PProfileInformation({}: PProfileInformationProps) {
+	const style = PProfileStyle();
 	const { push } = useNotif();
 	const [user, setUser] = useState<IUserFull | undefined>(undefined);
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [username, setUsername] = useState("");
-
-	const [isEditing, setIsEditing] = useState(false);
+	const [changes, setChanges] = useState<Partial<Pick<IUserFull, "firstName" | "lastName" | "username">>>({});
+	const hasChanges = Object.keys(changes).length > 0;
 
 	useEffect(() => {
 		apiUserGetFullSelf(setUser, push);
 	}, [push]);
-	const style = PProfileStyle();
 
-	const handleEdit = () => {
+	const handleChange = <key extends keyof Pick<IUserFull, "firstName" | "lastName" | "username">>(
+		field: key,
+		value: string,
+	) => {
 		if (!user) return;
-		setFirstName(user.firstName || "");
-		setLastName(user.lastName || "");
-		setUsername(user.username);
-		setIsEditing(true);
+		setChanges((prev) => {
+			const next = { ...prev };
+			const savedValue = user[field] ?? "";
+			if (value === savedValue) delete next[field];
+			else next[field] = value as never;
+			return next;
+		});
 	};
 
 	const handleCancel = () => {
-		setIsEditing(false);
+		setChanges({});
 	};
 
 	const handleSave = async () => {
-		if (!user) return;
-		const response = await apiPatchData<
-			{ firstName: string; lastName: string; username: string },
-			{ user: IUserFull }
-		>(API_PROFILE, { firstName, lastName, username }, "notif");
-		if (!apiCheckReponse(response, "user", { type: "notif", handler: push })) return;
-		if (!response.data) return;
-		setUser(response.data.user);
+		if (!user || !hasChanges) return;
+		const updatedUser = await apiUserPatchSelf(changes, push);
+		if (!updatedUser) return;
+		setUser(updatedUser);
+		setChanges({});
 		push({ severity: "success", message: "Profile updated." });
-		setIsEditing(false);
 	};
+
+	if (!user) return null;
 
 	return (
 		<Stack sx={style.main}>
 			<CTextFieldOutlined
 				label="First Name"
-				value={isEditing ? firstName : user?.firstName || ""}
-				onChange={(e) => setFirstName(e.target.value)}
-				disabled={!isEditing}
+				value={changes.firstName ?? user?.firstName ?? ""}
+				onChange={(el) => handleChange("firstName", el.target.value)}
 				sx={style.input}
 				styling="neutral"
 				fullWidth
@@ -65,9 +63,8 @@ function PProfileInformation({}: PProfileInformationProps) {
 
 			<CTextFieldOutlined
 				label="Last Name"
-				value={isEditing ? lastName : user?.lastName || ""}
-				onChange={(e) => setLastName(e.target.value)}
-				disabled={!isEditing}
+				value={changes.lastName ?? user?.lastName ?? ""}
+				onChange={(el) => handleChange("lastName", el.target.value)}
 				sx={style.input}
 				styling="neutral"
 				fullWidth
@@ -75,26 +72,21 @@ function PProfileInformation({}: PProfileInformationProps) {
 
 			<CTextFieldOutlined
 				label="Username"
-				value={isEditing ? username : user?.username || ""}
-				onChange={(e) => setUsername(e.target.value)}
-				disabled={!isEditing}
+				value={changes.username ?? user?.username ?? ""}
+				onChange={(el) => handleChange("username", el.target.value)}
 				sx={style.input}
 				styling="neutral"
 				fullWidth
 			/>
 
-			<Stack direction="row" sx={style.buttons}>
-				{!isEditing ? (
-					<CButtonText onClick={handleEdit}>Edit Profile</CButtonText>
-				) : (
-					<>
-						<CButtonText onClick={handleCancel} styling="cancel">
-							Cancel
-						</CButtonText>
-						<CButtonText onClick={handleSave}>Save Changes</CButtonText>
-					</>
-				)}
-			</Stack>
+			{hasChanges && (
+				<Stack direction="row" sx={style.buttons}>
+					<CButtonText onClick={handleCancel} styling="cancel">
+						Cancel
+					</CButtonText>
+					<CButtonText onClick={handleSave}>Save</CButtonText>
+				</Stack>
+			)}
 		</Stack>
 	);
 }

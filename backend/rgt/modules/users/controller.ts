@@ -1,12 +1,15 @@
 import type { Request, Response } from "express";
 import { User } from "./schema.js";
 import {
+	API_USER_PATCH_SELF_CHECKER,
 	IAPIUserCheckAvailableRcv,
 	IAPIUserGetSelfFull,
+	IAPIUserPatchSelf,
 	IAPIUserRegister,
 } from "../../types/api/users/TAPIUsers.js";
 import argon2 from "argon2";
 import { PASSWORD_MAX, PASSWORD_MIN } from "../../consts.js";
+import { checkApi } from "../../util/UApi.js";
 import { checkField } from "../../util/UError.js";
 
 //--------------------------------------------------
@@ -73,5 +76,25 @@ export const getUserSelfFull = async (req: Request, res: Response) => {
 
 	res.status(200).json({
 		user: user.getUserFull(),
+	} as IAPIUserGetSelfFull);
+};
+
+export const patchUserSelf = async (req: Request, res: Response) => {
+	if (!req.user) throw { code: 400, message: "Missing user id" };
+
+	const update: IAPIUserPatchSelf = checkApi<IAPIUserPatchSelf>(
+		req.body,
+		API_USER_PATCH_SELF_CHECKER,
+	);
+
+	const updatedUser = await User.findByIdAndUpdate(req.user, update, {
+		new: true,
+		runValidators: true,
+	});
+
+	if (!updatedUser) throw { code: 404, message: "User not found" };
+
+	res.status(200).json({
+		user: updatedUser.getUserFull(),
 	} as IAPIUserGetSelfFull);
 };
