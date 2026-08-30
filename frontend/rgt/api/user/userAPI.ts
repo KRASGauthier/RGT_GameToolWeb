@@ -4,11 +4,12 @@ import type {
 	IAPIUserCheckAvailable,
 	IAPIUserCheckAvailableRcv,
 	IAPIUserGetSelfFull,
+	IAPIUserPatchSelf,
 	IAPIUserRegister,
 } from "../../types/api/users/TAPIUsers";
 import type { IUserFull, IUserRegister } from "../../types/data/TUser";
 import type { IAppNotif } from "../../types/TEvents";
-import { apiCheckReponse, apiCheckReponseError, apiGetData, apiPostData } from "../shared";
+import { apiCheckReponse, apiCheckReponseError, apiGetData, apiPatchData, apiPostData } from "../shared";
 
 //--------------------------------------------------
 //                   REGISTERING
@@ -53,4 +54,18 @@ export const apiUserGetFullSelf = async (
 	if (!apiCheckReponse(data, "user", { type: "notif", handler: push })) return false;
 	if (!data.data) return false;
 	setUser(data.data.user);
+};
+
+export const apiUserPatchSelf = async (
+	changes: IAPIUserPatchSelf,
+	push: (notif: IAppNotif) => void,
+): Promise<IUserFull | undefined> => {
+	const data: IAPIData<IAPIUserGetSelfFull> = await apiPatchData<IAPIUserPatchSelf, IAPIUserGetSelfFull>(
+		API_USER + API_USER_SELF,
+		changes,
+		"notif",
+	);
+	if (!apiCheckReponse(data, "user", { type: "notif", handler: push })) return undefined;
+	if (!data.data) return undefined;
+	return data.data.user;
 };
