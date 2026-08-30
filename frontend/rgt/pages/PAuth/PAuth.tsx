@@ -2,7 +2,7 @@ import { Stack } from "@mui/material";
 import type { GPageProps } from "../shared/pageCommon";
 import CPaperTitle from "../../components/surfaces/CPaperTitle";
 import CTabs from "../../components/navigation/tabs/CTabs";
-import CForm, { type TFromDataType } from "../../components/inputs/form/CForm";
+import CForm, { type TFormDataType } from "../../components/inputs/form/CForm";
 import { useState, type ReactNode } from "react";
 import { apiUserCheckAvailable, apiUserRegister } from "../../api/user/userAPI";
 import type { IUserRegister } from "../../types/data/TUser";
@@ -27,13 +27,13 @@ function PAuth({}: PAuthProps) {
 	const { user, status, login } = useAuth();
 
 	//====================== HANDLERS ======================
-	const handleLogin = async (data: TFromDataType) => {
+	const handleLogin = async (data: TFormDataType) => {
 		setIsLogin(true);
 		await login(data, setLoginError);
 		setIsLogin(false);
 	};
 
-	const handleRegister = async (data: TFromDataType) => {
+	const handleRegister = async (data: TFormDataType) => {
 		setIsLogin(true);
 		if (await apiUserRegister(data as unknown as IUserRegister, push, setErrorInfo))
 			await login(data, setLoginError);

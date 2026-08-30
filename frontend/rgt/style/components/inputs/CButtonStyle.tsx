@@ -25,7 +25,6 @@ interface IButtonStyling {
 type TButtonStyling = Record<TButtonStylingTypes, IButtonStyling>;
 
 const stylingContent: TButtonStyling = {
-
 	//--------------------- Checked ---------------------
 	dark: {
 		normal: [appTheme.colors.primary[2], appTheme.colors.quaternary[3]],
@@ -85,7 +84,6 @@ const stylingContent: TButtonStyling = {
 		type: "radial",
 	},
 
-
 	//--------------------- Checked ---------------------,
 	checkedLight: {
 		normal: [appTheme.colors.secondary[6], appTheme.colors.quinary[7]],
@@ -95,7 +93,7 @@ const stylingContent: TButtonStyling = {
 			appTheme.colors.quaternary[7],
 		],
 		disabled: [appTheme.colors.greys[6], appTheme.colors.greys[7]],
-		text:appTheme.colors.black
+		text: appTheme.colors.black,
 	},
 };
 
@@ -120,11 +118,11 @@ export const CButtonStyle = ({
 	styling = "light",
 	checkedStyling,
 }: IButtonStyleProps): IButtonStyle => {
-
 	let currentStyling: TButtonStylingTypes = styling;
-	if(checked)
-		currentStyling = checkedStyling ?? `checked${styling.charAt(0).toUpperCase()}${styling.slice(1)}` as TButtonStylingTypes
-
+	if (checked)
+		currentStyling =
+			checkedStyling ??
+			(`checked${styling.charAt(0).toUpperCase()}${styling.slice(1)}` as TButtonStylingTypes);
 
 	//====================== COLOR ======================
 	const background = colorGetBackground(
@@ -148,7 +146,10 @@ export const CButtonStyle = ({
 
 	//====================== TEXT ======================
 	const textColor = stylingContent[currentStyling].text ?? appTheme.colors.white;
-	const textHoverColor = stylingContent[currentStyling].textHover ?? stylingContent[currentStyling].text ?? appTheme.colors.white;
+	const textHoverColor =
+		stylingContent[currentStyling].textHover ??
+		stylingContent[currentStyling].text ??
+		appTheme.colors.white;
 
 	return {
 		main: {

@@ -3,7 +3,7 @@ import type { IFormStyle } from "../../../style/components/inputs/CFormStyle";
 import type { CInputOutlinedStyling } from "../../../style/components/inputs/sharedStyle";
 import type { IVersion } from "../../../types/TShared";
 import type { GCompProps } from "../../shared/ccommon";
-import { getFormTypeDefaultField, type IFormEntry, type TFromDataType } from "./CForm";
+import { getFormTypeDefaultField, type IFormEntry, type TFormDataType } from "./CForm";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import CTextFieldOutlined from "../text/CTextFieldOutlined";
 import { keyboartdIsSubmit } from "../../../utils/UKeyboard";
@@ -17,21 +17,21 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 type TFormAvailability = "not-available" | "checking" | "available";
 export type TFormComponentFilter = {
 	filter: RegExp;
-	message: string; 
-}
+	message: string;
+};
 export interface CFormComponentProps extends GCompProps {
 	//Sub component only
 	type: React.HTMLInputTypeAttribute;
 	localFilter?: TFormComponentFilter;
-	subMessages?: ReactNode
+	subMessages?: ReactNode;
 	addEye?: boolean;
-	subValueChanged?: (value: string) => void;
+	subValueChanged?: (value: string | IVersion) => void;
 	customCheck?: (trimedValue: string, soft?: boolean) => string;
 
 	//CForm
 	entry: IFormEntry;
 	exists?: string;
-	defaultValue?: TFromDataType;
+	values?: TFormDataType;
 
 	style: IFormStyle;
 	outlinedStyling?: CInputOutlinedStyling;
@@ -40,23 +40,40 @@ export interface CFormComponentProps extends GCompProps {
 	onEnter: () => void;
 	checkAvailable?: (username: string) => Promise<boolean>;
 }
-export interface CFormSubComponentProps extends Omit<CFormComponentProps, "type" | "localFilter" | "customCheck" | "subMessages" | "subValueChanged" | "addEye"> {}
+export interface CFormSubComponentProps extends Omit<
+	CFormComponentProps,
+	"type" | "localFilter" | "customCheck" | "subMessages" | "subValueChanged" | "addEye"
+> {}
 
-function CFormComponent({type, localFilter, subMessages, addEye, subValueChanged, customCheck, entry, defaultValue, exists, style, outlinedStyling, onChange, onEnter, checkAvailable}: CFormComponentProps) {
-	
-	//====================== DATA ======================
-	const [value, setValue] = useState<string>((): string => {
-		if(!defaultValue)
-			return "";
-		const value = defaultValue[entry.field ?? getFormTypeDefaultField(entry.type)];
-		if(typeof value == "boolean" || typeof value == "object")
-			return "";
+function CFormComponent({
+	type,
+	localFilter,
+	subMessages,
+	addEye,
+	subValueChanged,
+	customCheck,
+	entry,
+	values,
+	exists,
+	style,
+	outlinedStyling,
+	onChange,
+	onEnter,
+	checkAvailable,
+}: CFormComponentProps) {
+	const getValue = (): string | undefined => {
+		if (!values) return undefined;
+		const value = values[entry.field ?? getFormTypeDefaultField(entry.type)];
+		if (typeof value == "boolean" || typeof value == "object") return undefined;
 		return value;
-	});
+	};
+
+	//====================== DATA ======================
+	const [localValue, setLocalValue] = useState<string>("");
+	const value: string = getValue() ?? localValue;
 	const [localExists, setLocalExists] = useState<string | undefined>(undefined);
 	const [checking, setChecking] = useState<TFormAvailability>("not-available");
 	const [show, setShow] = useState<boolean>(false);
-	
 
 	//====================== ERROR ======================
 	const check = useCallback(
@@ -66,8 +83,7 @@ function CFormComponent({type, localFilter, subMessages, addEye, subValueChanged
 			if (!trimed) return "";
 			if (entry.filter && !trimed.match(entry.filter))
 				return "Unallowed charcter is begin used";
-			if (localFilter && !trimed.match(localFilter.filter))
-				return localFilter.message;
+			if (localFilter && !trimed.match(localFilter.filter)) return localFilter.message;
 			if (entry.min && trimed.length < entry.min)
 				return (
 					"Too few characters (min: " + entry.min + ", current: " + trimed.length + ")"
@@ -79,8 +95,7 @@ function CFormComponent({type, localFilter, subMessages, addEye, subValueChanged
 			if (exists === checkedValue || localExists == checkedValue)
 				return `This ${entry.label ?? entry.field ?? getFormTypeDefaultField(entry.type)} is already taken`;
 
-			if(customCheck)
-				return customCheck(trimed, soft)
+			if (customCheck) return customCheck(trimed, soft);
 
 			return "";
 		},
@@ -90,10 +105,9 @@ function CFormComponent({type, localFilter, subMessages, addEye, subValueChanged
 		return check(value, true);
 	}, [value, check]);
 
-
 	//====================== EXIST ======================
 	const prevExist: React.RefObject<string | undefined> = useRef<string | undefined>(exists);
-	const { call: checkUsername  } = useDebounced((value: string) => {
+	const { call: checkUsername } = useDebounced((value: string) => {
 		if (check(value) || !value.trim()) {
 			onChange(false, entry.field ?? getFormTypeDefaultField(entry.type));
 			setChecking("not-available");
@@ -123,7 +137,7 @@ function CFormComponent({type, localFilter, subMessages, addEye, subValueChanged
 	}, 1000);
 	const handleChange = (value: string) => {
 		onChange(false, entry.field ?? getFormTypeDefaultField(entry.type));
-		setValue(value);
+		setLocalValue(value);
 		setChecking("checking");
 		checkUsername(value);
 	};
@@ -134,17 +148,15 @@ function CFormComponent({type, localFilter, subMessages, addEye, subValueChanged
 		onChange(!check(value) ? value : false, entry.field ?? getFormTypeDefaultField(entry.type));
 	}, [exists, entry, prevExist, value, onChange, check]);
 
-
 	//====================== NODE ======================
 	return (
 		<Stack direction={"column"}>
 			<CTextFieldOutlined
 				value={value}
 				onChange={(e) => {
-					subValueChanged?.(e.target.value)
-					if(checkAvailable)
-						return handleChange(e.target.value);
-					setValue(e.target.value);
+					subValueChanged?.(e.target.value);
+					if (checkAvailable) return handleChange(e.target.value);
+					setLocalValue(e.target.value);
 
 					onChange(
 						!check(e.target.value) ? e.target.value : false,
@@ -161,28 +173,32 @@ function CFormComponent({type, localFilter, subMessages, addEye, subValueChanged
 				error={check(value, false) ? true : false}
 				required={entry.required}
 
-				slotProps={addEye ? {
-					input: {
-						endAdornment: (
-							<InputAdornment position="end">
-								<CButtonIcon
-									padding={4}
-									styling="medium"
-									onClick={() => setShow(!show)}
-									icon={
-										show ? (
-											<VisibilityOffIcon fontSize="small" />
-										) : (
-											<VisibilityIcon fontSize="small" />
-										)
-									}
-								/>
-							</InputAdornment>
-						),
-					},
-				} : undefined}
+				slotProps={
+					addEye
+						? {
+								input: {
+									endAdornment: (
+										<InputAdornment position="end">
+											<CButtonIcon
+												padding={4}
+												styling="medium"
+												onClick={() => setShow(!show)}
+												icon={
+													show ? (
+														<VisibilityOffIcon fontSize="small" />
+													) : (
+														<VisibilityIcon fontSize="small" />
+													)
+												}
+											/>
+										</InputAdornment>
+									),
+								},
+							}
+						: undefined
+				}
 			/>
-			{error &&  !entry.login && (
+			{error && !entry.login && (
 				<CText size="xs" weight={5} sx={{ color: appTheme.colors.error[6], ml: "10px" }}>
 					{error}
 				</CText>
@@ -198,7 +214,8 @@ function CFormComponent({type, localFilter, subMessages, addEye, subValueChanged
 				</CText>
 			)}
 			{subMessages}
-		</Stack> );
+		</Stack>
+	);
 }
 
 export default CFormComponent;
