@@ -13,21 +13,25 @@ import CFormPasswordConfirm from "./CFormPasswordConfirm";
 import CFormText from "./CFormText";
 import CFormUser from "./CFormUser";
 import type { TErrorInfo } from "../../../types/api/TAPI";
+import type { IVersion } from "../../../types/TShared";
+import CFormVersion from "./CFormVersion";
 
 //--------------------------------------------------
 //                      TYPES
 //--------------------------------------------------
-export type TFormTypes = "text" | "user" | "email" | "password" | "password-confirm";
-export function getFormTypeDefaultField(type: TFormTypes): string {
+export type TFormTypes = "text" | "user" | "email" | "password" | "password-confirm" | "version";
+export function getFormTypeDefaultField(type: TFormTypes, display?: boolean): string {
 	switch (type) {
 		case "text":
-			return "value";
+			return display ? "Value" : "value";
 		case "email":
-			return "email";
+			return display ? "Email" : "email";
 		case "password":
-			return "password";
+			return display ? "Password" : "password";
 		case "user":
-			return "username";
+			return display ? "Username" : "username";
+		case "version":
+			return display ? "Version" : "version";
 	}
 	return "value";
 }
@@ -43,60 +47,77 @@ export interface IFormEntry {
 	min?: number;
 	max?: number;
 	multiLang?: boolean;
+
+	checkTarget?: string;
 }
-export type TFromDataType = Record<string, string | boolean>;
+export type TFormDataType = Record<string, string | boolean | IVersion>;
 
 //--------------------------------------------------
 //                   COMPONENT
 //--------------------------------------------------
-export interface CFormCompProps extends GCompProps {
-	entry: IFormEntry;
-	exists?: string;
-
-	style: IFormStyle;
-	outlinedStyling?: CInputOutlinedStyling;
-
-	onChange: (value: string | boolean, field: string) => void;
-	onEnter: () => void;
-}
 
 export interface CFormProps extends GCompProps {
-	entries: IFormEntry[];
-	buttonMessage?: string;
-	globalError?: ReactNode;
-	fieldExists?: TErrorInfo;
-	disable?: boolean;
+	//MAIN
+	entries: IFormEntry[]; // Defines the fields rendered by the form
+	values?: TFormDataType; // Initial/current values; enables managed edit mode
+	buttonMessage?: string; // Overrides the internal submit button label
+	globalError?: ReactNode; // Error displayed at form level
+	fieldExists?: TErrorInfo; // Backend field-existence validation errors
+	disable?: boolean; // Forces form submission to be disabled
+	deallocateButton?: boolean; // Prevents CForm from rendering its action buttons
 
-	outlinedStyling?: CInputOutlinedStyling;
-	buttonStyling?: TButtonStylingTypes;
+	//STYLING
+	outlinedStyling?: CInputOutlinedStyling; // Styling propagated to outlined fields
+	buttonStyling?: TButtonStylingTypes; // Styling used by the standard submit button
+	managedButtonPosition?: React.CSSProperties["justifyContent"]; // Alignment of managed-mode buttons
 
-	minWidth?: TSize;
+	minWidth?: TSize; // Minimum form width
 
-	onSend?: (data: TFromDataType) => void;
-	onUsernameCheck?: (username: string) => Promise<boolean>;
+	//FUNCTIONS
+	onSend?: (data: TFormDataType) => void; // Called when a standard form is submitted
+	onSendEdit?: (data: TFormDataType) => Promise<boolean>; // Called when managed changes are submitted
+	onChange?: (data: TFormDataType, valid: boolean) => void; // Reports changed values and form validity
+	onUsernameCheck?: (username: string) => Promise<boolean>; // Checks username availability
 }
 
 function CForm({
 	entries,
+	values,
 	buttonMessage,
 	globalError,
 	fieldExists,
 	disable,
+	deallocateButton,
 
 	outlinedStyling,
 	buttonStyling,
+	managedButtonPosition,
 
 	minWidth,
 
 	onSend,
+	onSendEdit,
+	onChange,
 	onUsernameCheck,
 }: CFormProps) {
+	//====================== CHECKER ======================
+	const isManaged = (): boolean => {
+		return values ? true : false;
+	};
+
 	//====================== DATA ======================
 	const style: IFormStyle = useMemo(() => {
 		return CFormStyle({ minWidth });
 	}, [minWidth]);
 
-	const [valueObject, setValueObject] = useState<TFromDataType>({});
+	const [valueObject, setValueObject] = useState<TFormDataType>({});
+	const currentValues: TFormDataType | undefined = isManaged()
+		? {
+				...values,
+				...valueObject,
+			}
+		: undefined;
+
 	let finalGlobalError: ReactNode | undefined = globalError;
 	if (finalGlobalError && isValidElement<{ sx?: SxProps<Theme> }>(finalGlobalError)) {
 		finalGlobalError = cloneElement(finalGlobalError, {
@@ -108,32 +129,39 @@ function CForm({
 	}
 
 	//====================== EVENT ======================
-	const handleOnChange = (value: string | boolean, field: string) => {
-		const copy: TFromDataType = structuredClone(valueObject);
+	const handleOnChange = (value: string | boolean | IVersion, field: string) => {
+		const copy: TFormDataType = structuredClone(valueObject);
 		copy[field] = value;
 		setValueObject(copy);
+		onChange?.(copy, isValid(copy));
 	};
 	const handleOnMatch = (matched: boolean) => {
-		const copy: TFromDataType = structuredClone(valueObject);
+		const copy: TFormDataType = structuredClone(valueObject);
 		copy.match = matched;
 		setValueObject(copy);
 	};
-	const handleOnSend = () => {
-		onSend?.(valueObject);
+	const handleOnSend = async () => {
+		onSend?.(isManaged() && currentValues ? currentValues : valueObject);
+		if (isManaged()) {
+			if (await onSendEdit?.(isManaged() && currentValues ? currentValues : valueObject))
+				setValueObject({});
+		}
 	};
-	const isValid = (): boolean => {
+	const handleOnCancel = async () => {
+		setValueObject({});
+	};
+	const isValid = (toCheck?: TFormDataType): boolean => {
+		const checked: TFormDataType =
+			toCheck ?? (isManaged() && currentValues ? currentValues : valueObject);
 		for (let i = 0; i < entries.length; i++) {
 			if (!entries[i].required) continue;
 			if (entries[i].field) {
-				if (!valueObject[entries[i].field!]) return false;
+				if (!checked[entries[i].field!]) return false;
 			} else {
-				if (!valueObject[getFormTypeDefaultField(entries[i].type)]) return false;
+				if (!checked[getFormTypeDefaultField(entries[i].type)]) return false;
 			}
 		}
-		if (
-			entries.find((entry: IFormEntry) => entry.type == "password-confirm") &&
-			!valueObject.match
-		)
+		if (entries.find((entry: IFormEntry) => entry.type == "password-confirm") && !checked.match)
 			return false;
 		return true;
 	};
@@ -146,6 +174,7 @@ function CForm({
 						return (
 							<CFormText
 								key={entry.type + "-" + index}
+								values={currentValues}
 								onChange={handleOnChange}
 								entry={entry}
 								style={style}
@@ -157,6 +186,7 @@ function CForm({
 						return (
 							<CFormUser
 								key={entry.type + "-" + index}
+								values={currentValues}
 								exists={
 									(entry.field ?? "username") in (fieldExists ?? {})
 										? (fieldExists ?? {})[entry.field ?? "username"]
@@ -179,6 +209,7 @@ function CForm({
 										: undefined
 								}
 								key={entry.type + "-" + index}
+								values={currentValues}
 								onChange={handleOnChange}
 								entry={entry}
 								style={style}
@@ -191,6 +222,7 @@ function CForm({
 							<CFormPassword
 								key={entry.type + "-" + index}
 								onChange={handleOnChange}
+								values={currentValues}
 								entry={entry}
 								style={style}
 								outlinedStyling={outlinedStyling}
@@ -210,17 +242,49 @@ function CForm({
 								onEnter={handleOnSend}
 							/>
 						);
+					case "version":
+						return (
+							<CFormVersion
+								key={entry.type + "-" + index}
+								values={currentValues}
+								onChange={handleOnChange}
+								entry={entry}
+								style={style}
+								outlinedStyling={outlinedStyling}
+								onEnter={handleOnSend}
+							/>
+						);
 				}
 				return null;
 			})}
 			{finalGlobalError}
-			<CButtonText
-				onClick={handleOnSend}
-				disabled={disable || !isValid()}
-				styling={buttonStyling ?? "light"}
-			>
-				{buttonMessage ?? "Validate"}
-			</CButtonText>
+			{!deallocateButton && !isManaged() && (
+				<CButtonText
+					onClick={handleOnSend}
+					disabled={disable || !isValid()}
+					styling={buttonStyling ?? "light"}
+				>
+					{buttonMessage ?? "Validate"}
+				</CButtonText>
+			)}
+			{!deallocateButton && isManaged() && Object.keys(valueObject).length > 0 && (
+				<Stack
+					spacing={appTheme.shapes.spacing.main}
+					sx={{ justifyContent: managedButtonPosition }}
+					direction={"row"}
+				>
+					<CButtonText
+						onClick={handleOnSend}
+						styling="validate"
+						disabled={disable || !isValid()}
+					>
+						{"Validate"}
+					</CButtonText>
+					<CButtonText onClick={handleOnCancel} styling="cancel">
+						{"Cancel"}
+					</CButtonText>
+				</Stack>
+			)}
 		</Stack>
 	);
 }

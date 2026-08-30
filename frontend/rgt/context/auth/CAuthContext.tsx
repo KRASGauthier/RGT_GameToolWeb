@@ -18,7 +18,7 @@ import {
 import CText from "../../components/text/CText";
 import CCard from "../../components/surfaces/CCard";
 import { Stack } from "@mui/material";
-import type { TFromDataType } from "../../components/inputs/form/CForm";
+import type { TFormDataType } from "../../components/inputs/form/CForm";
 import { api } from "../../api/shared";
 import type { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { API_AUTH, API_AUTH_REFRESH } from "../../consts";
@@ -39,7 +39,7 @@ export interface IAuthContext {
 	user: IUserBase | null;
 	status: TAuthStatus;
 	login: (
-		data: TFromDataType,
+		data: TFormDataType,
 		setRemoteError?: React.Dispatch<React.SetStateAction<ReactNode>>,
 	) => Promise<void>;
 	refresh: () => Promise<void>;
@@ -88,7 +88,7 @@ function CAuthContext({ children }: CAuthContextProps) {
 
 	const login = useCallback(
 		async (
-			data: TFromDataType,
+			data: TFormDataType,
 			setRemoteError?: React.Dispatch<React.SetStateAction<ReactNode>>,
 		) => {
 			let email: string | boolean | undefined = data.email;
