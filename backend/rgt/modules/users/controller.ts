@@ -2,15 +2,21 @@ import type { Request, Response } from "express";
 import { User } from "./schema.js";
 import {
 	API_USER_PATCH_SELF_CHECKER,
+	API_CHANGE_PASSWORD_CHECKER,
 	IAPIUserCheckAvailableRcv,
 	IAPIUserGetSelfFull,
 	IAPIUserPatchSelf,
 	IAPIUserRegister,
+	IAPIChangePassword,
 } from "../../types/api/users/TAPIUsers.js";
 import argon2 from "argon2";
 import { PASSWORD_MAX, PASSWORD_MIN } from "../../consts.js";
 import { checkApi } from "../../util/UApi.js";
 import { checkField } from "../../util/UError.js";
+import sharp from "sharp";
+import { randomUUID } from "node:crypto";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 //--------------------------------------------------
 //                   HELPERS
@@ -97,4 +103,59 @@ export const patchUserSelf = async (req: Request, res: Response) => {
 	res.status(200).json({
 		user: updatedUser.getUserFull(),
 	} as IAPIUserGetSelfFull);
+};
+
+export const patchUserSelfAvatar = async (req: Request, res: Response) => {
+	if (!req.user) throw { code: 400, message: "Missing user id" };
+	if (!req.file) throw { code: 400, message: "Avatar file missing" };
+
+	const uploadLocation = process.env.BACKEND_UPLOADE_LOCATION ?? "/home/app/uploaded-dev";
+	const fileName = `${randomUUID()}.webp`;
+	const finalPath = path.join(uploadLocation, fileName);
+
+	await sharp(req.file.path)
+		.rotate()
+		.resize(512, 512, { fit: "cover" })
+		.webp({ quality: 90 })
+		.toFile(finalPath);
+
+	await fs.unlink(req.file.path).catch(() => undefined);
+
+	const avatarUrl = `/images/${fileName}`;
+	const updatedUser = await User.findByIdAndUpdate(
+		req.user,
+		{ avatar: avatarUrl },
+		{ new: true, runValidators: true },
+	);
+
+	if (!updatedUser) throw { code: 404, message: "User not found" };
+
+	res.status(200).json({
+		user: updatedUser.getUserFull(),
+	} as IAPIUserGetSelfFull);
+};
+
+export const patchUserPassword = async (req: Request, res: Response) => {
+    if (!req.user) throw { code: 400, message: "Missing user id" };
+
+    const data: IAPIChangePassword = checkApi<IAPIChangePassword>(
+        req.body,
+        API_CHANGE_PASSWORD_CHECKER,
+    );
+
+    const user = await User.findById(req.user);
+    if (!user) throw { code: 404, message: "User not found" };
+
+    const isValid = await argon2.verify(user.password, data.currentPassword);
+    if (!isValid) throw { code: 401, message: "Current password is incorrect" };
+
+    checkPassword(data.newPassword);
+
+    const hashedPassword = await argon2.hash(data.newPassword.trim());
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({
+        message: "Password changed successfully",
+    });
 };

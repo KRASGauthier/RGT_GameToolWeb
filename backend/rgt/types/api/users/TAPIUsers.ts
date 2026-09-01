@@ -16,6 +16,11 @@ export type IAPIUserPatchSelf = Partial<
 	Pick<IUserFull, "firstName" | "lastName" | "username" | "email">
 >;
 
+export interface IAPIChangePassword {
+	currentPassword: string;
+	newPassword: string;
+}
+
 //--------------------------------------------------
 //                    RECEIVE
 //--------------------------------------------------
@@ -28,8 +33,13 @@ export interface IAPIUserGetSelfFull {
 }
 
 export const API_USER_PATCH_SELF_CHECKER = {
-	firstName: { type: "string" as const, optional: true },
-	lastName: { type: "string" as const, optional: true },
-	username: { type: "string" as const, optional: true },
-	email: { type: "string" as const, optional: true },
+	firstName: { type: "string" as const, optional: true as const },
+	lastName: { type: "string" as const, optional: true as const },
+	username: { type: "string" as const, optional: true as const },
+	email: { type: "string" as const, optional: true as const },
+} as const;
+
+export const API_CHANGE_PASSWORD_CHECKER = {
+	currentPassword: { type: "string" as const },
+	newPassword: { type: "string" as const },
 } as TAPIChecker;
