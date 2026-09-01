@@ -110,7 +110,14 @@ function CForm({
 		return CFormStyle({ minWidth });
 	}, [minWidth]);
 
-	const [valueObject, setValueObject] = useState<TFormDataType>({});
+	const [valueObject, setValueObject] = useState<TFormDataType>(() => {
+			const entryFound = entries.find((entry: IFormEntry) => { return entry.type == "version"});
+			if(!entryFound)
+				return {};
+			return {
+				[entryFound.field ?? getFormTypeDefaultField("version")]: {major: 1, minor: 0, patch: 0}
+			}
+	});
 	const currentValues: TFormDataType | undefined = isManaged()
 		? {
 				...values,
