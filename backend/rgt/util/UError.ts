@@ -1,4 +1,4 @@
-import type { Response } from "express";
+import type { Request, Response } from "express";
 import { IAPIErrors } from "../types/api/TAPI.js";
 import mongoose from "mongoose";
 import { uErrorResponse } from "./ULog.js";
@@ -54,3 +54,8 @@ export const checkField = (field: string, data: Record<string, unknown>, type?: 
 	if (type && typeof data[field] != type)
 		throw { code: 400, message: `Field '${field}' is not of type ${type}` };
 };
+
+
+export const hasUser = (req: Request) => {
+	if (!req.user) throw { code: 400, message: "Missing user id" };
+}

@@ -1,6 +1,14 @@
-export type TProjectEngineTypes = "unrealEngine" | "godot";
-export type TProjectLanguageTypes = "cpp" | "cs" | "gdscript";
+import type { IVersion } from "../../../../rgt/types/TShared.js";
 
+export const TProjectEngineTypesConsts = ["unrealEngine", "godot"] as const
+export type TProjectEngineTypes = typeof TProjectEngineTypesConsts[number];
+export const TProjectLanguageTypesConsts = ["cpp", "cs", "gdscript"] as const
+export type TProjectLanguageTypes = typeof TProjectLanguageTypesConsts[number];
+
+
+//--------------------------------------------------
+//                   SETTINGS
+//--------------------------------------------------
 export interface TProjectLanguage {
 	value: TProjectLanguageTypes;
 	display: string;
@@ -39,3 +47,18 @@ export const DProjectEngine: Record<TProjectEngineTypes, IProjectEngine> = {
 		langs: [DProjectLanguages.cs, DProjectLanguages.gdscript],
 	},
 };
+
+
+//--------------------------------------------------
+//                       DATA
+//--------------------------------------------------
+export interface IProject {
+	owner: string;
+	uid: string;
+	name: string;
+	title?: string;
+	version: IVersion;
+
+	engine: TProjectEngineTypes;
+	language: TProjectLanguageTypes;
+}

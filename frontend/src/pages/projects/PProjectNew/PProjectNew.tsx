@@ -21,6 +21,10 @@ import {
 import DoneIcon from "@mui/icons-material/Done";
 import CForm, { type TFormDataType } from "../../../../rgt/components/inputs/form/CForm";
 import { PROJECT_GAME_NAME_MAX, PROJECT_NAME_MAX, PROJECT_NAME_MIN } from "../../../consts";
+import type { TAPIProjectCreate } from "../../../types/api/project/TAPIProject";
+import { apiProjectCreate } from "../../../api/project/projectAPI";
+import { useNotif } from "../../../../rgt/context/app/CAppNotifContext";
+import type { IVersion } from "../../../../rgt/types/TShared";
 
 export interface PProjectNewProps extends GPageProps {}
 
@@ -33,6 +37,17 @@ function PProjectNew({}: PProjectNewProps) {
 	const style: IProjectNewStyle = useMemo(() => {
 		return PProjectNewStyle({});
 	}, []);
+	const {push} = useNotif();
+
+	//====================== FUNCTIONS ======================
+	const handleCreate = () => {
+		const data: TAPIProjectCreate = {
+			...formData as {name: string, version: IVersion, title?: string},
+			engine: engine,
+    		language: lang,
+		}
+		apiProjectCreate(data, push)
+	}
 
 	//====================== NODES ======================
 	return (
@@ -64,6 +79,7 @@ function PProjectNew({}: PProjectNewProps) {
 						Informations
 					</CTitle>
 					<CForm
+						outlinedStyling="neutral"
 						entries={[
 							{
 								type: "text",
@@ -137,6 +153,7 @@ function PProjectNew({}: PProjectNewProps) {
 				styling="validate"
 				startIcon={<DoneIcon />}
 				sx={{ mx: "auto", mb: "50px" }}
+				onClick={handleCreate}
 			>
 				Create
 			</CButtonIconText>

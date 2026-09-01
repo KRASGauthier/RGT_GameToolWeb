@@ -21,11 +21,11 @@ export const ROUTE_USERS_ME = "/users/me";
 export const API_BASE = "http://localhost:8082/API/";
 export const API_BASE_SIMPLE = "/API";
 
-//--------------------- Users ---------------------
-//Profile
-
 //--------------------- Shared ---------------------
 export const STATIC_IMAGES = "/images";
+
+//--------------------- project ---------------------
+export const API_PROJECT = "/projects"
 
 //====================== CONSTS ======================
 export const AUTH_MIN_USER = 3;
