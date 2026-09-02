@@ -15,11 +15,21 @@ export interface IAPIUserCheckAvailable {
 export type IAPIUserPatchSelf = Partial<
 	Pick<IUserFull, "firstName" | "lastName" | "username" | "email">
 >;
+export const IAPIUserPatchSelfChecker: TAPIChecker = {
+	firstName: { type: "string", optional: true },
+	lastName: { type: "string", optional: true },
+	username: { type: "string", optional: true },
+	email: { type: "string", optional: true },
+};
 
 export interface IAPIChangePassword {
 	currentPassword: string;
 	newPassword: string;
 }
+export const IAPIChangePasswordChecker: TAPIChecker = {
+	currentPassword: { type: "string" },
+	newPassword: { type: "string"},
+};
 
 //--------------------------------------------------
 //                    RECEIVE
@@ -31,15 +41,3 @@ export interface IAPIUserCheckAvailableRcv {
 export interface IAPIUserGetSelfFull {
 	user: IUserFull;
 }
-
-export const API_USER_PATCH_SELF_CHECKER = {
-	firstName: { type: "string" as const, optional: true as const },
-	lastName: { type: "string" as const, optional: true as const },
-	username: { type: "string" as const, optional: true as const },
-	email: { type: "string" as const, optional: true as const },
-} as const;
-
-export const API_CHANGE_PASSWORD_CHECKER = {
-	currentPassword: { type: "string" as const },
-	newPassword: { type: "string" as const },
-} as TAPIChecker;

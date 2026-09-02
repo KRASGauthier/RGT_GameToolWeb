@@ -36,7 +36,7 @@ export function checkApiSub(data: Record<string, unknown>, checker: TAPIChecker)
 
 		if (value.type == "checker" && value.checker)
 			checkApiSub(data[key] as Record<string, unknown>, value.checker);
-	}
+	});
 }
 
 export function checkApi<_T>(data: Record<string, unknown>, checker: TAPIChecker): _T {

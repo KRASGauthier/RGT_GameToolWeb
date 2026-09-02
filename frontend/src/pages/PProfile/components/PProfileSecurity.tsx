@@ -1,6 +1,5 @@
 import type { GCompProps } from "../../../../rgt/components/shared/ccommon";
 import { Stack } from "@mui/material";
-import { useState } from "react";
 import CText from "../../../../rgt/components/text/CText";
 import CForm from "../../../../rgt/components/inputs/form/CForm";
 import type { IFormEntry, TFormDataType } from "../../../../rgt/components/inputs/form/CForm";
@@ -11,7 +10,6 @@ export interface PProfileSecurityProps extends GCompProps {}
 
 function PProfileSecurity({}: PProfileSecurityProps) {
 	const { push } = useNotif();
-	const [globalError, setGlobalError] = useState<string | undefined>();
 
 	const profilePass: IFormEntry[] = [
 		{
@@ -37,23 +35,11 @@ function PProfileSecurity({}: PProfileSecurityProps) {
 	];
 
 	const handleSendEdit = async (data: TFormDataType): Promise<boolean> => {
-		try {
-			setGlobalError(undefined);
-
-			const success = await apiChangePassword(
-            	data.currentPassword as string,
-            	data.newPassword as string,
-            	push,
-        	);
-
-        	if (!success) return false;
-
-			push({ severity: "success", message: "Password changed successfully." });
-			return true;
-		} catch {
-			setGlobalError("Failed to change password. Please try again.");
-			return false;
-		}
+		return apiChangePassword(
+			data.currentPassword as string,
+			data.newPassword as string,
+			push,
+		);
 	};
 
 	return (
@@ -65,9 +51,7 @@ function PProfileSecurity({}: PProfileSecurityProps) {
 			<CForm
 				entries={profilePass}
 				values={{ currentPassword: "", newPassword: "", confirmPassword: "" }}
-				globalError={globalError}
 				onSendEdit={handleSendEdit}
-				deallocateButton={false}
 				buttonStyling="validate"
 				managedButtonPosition="flex-end"
 			/>

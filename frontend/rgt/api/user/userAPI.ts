@@ -1,4 +1,4 @@
-import { API_USER, API_USER_CHECK_AVAILABLE, API_USER_SELF } from "../../consts";
+import { API_USER, API_USER_CHECK_AVAILABLE, API_USER_SELF_PASSWORD, API_USER_SELF, API_USER_SELF_AVATAR } from "../../consts";
 import type { IAPIData, TErrorInfo } from "../../types/api/TAPI";
 import type {
 	IAPIChangePassword,
@@ -10,7 +10,7 @@ import type {
 } from "../../types/api/users/TAPIUsers";
 import type { IUserFull, IUserRegister } from "../../types/data/TUser";
 import type { IAppNotif } from "../../types/TEvents";
-import { api, apiCheckReponse, apiCheckReponseError, apiGetData, apiPatchData, apiPostData } from "../shared";
+import { apiCheckReponse, apiCheckReponseError, apiGetData, apiPatchData, apiPostData } from "../shared";
 
 //--------------------------------------------------
 //                   REGISTERING
@@ -73,27 +73,14 @@ export const apiUserPatchSelf = async (
 
 export const apiUserUploadAvatar = async (
 	file: File,
+	setUser: React.Dispatch<React.SetStateAction<IUserFull | undefined>>,
 	push: (notif: IAppNotif) => void,
 ): Promise<IUserFull | undefined> => {
 	const formData = new FormData();
 	formData.append("avatar", file);
-
-	try {
-		const response = await api.patch<IAPIUserGetSelfFull>(API_USER + API_USER_SELF + "/avatar", formData, {
-			headers: {
-				"Content-Type": "multipart/form-data",
-			},
-		});
-		const data = response.data;
-		if (!data || !data.user) 
-			return undefined;
-
-		push({ severity: "success", message: "Avatar updated." });
-		return data.user;
-	} catch {
-		push({ severity: "error", message: "Avatar upload failed." });
-		return undefined;
-	}
+	const data: IAPIData<IAPIUserGetSelfFull> = await apiPatchData<FormData, IAPIUserGetSelfFull>(API_USER + API_USER_SELF + API_USER_SELF_AVATAR, formData, "notif");
+	if (!apiCheckReponse(data, "user", { type: "notif", handler: push })) return;
+	if(data.data) setUser(data.data.user);
 };
 
 export const apiChangePassword = async (
@@ -105,7 +92,7 @@ export const apiChangePassword = async (
         IAPIChangePassword,
         { message: string }
     >(
-        API_USER + API_USER_SELF + "/password",
+        API_USER + API_USER_SELF + API_USER_SELF_PASSWORD,
         { currentPassword, newPassword },
         "notif",
     );

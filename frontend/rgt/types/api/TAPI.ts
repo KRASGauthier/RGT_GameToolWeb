@@ -18,5 +18,6 @@ export interface IAPICheckInfo {
 	type: TTypeOf | "checker" | "array";
 	optional?: boolean;
 	checker?: Record<string, IAPICheckInfo>;
+	optional?: boolean;
 }
 export type TAPIChecker = Record<string, IAPICheckInfo>;
