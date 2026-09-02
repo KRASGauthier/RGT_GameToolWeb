@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
 import { User } from "./schema.js";
 import {
-	API_USER_PATCH_SELF_CHECKER,
-	API_CHANGE_PASSWORD_CHECKER,
+	IAPIUserPatchSelfChecker,
+	IAPIChangePasswordChecker,
 	IAPIUserCheckAvailableRcv,
 	IAPIUserGetSelfFull,
 	IAPIUserPatchSelf,
@@ -10,11 +10,10 @@ import {
 	IAPIChangePassword,
 } from "../../types/api/users/TAPIUsers.js";
 import argon2 from "argon2";
-import { PASSWORD_MAX, PASSWORD_MIN } from "../../consts.js";
+import { PASSWORD_MAX, PASSWORD_MIN, STATIC_AVATARS } from "../../consts.js";
 import { checkApi } from "../../util/UApi.js";
 import { checkField } from "../../util/UError.js";
 import sharp from "sharp";
-import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 
@@ -85,16 +84,17 @@ export const getUserSelfFull = async (req: Request, res: Response) => {
 	} as IAPIUserGetSelfFull);
 };
 
+
+
 export const patchUserSelf = async (req: Request, res: Response) => {
 	if (!req.user) throw { code: 400, message: "Missing user id" };
-
 	const update: IAPIUserPatchSelf = checkApi<IAPIUserPatchSelf>(
 		req.body,
-		API_USER_PATCH_SELF_CHECKER,
+		IAPIUserPatchSelfChecker,
 	);
 
 	const updatedUser = await User.findByIdAndUpdate(req.user, update, {
-		new: true,
+		returnAfter: true,
 		runValidators: true,
 	});
 
@@ -105,27 +105,26 @@ export const patchUserSelf = async (req: Request, res: Response) => {
 	} as IAPIUserGetSelfFull);
 };
 
+
 export const patchUserSelfAvatar = async (req: Request, res: Response) => {
 	if (!req.user) throw { code: 400, message: "Missing user id" };
 	if (!req.file) throw { code: 400, message: "Avatar file missing" };
 
-	const uploadLocation = process.env.BACKEND_UPLOADE_LOCATION ?? "/home/app/uploaded-dev";
-	const fileName = `${randomUUID()}.webp`;
+	const uploadLocation = `${process.env.BACKEND_UPLOADE_LOCATION ?? "/home/app/uploaded-dev"}/${STATIC_AVATARS}` ;
+	const fileName = `avatar-${req.user}-512.png`;
 	const finalPath = path.join(uploadLocation, fileName);
-
 	await sharp(req.file.path)
-		.rotate()
 		.resize(512, 512, { fit: "cover" })
-		.webp({ quality: 90 })
+		.png()
 		.toFile(finalPath);
 
-	await fs.unlink(req.file.path).catch(() => undefined);
+	await fs.unlink(req.file.path);
 
-	const avatarUrl = `/images/${fileName}`;
+	const avatarUrl = `/images/${STATIC_AVATARS}/${fileName}`;
 	const updatedUser = await User.findByIdAndUpdate(
 		req.user,
 		{ avatar: avatarUrl },
-		{ new: true, runValidators: true },
+		{ returnAfter: true, runValidators: true },
 	);
 
 	if (!updatedUser) throw { code: 404, message: "User not found" };
@@ -140,7 +139,7 @@ export const patchUserPassword = async (req: Request, res: Response) => {
 
     const data: IAPIChangePassword = checkApi<IAPIChangePassword>(
         req.body,
-        API_CHANGE_PASSWORD_CHECKER,
+        IAPIChangePasswordChecker,
     );
 
     const user = await User.findById(req.user);

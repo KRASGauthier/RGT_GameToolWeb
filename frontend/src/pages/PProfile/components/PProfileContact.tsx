@@ -11,13 +11,16 @@ import type { IUserFull } from "../../../../rgt/types/data/TUser";
 export interface PProfileInformationProps extends GCompProps {}
 
 function PProfileContact({}: PProfileInformationProps) {
+
+	//====================== DATA ======================
 	const style = PProfileStyle();
-	const { push } = useNotif();
 	const [user, setUser] = useState<IUserFull | undefined>(undefined);
 	const [changes, setChanges] = useState<Partial<Pick<IUserFull, "email">>>({});
 	const hasChanges = Object.keys(changes).length > 0;
 	
-
+	const { push } = useNotif();
+	
+	//====================== EVENT ======================
 	useEffect(() => {
 		apiUserGetFullSelf(setUser, push);
 	}, [push]);

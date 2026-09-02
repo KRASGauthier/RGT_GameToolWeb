@@ -8,9 +8,11 @@ export interface IPProfileStyle {
 	buttons: SxProps<Theme>;
 }
 
+
 export const PProfileStyle = (): IPProfileStyle => {
 	return {
 		main: {
+			flex: 1,
 			p: appTheme.shapes.spacing.medium,
 			gap: "20px",
 		},

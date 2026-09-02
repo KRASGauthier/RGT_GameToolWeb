@@ -8,21 +8,23 @@ import {
 	type TAvatarStyling,
 } from "../../style/components/images/CAvatarStyle";
 import CText from "../text/CText";
+import type { TFontSize } from "../../types/themeType";
 
 export interface CAvatarProps extends GCompProps, AvatarProps {
 	user: IUserBase;
 
 	styling?: TAvatarStyling;
+	fontSize?: TFontSize;
 }
 
-function CAvatar({ user, styling = "light", ...other }: CAvatarProps) {
+function CAvatar({ user, styling = "light", fontSize, ...other }: CAvatarProps) {
 	const style: IAvatarStyle = useMemo(() => {
 		return CAvatarStyle({ styling });
 	}, [styling]);
 
 	return (
-		<Avatar sx={style.main} {...other}>
-			<CText size="lg" weight={7}>
+		<Avatar sx={style.main} src={user.avatar} {...other}>
+			<CText size={fontSize ?? "lg"} weight={7}>
 				{user.initials}
 			</CText>
 		</Avatar>

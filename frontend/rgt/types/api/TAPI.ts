@@ -17,5 +17,6 @@ export interface IAPIErrors {
 export interface IAPICheckInfo {
 	type: TTypeOf | "checker";
 	checker?: Record<string, IAPICheckInfo>;
+	optional?: boolean;
 }
 export type TAPIChecker = Record<string, IAPICheckInfo>;

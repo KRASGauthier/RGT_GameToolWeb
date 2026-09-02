@@ -15,6 +15,7 @@ function CFormPasswordConfirm({ ...other }: CFormPasswordConfirmProps) {
 			defaultTarget="password"
 			errorMessage="Password is not matching"
 			type="password"
+			addEye={true}
 			{...other}
 		/>
 	);
