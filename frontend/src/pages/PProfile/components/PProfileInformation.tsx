@@ -1,9 +1,9 @@
 import type { GCompProps } from "../../../../rgt/components/shared/ccommon";
 import { Stack } from "@mui/material";
-import CTextFieldOutlined from "../../../../rgt/components/inputs/text/CTextFieldOutlined";
-import CButtonText from "../../../../rgt/components/inputs/buttons/CButtonText";
+import CForm from "../../../../rgt/components/inputs/form/CForm";
+import type { IFormEntry, TFormDataType } from "../../../../rgt/components/inputs/form/CForm";
 import { useState, useEffect, useRef, type ChangeEvent, useMemo } from "react";
-import { apiUserGetFullSelf, apiUserPatchSelf, apiUserUploadAvatar } from "../../../../rgt/api/user/userAPI";
+import { apiUserGetFullSelf, apiUserPatchSelf, apiUserUploadAvatar, apiUserCheckAvailable } from "../../../../rgt/api/user/userAPI";
 import { useNotif } from "../../../../rgt/context/app/CAppNotifContext";
 import type { IUserFull } from "../../../../rgt/types/data/TUser";
 import { PProfileStyle } from "../../../style/pages/profiles/PProfileStyle";
@@ -11,58 +11,71 @@ import CSplitterRow from "../../../../rgt/components/splitters/CSplitterRow";
 import { appTheme } from "../../../style/theme";
 import CAvatar from "../../../../rgt/components/images/CAvatar";
 import CTitle from "../../../../rgt/components/text/CTitle";
+import { AUTH_MAX_USER, AUTH_MIN_USER } from "../../../consts";
+import CButtonText from "../../../../rgt/components/inputs/buttons/CButtonText";
 
 export interface PProfileInformationProps extends GCompProps {}
 
 function PProfileInformation({}: PProfileInformationProps) {
 
-
 	//====================== DATA ======================
 	const [user, setUser] = useState<IUserFull | undefined>(undefined);
 	
 	const { push } = useNotif();
-
-	const [changes, setChanges] = useState<Partial<Pick<IUserFull, "firstName" | "lastName" | "username">>>({});
-	const hasChanges = Object.keys(changes).length > 0;
-	const avatarInputRef = useRef<HTMLInputElement | null>(null);
 	
-	const style = useMemo(() => {
-		return PProfileStyle()
-	}, []);
-
+	const avatarInputRef = useRef<HTMLInputElement | null>(null);
 	
 	//====================== EFFECT ======================
 	useEffect(() => {
 		apiUserGetFullSelf(setUser, push);
 	}, [push]);
+	
+	const style = useMemo(() => {
+		return PProfileStyle()
+	}, []);
 
-	const handleChange = <key extends keyof Pick<IUserFull, "firstName" | "lastName" | "username">>(
-		field: key,
-		value: string,
-	) => {
-		if (!user) return;
-		setChanges((prev) => {
-			const next = { ...prev };
-			const savedValue = user[field] ?? "";
-			if (value === savedValue) delete next[field];
-			else next[field] = value as never;
-			return next;
-		});
+	const profileInfoEntries: IFormEntry[] = [
+		{
+			type: "text",
+			label: "First name",
+			filter: /^[ \u3000]*[\p{L}\p{M}]+(?:[ '\-・\u3000][\p{L}\p{M}]+)*[ \u3000]*$/u,
+			max: 100,
+			field: "firstName",
+			required: true,
+		},
+		{
+			type: "text",
+			label: "Last name",
+			filter: /^[ \u3000]*[\p{L}\p{M}]+(?:[ '\-・\u3000][\p{L}\p{M}]+)*[ \u3000]*$/u,
+			max: 100,
+			field: "lastName",
+			required: true,
+		},
+		{
+			type: "user",
+			multiLang: true,
+			max: AUTH_MAX_USER,
+			min: AUTH_MIN_USER,
+			field: "username",
+			required: true,
+		},
+	];
+
+	if (!user) return null;
+
+	const handleUserCheck = async (username: string): Promise<boolean> => {
+		if (username === user?.username) return true;
+		return await apiUserCheckAvailable(username, push);
 	};
 
-	const handleCancel = () => {
-		setChanges({});
-	};
-
-	const handleSave = async () => {
-		if (!user || !hasChanges) return;
-		const updatedUser = await apiUserPatchSelf(changes, push);
-		if (!updatedUser) return;
+	const handleSendEdit = async (data: TFormDataType): Promise<boolean> => {
+		if (!user) return false;
+		const updatedUser = await apiUserPatchSelf(data, push);
+		if (!updatedUser) return false;
 		setUser(updatedUser);
-		setChanges({});
 		push({ severity: "success", message: "Profile updated." });
+		return true;
 	};
-
 
 	const handleAvatarClick = () => {
 		avatarInputRef.current?.click();
@@ -75,46 +88,22 @@ function PProfileInformation({}: PProfileInformationProps) {
 		apiUserUploadAvatar(file, setUser, push);
 	};
 
-	if (!user) return null;
+
 
 	return (
 		<Stack direction={"row"} sx={{ flex: 1}}>
 			<Stack sx={style.main}>
-				<CTextFieldOutlined
-					label="First Name"
-					value={changes.firstName ?? user?.firstName ?? ""}
-					onChange={(el) => handleChange("firstName", el.target.value)}
-					sx={style.input}
-					styling="neutral"
-					fullWidth
+				<CForm
+					entries={profileInfoEntries}
+					values={{
+						firstName: user.firstName ?? "",
+						lastName: user.lastName ?? "",
+						username: user.username,
+					}}
+					onSendEdit={handleSendEdit}
+					onUsernameCheck={handleUserCheck}
+					managedButtonPosition="flex-end"
 				/>
-
-				<CTextFieldOutlined
-					label="Last Name"
-					value={changes.lastName ?? user?.lastName ?? ""}
-					onChange={(el) => handleChange("lastName", el.target.value)}
-					sx={style.input}
-					styling="neutral"
-					fullWidth
-				/>
-
-				<CTextFieldOutlined
-					label="Username"
-					value={changes.username ?? user?.username ?? ""}
-					onChange={(el) => handleChange("username", el.target.value)}
-					sx={style.input}
-					styling="neutral"
-					fullWidth
-				/>
-
-				{hasChanges && (
-					<Stack direction="row" sx={style.buttons}>
-						<CButtonText onClick={handleCancel} styling="cancel">
-							Cancel
-						</CButtonText>
-						<CButtonText onClick={handleSave}>Save</CButtonText>
-					</Stack>
-				)}
 			</Stack>
 			<CSplitterRow
 				color={appTheme.colors.primary[2]}
