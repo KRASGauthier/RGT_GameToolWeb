@@ -132,6 +132,7 @@ function CForm({
 	const handleOnChange = (value: string | boolean | IVersion, field: string) => {
 		const copy: TFormDataType = structuredClone(valueObject);
 		copy[field] = value;
+		console.log(copy)
 		setValueObject(copy);
 		onChange?.(copy, isValid(copy));
 	};
@@ -154,7 +155,7 @@ function CForm({
 		const checked: TFormDataType =
 			toCheck ?? (isManaged() && currentValues ? currentValues : valueObject);
 		for (let i = 0; i < entries.length; i++) {
-			if (!entries[i].required) continue;
+			if (!entries[i].required || entries[i].type == "password-confirm") continue;
 			if (entries[i].field) {
 				if (!checked[entries[i].field!]) return false;
 			} else {

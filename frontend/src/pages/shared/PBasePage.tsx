@@ -8,6 +8,7 @@ import {
 	ChecklistRounded,
 	TimelineRounded,
 	BugReportRounded,
+	PersonRounded,
 } from "@mui/icons-material";
 import type { TListMenuGroupData } from "../../../rgt/components/data/lists/subs/CListMenuGroup";
 import { EAppMenus } from "../../consts";
@@ -61,6 +62,12 @@ function PBasePage({}: PBasePageProps) {
 						value: EAppMenus.HOME,
 						display: "Home",
 						icon: <HomeRounded />,
+					},
+					{
+						color: { normal: "secondary" },
+						value: EAppMenus.PROFILE,
+						display: "Profile",
+						icon: <PersonRounded />,
 					},
 				]}
 				groups={groups}

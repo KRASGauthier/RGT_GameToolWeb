@@ -2,9 +2,10 @@ import { TAPIChecker } from "../types/api/TAPI.js";
 
 export function checkApiSub(data: Record<string, unknown>, checker: TAPIChecker) {
 	Object.entries(checker).forEach(([key, value]) => {
-		if (!(key in data))
-			throw { code: 400, message: "Contract missmatch", log: `Missing field: ${key}` };
-		else if (value.type != "checker" && typeof data[key] != value.type)
+		if (!(key in data)) {
+			if (!value.optional)
+				throw { code: 400, message: "Contract missmatch", log: `Missing field: ${key}` };
+		} else if (value.type != "checker" && typeof data[key] != value.type)
 			throw {
 				code: 400,
 				message: "Contract missmatch",

@@ -11,7 +11,7 @@ import CSplitterRow from "../../../rgt/components/splitters/CSplitterRow";
 import AddIcon from "@mui/icons-material/Add";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router";
-import { ROUTE_PROJECT, ROUTE_PROJECT_NEW } from "../../consts";
+import { ROUTE_PROFILE, ROUTE_PROJECT, ROUTE_PROJECT_NEW } from "../../consts";
 
 export interface PHomeProps extends GCompProps {}
 
@@ -49,6 +49,9 @@ function PHome({}: PHomeProps) {
 					{user.username}{" "}
 				</CTitle>
 				<CButtonIcon
+					onClick={() => {
+						navigate(ROUTE_PROFILE);
+					}}
 					styling="light"
 					sx={{ ml: "auto !important" }}
 					padding={"5px"}
