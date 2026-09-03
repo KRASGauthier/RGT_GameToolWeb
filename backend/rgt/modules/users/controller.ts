@@ -94,7 +94,7 @@ export const patchUserSelf = async (req: Request, res: Response) => {
 	);
 
 	const updatedUser = await User.findByIdAndUpdate(req.user, update, {
-		returnAfter: true,
+		returnDocument: "after",
 		runValidators: true,
 	});
 
