@@ -16,6 +16,7 @@ import { apiGetUserProject } from "../../api/project/projectAPI";
 import { useNotif } from "../../../rgt/context/app/CAppNotifContext";
 import type { IProject } from "../../types/data/project/TProject";
 import PHomeProjectCard from "./PHomeProjectCard";
+import CSkeleton from "../../../rgt/components/feedback/skeleton/CSkeleton";
 
 export interface PHomeProps extends GCompProps {}
 
@@ -24,7 +25,7 @@ const GRID_COUNT = 4;
 function PHome({}: PHomeProps) {
 	//====================== DATA ======================
 	const { user, logout } = useAuth();
-	const [projects, setProjects] = useState<IProject[]>([]);
+	const [projects, setProjects] = useState<IProject[] | undefined>(undefined);
 	const navigate = useNavigate();
 	const { push } = useNotif();
 
@@ -35,17 +36,33 @@ function PHome({}: PHomeProps) {
 
 	//====================== NODE ======================
 	const addButton: ReactNode = (
-		<Grid>
+		<Grid size={12 / GRID_COUNT}>
 			<CButtonIcon
 				icon={<AddIcon />}
 				onClick={() => navigate(ROUTE_PROJECT + ROUTE_PROJECT_NEW)}
+				sx={{ height: "100%", width: "100%", minHeight: "300px" }}
 			/>
 		</Grid>
 	);
 	const projectList: ReactNode = useMemo(() => {
+		if (!projects) {
+			const skeletonList: ReactNode[] = [];
+			for (let i = 0; i < 3; i++)
+				skeletonList.push(
+					<Grid key={i} size={12 / GRID_COUNT}>
+						<CSkeleton
+							variant="rectangular"
+							animation="wave"
+							sx={{ minHeight: "300px", borderRadius: appTheme.shapes.radius.small }}
+						/>
+					</Grid>,
+				);
+			return skeletonList;
+		}
+
 		return projects.map((project: IProject) => {
 			return (
-				<Grid size={12 / GRID_COUNT}>
+				<Grid key={project.uid} size={12 / GRID_COUNT}>
 					<PHomeProjectCard project={project} />
 				</Grid>
 			);
@@ -55,7 +72,7 @@ function PHome({}: PHomeProps) {
 	if (!user) return <>No user</>;
 
 	return (
-		<Stack sx={{ flex: 1 }}>
+		<Stack sx={{ flex: 1, overflow: "hidden" }}>
 			<Stack
 				sx={{
 					mx: appTheme.shapes.spacing.medium,
@@ -85,12 +102,19 @@ function PHome({}: PHomeProps) {
 					icon={<LogoutIcon sx={{ fontSize: appTheme.fonts.title.size.sm }} />}
 				/>
 			</Stack>
-			<Stack direction="row" sx={{ mx: appTheme.shapes.spacing.medium, flex: 1 }}>
+			<Stack
+				direction="row"
+				sx={{ mx: appTheme.shapes.spacing.medium, flex: 1, overflow: "hidden" }}
+			>
 				<Stack direction={"column"} sx={{ mt: "20px", flex: 1 }}>
 					<CTitle size="sm" weight={7}>
 						Projects
 					</CTitle>
-					<Grid container spacing={appTheme.shapes.spacing.main}>
+					<Grid
+						container
+						spacing={appTheme.shapes.spacing.main}
+						sx={{ overflow: "auto" }}
+					>
 						{projectList}
 						{addButton}
 					</Grid>

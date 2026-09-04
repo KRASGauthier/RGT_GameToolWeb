@@ -16,12 +16,16 @@ import { useMemo } from "react";
 import CTitle from "../../../rgt/components/text/CTitle";
 import CSplitterCollumn from "../../../rgt/components/splitters/CSplitterCollumn";
 import { versionToString } from "../../../rgt/types/TShared";
+import { useTab } from "../../../rgt/context/navigation/CTabProvider";
+import { ROUTE_PROJECT, ROUTE_PROJECT_ID } from "../../consts";
 
 export interface PHomeProjectCardProps extends GPageProps {
 	project: IProject;
 }
 
 function PHomeProjectCard({ project }: PHomeProjectCardProps) {
+	const { openTab } = useTab();
+
 	const style: IHomeProjectCardStyle = useMemo(() => {
 		return PHomeProjectCardStyle({});
 	}, []);
@@ -55,6 +59,17 @@ function PHomeProjectCard({ project }: PHomeProjectCardProps) {
 			styling="medium"
 			sx={style.main}
 			borderRadius={appTheme.shapes.radius.small}
+			onClick={() => {
+				openTab(
+					{
+						value: project.uid,
+						route: ROUTE_PROJECT + ROUTE_PROJECT_ID,
+						display: project.name,
+						icon: "project",
+					},
+					true,
+				);
+			}}
 		>
 			<Stack sx={style.stack} direction={"column"}>
 				<CImage
