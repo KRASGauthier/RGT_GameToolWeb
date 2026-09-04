@@ -37,17 +37,17 @@ function PProjectNew({}: PProjectNewProps) {
 	const style: IProjectNewStyle = useMemo(() => {
 		return PProjectNewStyle({});
 	}, []);
-	const {push} = useNotif();
+	const { push } = useNotif();
 
 	//====================== FUNCTIONS ======================
 	const handleCreate = () => {
 		const data: TAPIProjectCreate = {
-			...formData as {name: string, version: IVersion, title?: string},
+			...(formData as { name: string; version: IVersion; title?: string }),
 			engine: engine,
-    		language: lang,
-		}
-		apiProjectCreate(data, push)
-	}
+			language: lang,
+		};
+		apiProjectCreate(data, push);
+	};
 
 	//====================== NODES ======================
 	return (
@@ -123,7 +123,7 @@ function PProjectNew({}: PProjectNewProps) {
 					<CToggle
 						label="Engine:"
 						styling="medium"
-						checkedStyling="checkedLight"
+						checkedStyling="checked-light"
 						entries={[{ ...DProjectEngine.unrealEngine }, { ...DProjectEngine.godot }]}
 						value={engine}
 						onChange={(value: string) => {
@@ -141,7 +141,7 @@ function PProjectNew({}: PProjectNewProps) {
 					<CToggle
 						label="Language:"
 						styling="medium"
-						checkedStyling="checkedLight"
+						checkedStyling="checked-light"
 						entries={DProjectEngine[engine].langs}
 						value={lang}
 						onChange={(value: string) => setLang(value as TProjectLanguageTypes)}
