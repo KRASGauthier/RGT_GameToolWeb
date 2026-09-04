@@ -8,6 +8,7 @@ import { Stack } from "@mui/material";
 
 export interface PBaseTabPageProps extends GPageProps {
 	iconLibrary?: TTabProviderIconLibrary;
+	forceHome?: boolean;
 }
 function PBaseTabPageSub({ iconLibrary }: PBaseTabPageProps) {
 	const { tabs, activeTab, setTab, closeTab } = useTab();
@@ -26,9 +27,9 @@ function PBaseTabPageSub({ iconLibrary }: PBaseTabPageProps) {
 	);
 }
 
-function PBaseTabPage({ ...other }: PBaseTabPageProps) {
+function PBaseTabPage({ forceHome, ...other }: PBaseTabPageProps) {
 	return (
-		<CTabProvider>
+		<CTabProvider forceHome={forceHome}>
 			<PBaseTabPageSub {...other} />
 		</CTabProvider>
 	);

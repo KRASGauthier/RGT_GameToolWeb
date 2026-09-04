@@ -47,10 +47,11 @@ const LS_TAB_PROVIDER_SAVE = "CTabProvider-Save";
 //                     NODE
 //--------------------------------------------------
 export interface CTabProviderProps {
+	forceHome?: boolean;
 	children: ReactNode;
 }
 
-function CTabProvider({ children }: CTabProviderProps) {
+function CTabProvider({ forceHome, children }: CTabProviderProps) {
 	//====================== DATA ======================
 	const [tabs, setTabs] = useState<ITabEntryContext[]>(
 		JSON.parse(localStorage.getItem(LS_TAB_PROVIDER_SAVE) ?? "[]") as ITabEntryContext[],
@@ -89,15 +90,17 @@ function CTabProvider({ children }: CTabProviderProps) {
 			if (
 				(entry != null && !tabs.find((tab: ITabEntryContext) => tab.value == entry)) ||
 				activeTab == entry
-			)
+			) {
+				if (entry == null && forceHome) navigateTo(null);
 				return;
+			}
 			navigateTo(
 				entry == null
 					? null
 					: (tabs.find((tab: ITabEntryContext) => tab.value == entry) ?? null),
 			);
 		},
-		[tabs, activeTab, navigateTo],
+		[tabs, activeTab, forceHome, navigateTo],
 	);
 
 	const closeTab = useCallback(
