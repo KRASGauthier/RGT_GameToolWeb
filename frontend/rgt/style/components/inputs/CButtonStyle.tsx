@@ -6,10 +6,7 @@ import {
 	sizeToString,
 } from "../../../utils/UStyles";
 import { appTheme } from "../../../../src/style/theme";
-import type {
-	CButtonGlobalProps,
-	TButtonStylingTypes,
-} from "../../../components/inputs/buttons/CButton";
+import type { CButtonGlobalProps } from "../../../components/inputs/buttons/CButton";
 
 //--------------------------------------------------
 //                    STYLING
@@ -22,9 +19,8 @@ interface IButtonStyling {
 	text?: string;
 	textHover?: string;
 }
-type TButtonStyling = Record<TButtonStylingTypes, IButtonStyling>;
 
-const stylingContent: TButtonStyling = {
+const stylingContent = {
 	//--------------------- Checked ---------------------
 	dark: {
 		normal: [appTheme.colors.primary[2], appTheme.colors.quaternary[3]],
@@ -50,6 +46,33 @@ const stylingContent: TButtonStyling = {
 			appTheme.colors.primary[6],
 			appTheme.colors.secondary[6],
 			appTheme.colors.quinary[7],
+		],
+		disabled: [appTheme.colors.greys[6], appTheme.colors.greys[7]],
+	},
+	"secondary-dark": {
+		normal: [appTheme.colors.secondary[2], appTheme.colors.quinary[3]],
+		hovered: [
+			appTheme.colors.secondary[2],
+			appTheme.colors.primary[2],
+			appTheme.colors.quaternary[3],
+		],
+		disabled: [appTheme.colors.greys[2], appTheme.colors.greys[3]],
+	},
+	"secondary-medium": {
+		normal: [appTheme.colors.secondary[4], appTheme.colors.quinary[5]],
+		hovered: [
+			appTheme.colors.secondary[4],
+			appTheme.colors.primary[4],
+			appTheme.colors.quaternary[5],
+		],
+		disabled: [appTheme.colors.greys[4], appTheme.colors.greys[5]],
+	},
+	"secondary-light": {
+		normal: [appTheme.colors.secondary[6], appTheme.colors.quinary[7]],
+		hovered: [
+			appTheme.colors.secondary[6],
+			appTheme.colors.primary[6],
+			appTheme.colors.quaternary[7],
 		],
 		disabled: [appTheme.colors.greys[6], appTheme.colors.greys[7]],
 	},
@@ -85,7 +108,7 @@ const stylingContent: TButtonStyling = {
 	},
 
 	//--------------------- Checked ---------------------,
-	checkedLight: {
+	"checked-light": {
 		normal: [appTheme.colors.secondary[6], appTheme.colors.quinary[7]],
 		hovered: [
 			appTheme.colors.secondary[6],
@@ -95,7 +118,8 @@ const stylingContent: TButtonStyling = {
 		disabled: [appTheme.colors.greys[6], appTheme.colors.greys[7]],
 		text: appTheme.colors.black,
 	},
-};
+} as const satisfies Record<string, IButtonStyling>;
+export type TButtonStylingTypes = keyof typeof stylingContent;
 
 //--------------------------------------------------
 //                      SX
@@ -116,46 +140,37 @@ export const CButtonStyle = ({
 
 	checked = false,
 	styling = "light",
+	borderRadius,
 	checkedStyling,
 }: IButtonStyleProps): IButtonStyle => {
 	let currentStyling: TButtonStylingTypes = styling;
-	if (checked)
-		currentStyling =
-			checkedStyling ??
-			(`checked${styling.charAt(0).toUpperCase()}${styling.slice(1)}` as TButtonStylingTypes);
+	if (checked) currentStyling = checkedStyling ?? (`checked-${styling}` as TButtonStylingTypes);
+	const current: IButtonStyling = stylingContent[currentStyling] as IButtonStyling;
 
 	//====================== COLOR ======================
-	const background = colorGetBackground(
-		stylingContent[currentStyling].normal,
-		undefined,
-		stylingContent[currentStyling].type ?? "linear",
-		145,
-	);
+	const background = colorGetBackground(current.normal, undefined, current.type ?? "linear", 145);
 	const backgroundHover = colorGetBackground(
-		stylingContent[currentStyling].hovered,
+		current.hovered,
 		undefined,
-		stylingContent[currentStyling].type ?? "linear",
+		current.type ?? "linear",
 		145,
 	);
 	const backgroundDisabled = colorGetBackground(
-		stylingContent[currentStyling].disabled,
+		current.disabled,
 		undefined,
-		stylingContent[currentStyling].type ?? "linear",
+		current.type ?? "linear",
 		145,
 	);
 
 	//====================== TEXT ======================
-	const textColor = stylingContent[currentStyling].text ?? appTheme.colors.white;
-	const textHoverColor =
-		stylingContent[currentStyling].textHover ??
-		stylingContent[currentStyling].text ??
-		appTheme.colors.white;
+	const textColor = current.text ?? appTheme.colors.white;
+	const textHoverColor = current.textHover ?? current.text ?? appTheme.colors.white;
 
 	return {
 		main: {
 			background,
 			color: textColor,
-			borderRadius: appTheme.shapes.radius.large,
+			borderRadius: sizeToString(borderRadius, sizeToString(appTheme.shapes.radius.large)),
 			boxShadow: shadowGenerate(getQuadStyle(elevation) ?? 15),
 			p: padding ?? sizeToString(padding, "6px 16px"),
 
@@ -188,7 +203,10 @@ export const CButtonStyle = ({
 					});
 				},
 
-				borderRadius: appTheme.shapes.radius.large,
+				borderRadius: sizeToString(
+					borderRadius,
+					sizeToString(appTheme.shapes.radius.large),
+				),
 			},
 			"&:hover::before": {
 				opacity: 1,

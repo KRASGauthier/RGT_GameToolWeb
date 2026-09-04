@@ -3,7 +3,6 @@ import { CButtonStyle, type IButtonStyle } from "../../../style/components/input
 import CButtonIcon, { type CButtonIconProps } from "./CButtonIcon";
 import { sxMerger } from "../../../utils/UStyles";
 import { useLocation, useNavigate } from "react-router";
-import { appTheme } from "../../../../src/style/theme";
 
 interface CButtonNavProps extends CButtonIconProps {
 	path: string;
@@ -28,8 +27,6 @@ function CButtonNav({ path, isGeneral, sx, ...other }: CButtonNavProps) {
 			}}
 			checked={checked}
 			sx={sxMerger(style.nav, sx ? sx : {})}
-			textColor={appTheme.colors.black}
-			textHoverColor={appTheme.colors.black}
 			{...other}
 		/>
 	);

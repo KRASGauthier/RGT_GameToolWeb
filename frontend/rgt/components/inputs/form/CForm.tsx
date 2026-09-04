@@ -7,7 +7,6 @@ import { CFormStyle, type IFormStyle } from "../../../style/components/inputs/CF
 import { appTheme } from "../../../../src/style/theme";
 import CButtonText from "../buttons/CButtonText";
 import type { CInputOutlinedStyling } from "../../../style/components/inputs/sharedStyle";
-import type { TButtonStylingTypes } from "../buttons/CButton";
 import type { TSize } from "../../../types/TStyles";
 import CFormPasswordConfirm from "./CFormPasswordConfirm";
 import CFormText from "./CFormText";
@@ -15,6 +14,7 @@ import CFormUser from "./CFormUser";
 import type { TErrorInfo } from "../../../types/api/TAPI";
 import type { IVersion } from "../../../types/TShared";
 import CFormVersion from "./CFormVersion";
+import type { TButtonStylingTypes } from "../../../style/components/inputs/CButtonStyle";
 
 //--------------------------------------------------
 //                      TYPES
@@ -111,12 +111,17 @@ function CForm({
 	}, [minWidth]);
 
 	const [valueObject, setValueObject] = useState<TFormDataType>(() => {
-			const entryFound = entries.find((entry: IFormEntry) => { return entry.type == "version"});
-			if(!entryFound)
-				return {};
-			return {
-				[entryFound.field ?? getFormTypeDefaultField("version")]: {major: 1, minor: 0, patch: 0}
-			}
+		const entryFound = entries.find((entry: IFormEntry) => {
+			return entry.type == "version";
+		});
+		if (!entryFound) return {};
+		return {
+			[entryFound.field ?? getFormTypeDefaultField("version")]: {
+				major: 1,
+				minor: 0,
+				patch: 0,
+			},
+		};
 	});
 	const currentValues: TFormDataType | undefined = isManaged()
 		? {

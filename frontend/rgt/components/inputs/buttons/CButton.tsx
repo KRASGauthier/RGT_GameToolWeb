@@ -1,18 +1,21 @@
 import { Button, type ButtonProps } from "@mui/material";
 import type { GCompProps } from "../../shared/ccommon";
-import { CButtonStyle, type IButtonStyle } from "../../../style/components/inputs/CButtonStyle";
+import {
+	CButtonStyle,
+	type IButtonStyle,
+	type TButtonStylingTypes,
+} from "../../../style/components/inputs/CButtonStyle";
 import { memo } from "react";
 import { sxMerger } from "../../../utils/UStyles";
 import type { TQuadStyle, TSize } from "../../../types/TStyles";
 
-export type TButtonStylingTypes =
-	"dark" | "medium" | "light" | "validate" | "cancel" | "transparent" | "checkedLight";
 export interface CButtonGlobalProps extends GCompProps {
 	elevation?: TQuadStyle<number>;
 
 	styling?: TButtonStylingTypes;
 	checkedStyling?: TButtonStylingTypes;
 	padding?: TSize;
+	borderRadius?: TSize;
 
 	checked?: boolean;
 }
@@ -33,6 +36,7 @@ function CButton({
 	styling,
 	checkedStyling,
 	padding,
+	borderRadius,
 	checked,
 	sx,
 	...other
@@ -42,6 +46,7 @@ function CButton({
 		styling,
 		checkedStyling,
 		padding,
+		borderRadius,
 		checked,
 	});
 
