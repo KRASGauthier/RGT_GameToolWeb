@@ -4,11 +4,16 @@ import type { CFormSubComponentProps } from "./CFormComponent";
 import CFormComponent from "./CFormComponent";
 import CText from "../../text/CText";
 import { appTheme } from "../../../../src/style/theme";
+import type { IVersion } from "../../../types/TShared";
 
 export interface CFormPasswordProps extends CFormSubComponentProps {}
 
 function CFormPassword({ entry, ...other }: CFormPasswordProps) {
 	const [value, setValue] = useState<string>("");
+	const setValueValid = (value: string | IVersion) => {
+		if (typeof value == "object") return;
+		setValue(value);
+	};
 
 	const check = useCallback((trimed: string, soft?: boolean) => {
 		if (!trimed.match(/^[\x21-\x7E]+$/)) return "Unallowed charcter is begin used";
@@ -89,7 +94,7 @@ function CFormPassword({ entry, ...other }: CFormPasswordProps) {
 			type="password"
 			subMessages={subMessages}
 			addEye
-			subValueChanged={setValue}
+			subValueChanged={setValueValid}
 			customCheck={check}
 			entry={entry}
 			{...other}
