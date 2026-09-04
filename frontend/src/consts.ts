@@ -25,7 +25,7 @@ export const API_BASE_SIMPLE = "/API";
 export const STATIC_IMAGES = "/images";
 
 //--------------------- project ---------------------
-export const API_PROJECT = "/projects"
+export const API_PROJECT = "/projects";
 
 //====================== CONSTS ======================
 export const AUTH_MIN_USER = 3;

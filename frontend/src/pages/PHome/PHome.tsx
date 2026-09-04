@@ -9,16 +9,31 @@ import CTitle from "../../../rgt/components/text/CTitle";
 import { useAuth } from "../../../rgt/context/auth/CAuthContext";
 import CSplitterRow from "../../../rgt/components/splitters/CSplitterRow";
 import AddIcon from "@mui/icons-material/Add";
-import type { ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router";
 import { ROUTE_PROJECT, ROUTE_PROJECT_NEW } from "../../consts";
+import { apiGetUserProject } from "../../api/project/projectAPI";
+import { useNotif } from "../../../rgt/context/app/CAppNotifContext";
+import type { IProject } from "../../types/data/project/TProject";
+import PHomeProjectCard from "./PHomeProjectCard";
 
 export interface PHomeProps extends GCompProps {}
 
-function PHome({}: PHomeProps) {
-	const { user, logout } = useAuth();
-	const navigate = useNavigate();
+const GRID_COUNT = 4;
 
+function PHome({}: PHomeProps) {
+	//====================== DATA ======================
+	const { user, logout } = useAuth();
+	const [projects, setProjects] = useState<IProject[]>([]);
+	const navigate = useNavigate();
+	const { push } = useNotif();
+
+	//====================== EVENT ======================
+	useEffect(() => {
+		apiGetUserProject(setProjects, push);
+	}, [push]);
+
+	//====================== NODE ======================
 	const addButton: ReactNode = (
 		<Grid>
 			<CButtonIcon
@@ -27,6 +42,15 @@ function PHome({}: PHomeProps) {
 			/>
 		</Grid>
 	);
+	const projectList: ReactNode = useMemo(() => {
+		return projects.map((project: IProject) => {
+			return (
+				<Grid size={12 / GRID_COUNT}>
+					<PHomeProjectCard project={project} />
+				</Grid>
+			);
+		});
+	}, [projects]);
 
 	if (!user) return <>No user</>;
 
@@ -66,7 +90,10 @@ function PHome({}: PHomeProps) {
 					<CTitle size="sm" weight={7}>
 						Projects
 					</CTitle>
-					<Grid sx={{ flex: 1 }}>{addButton}</Grid>
+					<Grid container spacing={appTheme.shapes.spacing.main}>
+						{projectList}
+						{addButton}
+					</Grid>
 				</Stack>
 				<CSplitterRow
 					color={appTheme.colors.primary[2]}
