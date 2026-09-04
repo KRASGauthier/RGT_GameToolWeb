@@ -1,6 +1,10 @@
 import { Box, Stack, type BoxProps } from "@mui/material";
 import type { GCompProps } from "../shared/ccommon";
-import { CImageStyle, type IImageStyle } from "../../style/components/images/CImageStyle";
+import {
+	CImageStyle,
+	type IImageStyle,
+	type TImageStyling,
+} from "../../style/components/images/CImageStyle";
 import { useMemo, useState, type ReactNode } from "react";
 import { sxMerger } from "../../utils/UStyles";
 import HideImageIcon from "@mui/icons-material/HideImage";
@@ -11,6 +15,7 @@ export interface CImageProps extends GCompProps, BoxProps {
 
 	aspectRatio?: string;
 	styled?: boolean;
+	styling?: TImageStyling;
 
 	editable?: boolean;
 	onEdit?: (file: File) => void;
@@ -22,6 +27,7 @@ function CImage({
 	src,
 
 	styled,
+	styling,
 	aspectRatio = "16 / 9",
 
 	editable = false,
@@ -34,8 +40,8 @@ function CImage({
 }: CImageProps) {
 	const [expended, setExpended] = useState<boolean>(false);
 	const style: IImageStyle = useMemo(() => {
-		return CImageStyle({ aspectRatio, styled });
-	}, [aspectRatio, styled]);
+		return CImageStyle({ aspectRatio, styled, styling });
+	}, [aspectRatio, styled, styling]);
 
 	//====================== NODE ======================
 	const emptyNode = (
