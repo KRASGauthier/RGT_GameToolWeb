@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
 import { IVersion } from "../types/TShared.js";
 
-export const versionSchema = new Schema<IVersion> (
+export const versionSchema = new Schema<IVersion>(
 	{
 		major: {
 			type: Number,
@@ -9,8 +9,8 @@ export const versionSchema = new Schema<IVersion> (
 			required: true,
 			validate: {
 				validator: Number.isInteger,
-				message: "major should be an integer"
-			}
+				message: "major should be an integer",
+			},
 		},
 		minor: {
 			type: Number,
@@ -18,8 +18,8 @@ export const versionSchema = new Schema<IVersion> (
 			required: true,
 			validate: {
 				validator: Number.isInteger,
-				message: "major should be an integer"
-			}
+				message: "major should be an integer",
+			},
 		},
 		patch: {
 			type: Number,
@@ -27,11 +27,11 @@ export const versionSchema = new Schema<IVersion> (
 			required: true,
 			validate: {
 				validator: Number.isInteger,
-				message: "major should be an integer"
-			}
-		}
+				message: "major should be an integer",
+			},
+		},
 	},
 	{
 		_id: false,
-	}
-)
+	},
+);
