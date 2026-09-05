@@ -22,6 +22,7 @@ import type { TFormDataType } from "../../components/inputs/form/CForm";
 import { api } from "../../api/shared";
 import type { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { API_AUTH, API_AUTH_REFRESH } from "../../consts";
+import type { IVersion } from "../../types/TShared";
 
 //--------------------------------------------------
 //                      LOCAL OVERRIDE
@@ -91,9 +92,9 @@ function CAuthContext({ children }: CAuthContextProps) {
 			data: TFormDataType,
 			setRemoteError?: React.Dispatch<React.SetStateAction<ReactNode>>,
 		) => {
-			let email: string | boolean | undefined = data.email;
+			let email: string | boolean | IVersion | undefined = data.email;
 			if (typeof email == "string") email = email.trim();
-			let password: string | boolean | undefined = data.password;
+			let password: string | boolean | IVersion | undefined = data.password;
 			if (typeof password == "string") password = password.trim();
 			if (!email || !password || typeof email != "string" || typeof password != "string")
 				return;

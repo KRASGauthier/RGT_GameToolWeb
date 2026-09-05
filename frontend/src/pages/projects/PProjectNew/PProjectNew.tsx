@@ -3,7 +3,6 @@ import type { GPageProps } from "../../../../rgt/pages/shared/pageCommon";
 import AddIcon from "@mui/icons-material/Add";
 import CTitle from "../../../../rgt/components/text/CTitle";
 import CButtonIconText from "../../../../rgt/components/inputs/buttons/CButtonIconText";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { appTheme } from "../../../style/theme";
 import {
 	PProjectNewStyle,
@@ -14,13 +13,25 @@ import CSplitterRow from "../../../../rgt/components/splitters/CSplitterRow";
 import CToggle from "../../../../rgt/components/inputs/toggle/CToggle";
 import {
 	DProjectEngine,
+	type IProject,
 	type TProjectEngineTypes,
 	type TProjectLanguage,
 	type TProjectLanguageTypes,
 } from "../../../types/data/project/TProject";
 import DoneIcon from "@mui/icons-material/Done";
 import CForm, { type TFormDataType } from "../../../../rgt/components/inputs/form/CForm";
-import { PROJECT_GAME_NAME_MAX, PROJECT_NAME_MAX, PROJECT_NAME_MIN } from "../../../consts";
+import {
+	PROJECT_GAME_NAME_MAX,
+	PROJECT_NAME_MAX,
+	PROJECT_NAME_MIN,
+	ROUTE_PROJECT,
+	ROUTE_PROJECT_ID,
+} from "../../../consts";
+import type { TAPIProjectCreate } from "../../../types/api/project/TAPIProject";
+import { apiProjectCreate } from "../../../api/project/projectAPI";
+import { useNotif } from "../../../../rgt/context/app/CAppNotifContext";
+import type { IVersion } from "../../../../rgt/types/TShared";
+import { useTab } from "../../../../rgt/context/navigation/CTabProvider";
 
 export interface PProjectNewProps extends GPageProps {}
 
@@ -33,6 +44,28 @@ function PProjectNew({}: PProjectNewProps) {
 	const style: IProjectNewStyle = useMemo(() => {
 		return PProjectNewStyle({});
 	}, []);
+	const { push } = useNotif();
+	const { openTab } = useTab();
+
+	//====================== FUNCTIONS ======================
+	const handleCreate = async () => {
+		const data: TAPIProjectCreate = {
+			...(formData as { name: string; version: IVersion; title?: string }),
+			engine: engine,
+			language: lang,
+		};
+		const project: IProject | undefined = await apiProjectCreate(data, push);
+		if (!project) return;
+		openTab(
+			{
+				value: project.uid,
+				display: project.name,
+				route: ROUTE_PROJECT + ROUTE_PROJECT_ID,
+				icon: "project",
+			},
+			true,
+		);
+	};
 
 	//====================== NODES ======================
 	return (
@@ -49,10 +82,6 @@ function PProjectNew({}: PProjectNewProps) {
 				<CTitle weight={7} size="sm">
 					New project
 				</CTitle>
-
-				<CButtonIconText sx={{ ml: "auto" }} styling="cancel" startIcon={<ArrowBackIcon />}>
-					Back
-				</CButtonIconText>
 			</Stack>
 			<Stack direction="row" sx={{ mx: appTheme.shapes.spacing.medium, flex: 1 }}>
 				<Stack
@@ -64,6 +93,7 @@ function PProjectNew({}: PProjectNewProps) {
 						Informations
 					</CTitle>
 					<CForm
+						outlinedStyling="neutral"
 						entries={[
 							{
 								type: "text",
@@ -107,7 +137,7 @@ function PProjectNew({}: PProjectNewProps) {
 					<CToggle
 						label="Engine:"
 						styling="medium"
-						checkedStyling="checkedLight"
+						checkedStyling="checked-light"
 						entries={[{ ...DProjectEngine.unrealEngine }, { ...DProjectEngine.godot }]}
 						value={engine}
 						onChange={(value: string) => {
@@ -125,7 +155,7 @@ function PProjectNew({}: PProjectNewProps) {
 					<CToggle
 						label="Language:"
 						styling="medium"
-						checkedStyling="checkedLight"
+						checkedStyling="checked-light"
 						entries={DProjectEngine[engine].langs}
 						value={lang}
 						onChange={(value: string) => setLang(value as TProjectLanguageTypes)}
@@ -137,6 +167,7 @@ function PProjectNew({}: PProjectNewProps) {
 				styling="validate"
 				startIcon={<DoneIcon />}
 				sx={{ mx: "auto", mb: "50px" }}
+				onClick={handleCreate}
 			>
 				Create
 			</CButtonIconText>

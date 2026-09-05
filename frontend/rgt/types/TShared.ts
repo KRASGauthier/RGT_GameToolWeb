@@ -13,3 +13,6 @@ export interface IVersion {
 	minor: number;
 	patch: number;
 }
+export const versionToString = (version: IVersion) => {
+	return `${version.major.toFixed(0)}.${version.minor.toFixed(0)}.${version.patch.toFixed(0)}`;
+};

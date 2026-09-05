@@ -5,8 +5,8 @@ import { CToggleStyle, type IToggleStyle } from "../../../style/components/input
 import { useMemo, type ReactNode } from "react";
 import { sxMerger } from "../../../utils/UStyles";
 import type { TSize } from "../../../types/TStyles";
-import type { TButtonStylingTypes } from "../buttons/CButton";
 import CText from "../../text/CText";
+import type { TButtonStylingTypes } from "../../../style/components/inputs/CButtonStyle";
 
 //--------------------------------------------------
 //                     TYPES
