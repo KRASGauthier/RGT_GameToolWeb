@@ -9,7 +9,6 @@ import PProfileSecurity from "./components/PProfileSecurity";
 import CTitle from "../../../rgt/components/text/CTitle";
 import type { TListMenuCompData } from "../../../rgt/components/data/lists/subs/CListMenuComp";
 
-
 export interface PProfileProps extends GPageProps {}
 
 const profileMenuItems: TListMenuCompData[] = [
@@ -34,9 +33,8 @@ const profileMenuItems: TListMenuCompData[] = [
 ];
 
 function PProfile({}: PProfileProps) {
-
 	const [currentMenu, setCurrentMenu] = useState<string>("information");
-	
+
 	return (
 		<Stack direction="row" sx={{ flex: 1 }}>
 			<CDrawerMenu

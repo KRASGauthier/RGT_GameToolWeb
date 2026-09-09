@@ -8,7 +8,6 @@ export interface IPProfileStyle {
 	buttons: SxProps<Theme>;
 }
 
-
 export const PProfileStyle = (): IPProfileStyle => {
 	return {
 		main: {

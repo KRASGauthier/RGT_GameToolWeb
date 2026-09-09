@@ -6,7 +6,7 @@ import {
 	ROUTE_AUTH,
 	ROUTE_PROFILE,
 	ROUTE_PROJECT,
-    ROUTE_PROJECT_ID,
+	ROUTE_PROJECT_ID,
 	ROUTE_PROJECT_NEW,
 } from "./consts";
 import PAuth from "../rgt/pages/PAuth/PAuth";

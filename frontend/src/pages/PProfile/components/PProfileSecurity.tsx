@@ -35,11 +35,7 @@ function PProfileSecurity({}: PProfileSecurityProps) {
 	];
 
 	const handleSendEdit = async (data: TFormDataType): Promise<boolean> => {
-		return apiChangePassword(
-			data.currentPassword as string,
-			data.newPassword as string,
-			push,
-		);
+		return apiChangePassword(data.currentPassword as string, data.newPassword as string, push);
 	};
 
 	return (

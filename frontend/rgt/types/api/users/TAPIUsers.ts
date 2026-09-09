@@ -28,7 +28,7 @@ export interface IAPIChangePassword {
 }
 export const IAPIChangePasswordChecker: TAPIChecker = {
 	currentPassword: { type: "string" },
-	newPassword: { type: "string"},
+	newPassword: { type: "string" },
 };
 
 //--------------------------------------------------

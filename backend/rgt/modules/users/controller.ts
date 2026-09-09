@@ -84,8 +84,6 @@ export const getUserSelfFull = async (req: Request, res: Response) => {
 	} as IAPIUserGetSelfFull);
 };
 
-
-
 export const patchUserSelf = async (req: Request, res: Response) => {
 	if (!req.user) throw { code: 400, message: "Missing user id" };
 	const update: IAPIUserPatchSelf = checkApi<IAPIUserPatchSelf>(
@@ -105,18 +103,14 @@ export const patchUserSelf = async (req: Request, res: Response) => {
 	} as IAPIUserGetSelfFull);
 };
 
-
 export const patchUserSelfAvatar = async (req: Request, res: Response) => {
 	if (!req.user) throw { code: 400, message: "Missing user id" };
 	if (!req.file) throw { code: 400, message: "Avatar file missing" };
 
-	const uploadLocation = `${process.env.BACKEND_UPLOADE_LOCATION ?? "/home/app/uploaded-dev"}/${STATIC_AVATARS}` ;
+	const uploadLocation = `${process.env.BACKEND_UPLOADE_LOCATION ?? "/home/app/uploaded-dev"}/${STATIC_AVATARS}`;
 	const fileName = `avatar-${req.user}-512.png`;
 	const finalPath = path.join(uploadLocation, fileName);
-	await sharp(req.file.path)
-		.resize(512, 512, { fit: "cover" })
-		.png()
-		.toFile(finalPath);
+	await sharp(req.file.path).resize(512, 512, { fit: "cover" }).png().toFile(finalPath);
 
 	await fs.unlink(req.file.path);
 
@@ -135,26 +129,26 @@ export const patchUserSelfAvatar = async (req: Request, res: Response) => {
 };
 
 export const patchUserPassword = async (req: Request, res: Response) => {
-    if (!req.user) throw { code: 400, message: "Missing user id" };
+	if (!req.user) throw { code: 400, message: "Missing user id" };
 
-    const data: IAPIChangePassword = checkApi<IAPIChangePassword>(
-        req.body,
-        IAPIChangePasswordChecker,
-    );
+	const data: IAPIChangePassword = checkApi<IAPIChangePassword>(
+		req.body,
+		IAPIChangePasswordChecker,
+	);
 
-    const user = await User.findById(req.user);
-    if (!user) throw { code: 404, message: "User not found" };
+	const user = await User.findById(req.user);
+	if (!user) throw { code: 404, message: "User not found" };
 
-    const isValid = await argon2.verify(user.password, data.currentPassword);
-    if (!isValid) throw { code: 401, message: "Current password is incorrect" };
+	const isValid = await argon2.verify(user.password, data.currentPassword);
+	if (!isValid) throw { code: 401, message: "Current password is incorrect" };
 
-    checkPassword(data.newPassword);
+	checkPassword(data.newPassword);
 
-    const hashedPassword = await argon2.hash(data.newPassword.trim());
-    user.password = hashedPassword;
-    await user.save();
+	const hashedPassword = await argon2.hash(data.newPassword.trim());
+	user.password = hashedPassword;
+	await user.save();
 
-    res.status(200).json({
-        message: "Password changed successfully",
-    });
+	res.status(200).json({
+		message: "Password changed successfully",
+	});
 };

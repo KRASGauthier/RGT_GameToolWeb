@@ -144,7 +144,7 @@ function CForm({
 	const handleOnChange = (value: string | boolean | IVersion, field: string) => {
 		const copy: TFormDataType = structuredClone(valueObject);
 		copy[field] = value;
-		console.log(copy)
+		console.log(copy);
 		setValueObject(copy);
 		onChange?.(copy, isValid(copy));
 	};

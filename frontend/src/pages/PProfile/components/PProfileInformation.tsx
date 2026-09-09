@@ -3,7 +3,12 @@ import { Stack } from "@mui/material";
 import CForm from "../../../../rgt/components/inputs/form/CForm";
 import type { IFormEntry, TFormDataType } from "../../../../rgt/components/inputs/form/CForm";
 import { useState, useEffect, useRef, type ChangeEvent, useMemo } from "react";
-import { apiUserGetFullSelf, apiUserPatchSelf, apiUserUploadAvatar, apiUserCheckAvailable } from "../../../../rgt/api/user/userAPI";
+import {
+	apiUserGetFullSelf,
+	apiUserPatchSelf,
+	apiUserUploadAvatar,
+	apiUserCheckAvailable,
+} from "../../../../rgt/api/user/userAPI";
 import { useNotif } from "../../../../rgt/context/app/CAppNotifContext";
 import type { IUserFull } from "../../../../rgt/types/data/TUser";
 import { PProfileStyle } from "../../../style/pages/profiles/PProfileStyle";
@@ -17,21 +22,20 @@ import CButtonText from "../../../../rgt/components/inputs/buttons/CButtonText";
 export interface PProfileInformationProps extends GCompProps {}
 
 function PProfileInformation({}: PProfileInformationProps) {
-
 	//====================== DATA ======================
 	const [user, setUser] = useState<IUserFull | undefined>(undefined);
-	
+
 	const { push } = useNotif();
-	
+
 	const avatarInputRef = useRef<HTMLInputElement | null>(null);
-	
+
 	//====================== EFFECT ======================
 	useEffect(() => {
 		apiUserGetFullSelf(setUser, push);
 	}, [push]);
-	
+
 	const style = useMemo(() => {
-		return PProfileStyle()
+		return PProfileStyle();
 	}, []);
 
 	const profileInfoEntries: IFormEntry[] = [
@@ -88,10 +92,8 @@ function PProfileInformation({}: PProfileInformationProps) {
 		apiUserUploadAvatar(file, setUser, push);
 	};
 
-
-
 	return (
-		<Stack direction={"row"} sx={{ flex: 1}}>
+		<Stack direction={"row"} sx={{ flex: 1 }}>
 			<Stack sx={style.main}>
 				<CForm
 					entries={profileInfoEntries}
@@ -109,7 +111,7 @@ function PProfileInformation({}: PProfileInformationProps) {
 				color={appTheme.colors.primary[2]}
 				elevation={20}
 				secondSize={"100%"}
-				sx={{ my: "auto"}}
+				sx={{ my: "auto" }}
 			/>
 			<Stack
 				sx={{
