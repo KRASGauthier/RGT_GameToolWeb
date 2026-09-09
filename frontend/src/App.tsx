@@ -15,8 +15,8 @@ import CProtectedRoute from "../rgt/components/routes/CProtectedRoute";
 import PHome from "./pages/PHome/PHome";
 import PBaseTabPage from "../rgt/pages/shared/PBaseTabPage";
 import PProjectNew from "./pages/projects/PProjectNew/PProjectNew";
-import PProject from "./pages/projects/PProject/PProject";
 import { DIconLibrary } from "./icons/IIconLibrary";
+import PProjectNav from "./pages/projects/PProjectNav/PProjectNav";
 import PProfile from "./pages/PProfile/PProfile";
 
 function App() {
@@ -37,7 +37,7 @@ function App() {
 								/>
 								<Route
 									path={ROUTE_PROJECT + ROUTE_PROJECT_ID}
-									element={<PProject />}
+									element={<PProjectNav />}
 								/>
 							</Route>
 						</Route>
