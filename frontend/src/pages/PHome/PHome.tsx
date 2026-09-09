@@ -11,7 +11,7 @@ import CSplitterRow from "../../../rgt/components/splitters/CSplitterRow";
 import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router";
-import { ROUTE_PROJECT, ROUTE_PROJECT_NEW } from "../../consts";
+import { ROUTE_PROJECT, ROUTE_PROJECT_NEW, ROUTE_PROFILE} from "../../consts";
 import { apiGetUserProject } from "../../api/project/projectAPI";
 import { useNotif } from "../../../rgt/context/app/CAppNotifContext";
 import type { IProject } from "../../types/data/project/TProject";
@@ -90,6 +90,9 @@ function PHome({}: PHomeProps) {
 					{user.username}{" "}
 				</CTitle>
 				<CButtonIcon
+					onClick={() => {
+						navigate(ROUTE_PROFILE);
+					}}
 					styling="light"
 					sx={{ ml: "auto !important" }}
 					padding={"5px"}

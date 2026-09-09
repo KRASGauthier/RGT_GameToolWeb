@@ -1,6 +1,7 @@
 //====================== ROOTING ======================
 export const EAppMenus: Record<string, string> = {
 	HOME: "home",
+	PROFILE: "profile",
 
 	MANAGEMENT_TODO: "todo",
 	MANAGEMENT_ROADMAP: "roadmap",
@@ -9,6 +10,9 @@ export const EAppMenus: Record<string, string> = {
 
 //Auth
 export const ROUTE_AUTH = "/auth";
+
+//Profile
+export const ROUTE_PROFILE = "/profile";
 
 //Project
 export const ROUTE_PROJECT = "/project";

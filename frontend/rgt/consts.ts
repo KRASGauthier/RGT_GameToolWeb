@@ -8,7 +8,12 @@ export const API_AUTH_LOGOUT_EVERYWHERE = "/logout-everywhere";
 //USER
 export const API_USER = "/users";
 export const API_USER_SELF = "/self";
+export const API_USER_SELF_AVATAR = "/avatar";
+export const API_USER_SELF_PASSWORD = "/password";
 export const API_USER_CHECK_AVAILABLE = "/available";
+
+//====================== STATIC ======================
+export const STATIC_AVATARS = "/avatars";
 
 //====================== COMMON ======================
 export const TIME_1S = 1000;
