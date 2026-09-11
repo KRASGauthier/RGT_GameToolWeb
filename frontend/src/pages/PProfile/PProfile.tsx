@@ -42,6 +42,7 @@ function PProfile({}: PProfileProps) {
 				onValueChange={setCurrentMenu}
 				comps={profileMenuItems}
 				groups={[]}
+				saveID="profile-menu"
 			/>
 			<Stack sx={{ flex: 1, p: 2, gap: 2 }}>
 				<CTitle size="md" weight={6} sx={{ textTransform: "capitalize" }}>

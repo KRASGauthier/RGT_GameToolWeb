@@ -55,6 +55,8 @@ export const checkField = (field: string, data: Record<string, unknown>, type?: 
 		throw { code: 400, message: `Field '${field}' is not of type ${type}` };
 };
 
-export const hasUser = (req: Request) => {
+export const hasUser: (req: Request) => asserts req is Request & { user: string } = (
+	req: Request,
+) => {
 	if (!req.user) throw { code: 400, message: "Missing user id" };
 };

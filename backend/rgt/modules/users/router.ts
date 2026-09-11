@@ -17,7 +17,7 @@ import {
 } from "../../consts.js";
 import { verifyJWT } from "../../middleware/jwt.js";
 import createLimiter from "../../middleware/limiter.js";
-import { uploadImage } from "../../middleware/upload.js";
+import { uploadInMemory } from "../../middleware/upload.js";
 
 const userRouter = express.Router();
 const limiter = createLimiter(LIMITER_REGISTER);
@@ -31,7 +31,7 @@ userRouter.patch(API_USER_SELF, verifyJWT, patchUserSelf);
 userRouter.patch(
 	API_USER_SELF + API_USER_SELF_AVATAR,
 	verifyJWT,
-	uploadImage.single("avatar"),
+	uploadInMemory.single("avatar"),
 	patchUserSelfAvatar,
 );
 userRouter.patch(API_USER_SELF + API_USER_SELF_PASSWORD, verifyJWT, patchUserPassword);

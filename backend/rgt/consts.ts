@@ -12,8 +12,10 @@ export const API_USER_SELF_AVATAR = "/avatar";
 export const API_USER_SELF_PASSWORD = "/password";
 export const API_USER_CHECK_AVAILABLE = "/available";
 
-//====================== STATIC ======================
-export const STATIC_AVATARS = "/avatars";
+//====================== IMAGES ======================
+export const IMG_USERS = "/users";
+export const IMG_USERS_ID = "/:UID";
+export const IMG_USERS_AVATAR = "/avatar.png";
 
 //====================== COMMON ======================
 export const TIME_1S = 1000;
