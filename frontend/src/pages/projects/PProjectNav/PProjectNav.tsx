@@ -18,7 +18,7 @@ import PProjectSettings from "../PProjectSettings/PProjectSettings";
 import CProjectProvider from "../../../context/CProjectContext";
 
 //--------------------------------------------------
-//                     SECTIONS 
+//                     SECTIONS
 //--------------------------------------------------
 export const EProjectSections = {
 	home: "home",
@@ -35,7 +35,7 @@ export const DProjectMenuComp: TListMenuCompData[] = [
 		value: EProjectSections.home,
 		display: "Home",
 		icon: <HomeRounded />,
-		color: {normal: "secondary"},
+		color: { normal: "secondary" },
 	},
 ];
 
@@ -44,7 +44,7 @@ export const DProjectMenuGroups: TListMenuGroupData[] = [
 		value: EProjectSections.project,
 		display: "Project",
 		icon: <FolderRounded />,
-		color: {normal: "tertiary"},
+		color: { normal: "tertiary" },
 		comps: [
 			{
 				value: EProjectSections.todo,
@@ -67,7 +67,7 @@ export const DProjectMenuGroups: TListMenuGroupData[] = [
 		value: EProjectSections.settings,
 		display: "Settings",
 		icon: <SettingsRounded />,
-		color: {normal: "grey"},
+		color: { normal: "grey" },
 		comps: [
 			{
 				value: EProjectSections.options,
@@ -78,44 +78,61 @@ export const DProjectMenuGroups: TListMenuGroupData[] = [
 	},
 ];
 
-
 //--------------------------------------------------
 //                       NODE
 //--------------------------------------------------
-export interface PProjectNavProps {
-
-}
+export interface PProjectNavProps {}
 
 function PProjectNavSub({}: PProjectNavProps) {
-
 	//====================== DATA ======================
-	const {tab, section} = useParams();
+	const { tab, section } = useParams();
 	const navigate = useNavigate();
 
 	//====================== FUNCTIONS ======================
 	const handleChange = (value: string) => {
-		navigate(generatePath(ROUTE_PROJECT + ROUTE_PROJECT_ID + ROUTE_PROJECT_SECCTION, { tab, section: value}))
-	}
+		navigate(
+			generatePath(ROUTE_PROJECT + ROUTE_PROJECT_ID + ROUTE_PROJECT_SECCTION, {
+				tab,
+				section: value,
+			}),
+		);
+	};
 	const current = useMemo(() => {
-		switch(section) {
+		switch (section) {
 			case EProjectSections.options:
-				return <PProjectSettings />
+				return <PProjectSettings />;
 		}
-	}, [section])
+	}, [section]);
 
-	if(!section)
-		return <Navigate to={generatePath(ROUTE_PROJECT + ROUTE_PROJECT_ID + ROUTE_PROJECT_SECCTION, { tab, section: EProjectSections.home})} />
-	return <Stack direction={"row"} sx={{ flex: 1, overflow: "hidden"}} >
-		 <CDrawerMenu saveID="projectMenu" onValueChange={handleChange} value={section} comps={DProjectMenuComp} groups={DProjectMenuGroups}/>
-		 {current}
-	</Stack>
+	if (!section)
+		return (
+			<Navigate
+				to={generatePath(ROUTE_PROJECT + ROUTE_PROJECT_ID + ROUTE_PROJECT_SECCTION, {
+					tab,
+					section: EProjectSections.home,
+				})}
+			/>
+		);
+	return (
+		<Stack direction={"row"} sx={{ flex: 1, overflow: "hidden" }}>
+			<CDrawerMenu
+				saveID="projectMenu"
+				onValueChange={handleChange}
+				value={section}
+				comps={DProjectMenuComp}
+				groups={DProjectMenuGroups}
+			/>
+			{current}
+		</Stack>
+	);
 }
 
-
-function PProjectNav({...other}: PProjectNavProps) {
-	return <CProjectProvider>
-		<PProjectNavSub {...other} />
-	</CProjectProvider>
+function PProjectNav({ ...other }: PProjectNavProps) {
+	return (
+		<CProjectProvider>
+			<PProjectNavSub {...other} />
+		</CProjectProvider>
+	);
 }
 
 export default PProjectNav;

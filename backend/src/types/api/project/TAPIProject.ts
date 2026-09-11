@@ -71,10 +71,7 @@ export const TAPIProjectCreateChecker: TAPIChecker = {
 	language: projectChecker.language,
 };
 
-export type TAPIProjectModify = Partial<Pick<
-	IProject,
-	"name" | "title" | "version"
->>;
+export type TAPIProjectModify = Partial<Pick<IProject, "name" | "title" | "version">>;
 export const TAPIProjectModifyChecker: TAPIChecker = {
 	name: {
 		...projectChecker.name,

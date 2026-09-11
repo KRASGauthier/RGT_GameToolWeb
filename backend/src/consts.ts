@@ -20,13 +20,13 @@ export const ROUTE_PROJECT_NEW = "/new";
 export const ROUTE_PROJECT_ID = "/:tab";
 export const ROUTE_PROJECT_SECCTION = "/:section?";
 
-//Users	
+//Users
 export const ROUTE_USERS_ME = "/users/me";
 
 //====================== IMAGES ======================
-export const IMG_PROJECT = "/projects"
-export const IMG_PROJECT_UID = "/:uid"
-export const IMG_PROJECT_COVER = "/cover.png"
+export const IMG_PROJECT = "/projects";
+export const IMG_PROJECT_UID = "/:uid";
+export const IMG_PROJECT_COVER = "/cover.png";
 
 //====================== API ======================
 export const API_BASE = "http://localhost:8082/API/";

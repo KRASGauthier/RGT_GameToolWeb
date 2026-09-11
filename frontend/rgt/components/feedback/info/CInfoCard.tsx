@@ -7,15 +7,17 @@ import type { TCardStyling } from "../../../style/components/surfaces/CCardStyle
 
 export interface CInfoCardProps extends GCompProps {
 	cardStyling?: TCardStyling;
-	children: string | ReactNode
+	children: string | ReactNode;
 }
 
-function CInfoCard({cardStyling, children}: CInfoCardProps) {
-	return <Stack direction="column" sx={{ mt: "20px", alignItems: "center" }}>
-		<CCard styling={cardStyling}>
-			{typeof children == "string" ? <CText>{children}</CText> : children}
-		</CCard>
-	</Stack>
+function CInfoCard({ cardStyling, children }: CInfoCardProps) {
+	return (
+		<Stack direction="column" sx={{ mt: "20px", alignItems: "center" }}>
+			<CCard styling={cardStyling}>
+				{typeof children == "string" ? <CText>{children}</CText> : children}
+			</CCard>
+		</Stack>
+	);
 }
 
 export default CInfoCard;

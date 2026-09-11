@@ -9,13 +9,14 @@ export interface CChipProps extends GCompProps, Omit<ChipProps, "label"> {
 	label: string;
 }
 
-function CChip({label, sx, ...other}: CChipProps) {
-
+function CChip({ label, sx, ...other }: CChipProps) {
 	const style: IChipStyle = useMemo(() => {
 		return CChipStyle({});
-	}, [])
+	}, []);
 
-	return <Chip label={<CText>{label}</CText>} sx={sxMerger(style.main, sx ? sx : {})} {...other}/>
+	return (
+		<Chip label={<CText>{label}</CText>} sx={sxMerger(style.main, sx ? sx : {})} {...other} />
+	);
 }
 
 export default CChip;
