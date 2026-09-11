@@ -51,6 +51,7 @@ export interface IThemeSpacing {
 	grid: string;
 	small: string;
 	medium: string;
+	mediumLarge: string;
 }
 
 export interface IThemeShape {

@@ -143,6 +143,7 @@ export const appTheme: IAppTheme = {
 			searchTop: "5px",
 			small: "10px",
 			medium: "15px",
+			mediumLarge: "25px",
 		},
 	},
 
