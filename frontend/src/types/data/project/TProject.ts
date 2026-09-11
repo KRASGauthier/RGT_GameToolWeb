@@ -1,8 +1,8 @@
 import type { IVersion } from "../../../../rgt/types/TShared";
 
-export const TProjectEngineTypesConsts = ["unrealEngine", "godot"] as const;
+export const TProjectEngineTypesConsts = ["unrealEngine", "godot", "rgtSystem"] as const;
 export type TProjectEngineTypes = (typeof TProjectEngineTypesConsts)[number];
-export const TProjectLanguageTypesConsts = ["cpp", "cs", "gdscript"] as const;
+export const TProjectLanguageTypesConsts = ["cpp", "cs", "gdscript", "ts"] as const;
 export type TProjectLanguageTypes = (typeof TProjectLanguageTypesConsts)[number];
 
 //--------------------------------------------------
@@ -31,6 +31,10 @@ export const DProjectLanguages: Record<TProjectLanguageTypes, TProjectLanguage> 
 		value: "gdscript",
 		display: "GD Script",
 	},
+	ts: {
+		value: "ts",
+		display: "Typescript",
+	},
 };
 export const DProjectEngine: Record<TProjectEngineTypes, IProjectEngine> = {
 	unrealEngine: {
@@ -45,6 +49,12 @@ export const DProjectEngine: Record<TProjectEngineTypes, IProjectEngine> = {
 
 		langs: [DProjectLanguages.cs, DProjectLanguages.gdscript],
 	},
+	rgtSystem: {
+		value: "rgtSystem",
+		display: "RGT System",
+
+		langs: [DProjectLanguages.ts],
+	},
 };
 
 //--------------------------------------------------
@@ -56,7 +66,7 @@ export interface IProject {
 	uid: string;
 	name: string;
 	title?: string;
-	picture?: string;
+	cover?: string;
 	version: IVersion;
 
 	engine: TProjectEngineTypes;

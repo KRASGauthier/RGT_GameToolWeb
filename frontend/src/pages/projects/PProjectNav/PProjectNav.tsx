@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { generatePath, Navigate, useNavigate, useParams } from "react-router";
 import {
 	HomeRounded,
 	FolderRounded,
@@ -12,6 +12,10 @@ import CDrawerMenu from "../../../../rgt/components/navigation/drawers/CDrawerMe
 import type { TListMenuCompData } from "../../../../rgt/components/data/lists/subs/CListMenuComp";
 import type { TListMenuGroupData } from "../../../../rgt/components/data/lists/subs/CListMenuGroup";
 import { Stack } from "@mui/material";
+import { ROUTE_PROJECT, ROUTE_PROJECT_ID, ROUTE_PROJECT_SECCTION } from "../../../consts";
+import { useMemo } from "react";
+import PProjectSettings from "../PProjectSettings/PProjectSettings";
+import CProjectProvider from "../../../context/CProjectContext";
 
 //--------------------------------------------------
 //                     SECTIONS 
@@ -82,11 +86,36 @@ export interface PProjectNavProps {
 
 }
 
-function PProjectNav({}: PProjectNavProps) {
+function PProjectNavSub({}: PProjectNavProps) {
 
+	//====================== DATA ======================
+	const {tab, section} = useParams();
+	const navigate = useNavigate();
+
+	//====================== FUNCTIONS ======================
+	const handleChange = (value: string) => {
+		navigate(generatePath(ROUTE_PROJECT + ROUTE_PROJECT_ID + ROUTE_PROJECT_SECCTION, { tab, section: value}))
+	}
+	const current = useMemo(() => {
+		switch(section) {
+			case EProjectSections.options:
+				return <PProjectSettings />
+		}
+	}, [section])
+
+	if(!section)
+		return <Navigate to={generatePath(ROUTE_PROJECT + ROUTE_PROJECT_ID + ROUTE_PROJECT_SECCTION, { tab, section: EProjectSections.home})} />
 	return <Stack direction={"row"} sx={{ flex: 1, overflow: "hidden"}} >
-		 <CDrawerMenu comps={DProjectMenuComp} groups={DProjectMenuGroups}/>
+		 <CDrawerMenu saveID="projectMenu" onValueChange={handleChange} value={section} comps={DProjectMenuComp} groups={DProjectMenuGroups}/>
+		 {current}
 	</Stack>
+}
+
+
+function PProjectNav({...other}: PProjectNavProps) {
+	return <CProjectProvider>
+		<PProjectNavSub {...other} />
+	</CProjectProvider>
 }
 
 export default PProjectNav;

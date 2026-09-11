@@ -76,7 +76,7 @@ function PHomeProjectCard({ project }: PHomeProjectCardProps) {
 					styling="secondary-dark"
 					sx={style.image}
 					aspectRatio="16/9"
-					src={project.picture ?? ""}
+					src={project.cover ?? ""}
 				></CImage>
 				<CTitle size="sm" weight={8}>
 					{project.name}

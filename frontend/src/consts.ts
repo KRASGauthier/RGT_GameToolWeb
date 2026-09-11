@@ -18,9 +18,15 @@ export const ROUTE_PROFILE = "/profile";
 export const ROUTE_PROJECT = "/project";
 export const ROUTE_PROJECT_NEW = "/new";
 export const ROUTE_PROJECT_ID = "/:tab";
+export const ROUTE_PROJECT_SECCTION = "/:section?";
 
-//Users
+//Users	
 export const ROUTE_USERS_ME = "/users/me";
+
+//====================== IMAGES ======================
+export const IMG_PROJECT = "/projects"
+export const IMG_PROJECT_UID = "/:uid"
+export const IMG_PROJECT_COVER = "/cover.png"
 
 //====================== API ======================
 export const API_BASE = "http://localhost:8082/API/";
@@ -31,6 +37,8 @@ export const STATIC_IMAGES = "/images";
 
 //--------------------- project ---------------------
 export const API_PROJECT = "/projects";
+export const API_PROJECT_TARGET = "/:uid";
+export const API_PROJECT_TARGET_PICTURE = "/picture";
 
 //====================== CONSTS ======================
 export const AUTH_MIN_USER = 3;

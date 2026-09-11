@@ -138,7 +138,7 @@ function PProjectNew({}: PProjectNewProps) {
 						label="Engine:"
 						styling="medium"
 						checkedStyling="checked-light"
-						entries={[{ ...DProjectEngine.unrealEngine }, { ...DProjectEngine.godot }]}
+						entries={[{ ...DProjectEngine.unrealEngine }, { ...DProjectEngine.godot }, { ...DProjectEngine.rgtSystem }]}
 						value={engine}
 						onChange={(value: string) => {
 							setEngine(value as TProjectEngineTypes);

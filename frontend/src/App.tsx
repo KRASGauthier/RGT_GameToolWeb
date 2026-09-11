@@ -8,6 +8,7 @@ import {
 	ROUTE_PROJECT,
 	ROUTE_PROJECT_ID,
 	ROUTE_PROJECT_NEW,
+	ROUTE_PROJECT_SECCTION,
 } from "./consts";
 import PAuth from "../rgt/pages/PAuth/PAuth";
 import CAuthContext from "../rgt/context/auth/CAuthContext";
@@ -36,7 +37,7 @@ function App() {
 									element={<PProjectNew />}
 								/>
 								<Route
-									path={ROUTE_PROJECT + ROUTE_PROJECT_ID}
+									path={ROUTE_PROJECT + ROUTE_PROJECT_ID + ROUTE_PROJECT_SECCTION}
 									element={<PProjectNav />}
 								/>
 							</Route>
