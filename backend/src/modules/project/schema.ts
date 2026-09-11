@@ -42,6 +42,7 @@ const projectSchema = new Schema<IProjectDB, Model<IProjectDB>, IProjectDBMethod
 			default: "",
 			maxLength: PROJECT_GAME_NAME_MAX,
 		},
+		cover: String,
 		version: {
 			type: versionSchema,
 			required: true,
@@ -69,6 +70,7 @@ projectSchema.set("toJSON", {
 		uid: ret._id.toString(),
 		name: ret.name,
 		title: ret.title,
+		cover: ret.cover,
 		version: ret.version,
 
 		engine: ret.engine,
@@ -87,6 +89,7 @@ projectSchema.method("getProjectFull", async function (): Promise<IProject> {
 		uid: this._id.toString(),
 		name: this.name,
 		title: this.title,
+		cover: this.cover,
 		version: this.version,
 
 		engine: this.engine,
