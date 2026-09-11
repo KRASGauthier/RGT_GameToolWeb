@@ -1,19 +1,27 @@
 import { Skeleton, type SkeletonProps } from "@mui/material";
 import type { GPageProps } from "../../../pages/shared/pageCommon";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import {
 	CSkeletonStyle,
 	type ISkeletonStyle,
+	type TSkeletonStyleStyling,
 } from "../../../style/components/feedback/CSkeletonStyle";
 
-export interface CSkeletonProps extends GPageProps, SkeletonProps {}
+export interface CSkeletonProps extends GPageProps, SkeletonProps {
+	styling?: TSkeletonStyleStyling;
+}
 
-function CSkeleton({ ...other }: CSkeletonProps) {
+function CSkeleton({ styling = "rectangle", ...other }: CSkeletonProps) {
+	const getVariant = useCallback((): SkeletonProps["variant"] => {
+		if (styling == "text") return "text";
+		return "rectangular";
+	}, [styling]);
+
 	const style: ISkeletonStyle = useMemo(() => {
-		return CSkeletonStyle({});
-	}, []);
+		return CSkeletonStyle({ styling });
+	}, [styling]);
 
-	return <Skeleton sx={style.main} {...other} />;
+	return <Skeleton variant={getVariant()} sx={style.main} {...other} />;
 }
 
 export default CSkeleton;

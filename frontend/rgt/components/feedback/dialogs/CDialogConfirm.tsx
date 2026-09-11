@@ -9,7 +9,7 @@ export interface CDialogConfirmProps extends CDialogProps {
 	name?: string;
 }
 
-function CDialogConfirm({ type, name, ...other }: CDialogConfirmProps) {
+function CDialogConfirm({ type, name, actions = ["yes", "no"], ...other }: CDialogConfirmProps) {
 	const getText = (): ReactNode => {
 		if (!type && !name) return <CText>Are you sure you want to delete this ?</CText>;
 		if (!type && name)
@@ -36,7 +36,11 @@ function CDialogConfirm({ type, name, ...other }: CDialogConfirmProps) {
 			);
 	};
 
-	return <CDialog {...other}>{getText()}</CDialog>;
+	return (
+		<CDialog actions={actions} {...other}>
+			{getText()}
+		</CDialog>
+	);
 }
 
 export default CDialogConfirm;

@@ -22,7 +22,7 @@ const projectChecker: TAPIChecker = {
 		type: "string",
 		optional: true,
 	},
-	picture: {
+	cover: {
 		type: "string",
 		optional: true,
 	},

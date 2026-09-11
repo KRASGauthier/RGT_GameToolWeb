@@ -28,9 +28,13 @@ updateFile() {
 
 updateFolder "src/types/api"
 updateFolder "src/types/data"
+updateFolder "src/types/icons"
 updateFolder "rgt/types/api"
 updateFolder "rgt/types/data"
+updateFolder "rgt/types/components"
 updateFile "rgt/types/TShared.ts"
+updateFile "rgt/types/TStyles.ts"
+
 updateFolder "src/consts"
 updateFile "src/consts.ts"
 updateFile "rgt/consts.ts"
@@ -42,3 +46,25 @@ find "${TYPE_DIRS[@]}" -type f -name "*.ts" -exec sed -Ei \
 
 sed -Ei 's/\{([^}]+)\}/:\1/g' ./backend/src/consts.ts
 sed -Ei 's/\{([^}]+)\}/:\1/g' ./backend/rgt/consts.ts
+
+# Generate backend-only TIconLibrary from frontend DIconLibrary keys
+ICON_SOURCE="./frontend/src/types/icons/TIconLibrary.ts"
+ICON_DEST="./backend/src/types/icons/TIconLibrary.ts"
+
+if [[ -f "$ICON_SOURCE" ]]; then
+	mapfile -t ICON_KEYS < <(
+		sed -n '/export const DIconLibrary = {/,/} satisfies/p' "$ICON_SOURCE" |
+		sed -nE 's/^[[:space:]]*([A-Za-z_][A-Za-z0-9_]*)[[:space:]]*:.*$/\1/p'
+	)
+
+	{
+		echo -n "export type TIconLibrary = "
+		
+		for i in "${!ICON_KEYS[@]}"; do
+			[[ $i -gt 0 ]] && echo -n " | "
+			echo -n "\"${ICON_KEYS[$i]}\""
+		done
+
+		echo ";"
+	} > "$ICON_DEST"
+fi

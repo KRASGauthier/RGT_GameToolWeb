@@ -14,7 +14,7 @@ function PBaseTabPageSub({ iconLibrary }: PBaseTabPageProps) {
 	const { tabs, activeTab, setTab, closeTab } = useTab();
 
 	return (
-		<Stack sx={{ position: "absolute", inset: "0" }} direction={"column"}>
+		<Stack sx={{ position: "absolute", inset: "0", overflow: "hidden" }} direction={"column"}>
 			<CTabNavigation
 				iconLibrary={iconLibrary}
 				onChange={setTab}

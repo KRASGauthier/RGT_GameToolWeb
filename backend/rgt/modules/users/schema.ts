@@ -11,6 +11,7 @@ import {
 	AUTH_USER_MULTI_LANG,
 } from "../../../src/consts.js";
 import { IUserBase, IUserFull } from "../../types/data/TUser.js";
+import { linkUserPreSave } from "../../../src/link/user.js";
 
 export interface IUserBackendDB extends Omit<IUserBackend, "uid">, IDBData {}
 export interface IUserBackendDBMethods {
@@ -69,6 +70,17 @@ const userSchema = new Schema<IUserBackendDB, Model<IUserBackendDB>, IUserBacken
 		timestamps: true,
 	},
 );
+
+//--------------------------------------------------
+//                     EVENT
+//--------------------------------------------------
+userSchema.pre("save", async function () {
+	linkUserPreSave(this._id);
+});
+
+//--------------------------------------------------
+//                   CONVERTION
+//--------------------------------------------------
 userSchema.set("toJSON", {
 	transform: (_doc, ret) => ({
 		uid: ret._id.toString(),

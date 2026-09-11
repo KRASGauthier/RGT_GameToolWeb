@@ -140,7 +140,8 @@ export function colorAlterColor(
 		colorOut.brightness += Array.isArray(value) ? 0 : value;
 		colorOut.brightness = Math.max(Math.min(colorOut.brightness, 1), 0);
 	} else if (alter == "shift-hue") {
-		colorOut.hue += Array.isArray(value) ? 0 : value;
+		colorOut.hue = (colorOut.hue + ((Array.isArray(value) ? 0 : value) % 360) + 360) % 360;
+		if (colorOut.hue < 0) colorOut.hue *= -1;
 		colorOut.brightness = Math.max(Math.min(colorOut.brightness, 360), 0);
 		colorSetBase(colorOut);
 	}
@@ -170,11 +171,14 @@ export function colorGetAtPos(colorStart: string, colorEnd: string, per: number)
 	return colorColorToHex(colorOut);
 }
 
-export function colorGetTextColor(color: string, white?: string, black?: string): string {
-	const colorOut = colorHexToColor(color);
-	const avr: number = Math.trunc((colorOut.r + colorOut.g + colorOut.b) / 3);
-	if (avr > 127) return black == undefined ? appTheme.colors.black : black;
-	return white == undefined ? appTheme.colors.white : white;
+export function colorGetTextColor(
+	color: string,
+	white: string = appTheme.colors.white,
+	black: string = appTheme.colors.black,
+): string {
+	const { r, g, b } = colorHexToColor(color);
+	const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+	return luminance > 127 ? black : white;
 }
 
 //--------------------------------------------------

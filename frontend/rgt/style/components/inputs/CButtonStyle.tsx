@@ -7,6 +7,8 @@ import {
 } from "../../../utils/UStyles";
 import { appTheme } from "../../../../src/style/theme";
 import type { CButtonGlobalProps } from "../../../components/inputs/buttons/CButton";
+import type { TSize } from "../../../types/TStyles";
+import type { TFontSize } from "../../../types/themeType";
 
 //--------------------------------------------------
 //                    STYLING
@@ -127,7 +129,6 @@ export type TButtonStylingTypes = keyof typeof stylingContent;
 export interface IButtonStyle {
 	main: SxProps<Theme>;
 	text: SxProps<Theme>;
-	icon: SxProps<Theme>;
 	nav: SxProps<Theme>;
 }
 
@@ -219,13 +220,6 @@ export const CButtonStyle = ({
 			},
 		},
 		text: {},
-		icon: {
-			borderRadius: appTheme.shapes.radius.small,
-			p: sizeToString(padding, "8px"),
-			"&::before": {
-				borderRadius: appTheme.shapes.radius.small,
-			},
-		},
 		nav: {
 			ml: "3px",
 			height: appTheme.shapes.header.height * 0.8 + "px",
@@ -251,9 +245,34 @@ export const CButtonStyle = ({
 	};
 };
 
+export interface IButtonIconStyle {
+	main: SxProps<Theme>;
+	icon: SxProps<Theme>;
+}
+
+export interface CButtonIconStyleProps {
+	padding?: TSize;
+	size?: TFontSize;
+}
+
+export const CButtonIconStyle = ({ padding, size }: CButtonIconStyleProps): IButtonIconStyle => {
+	return {
+		main: {
+			borderRadius: appTheme.shapes.radius.small,
+			p: sizeToString(padding, "8px"),
+			"&::before": {
+				borderRadius: appTheme.shapes.radius.small,
+			},
+		},
+		icon: {
+			fontSize: size ? appTheme.fonts.text.size[size] : undefined,
+		},
+	};
+};
+
 //--------------------------------------------------
 //                     PRE-MADE
-//------------------------------------------------	--
+//--------------------------------------------------
 export interface IButtonCopyStyle {
 	main: SxProps<Theme>;
 	button: SxProps<Theme>;
