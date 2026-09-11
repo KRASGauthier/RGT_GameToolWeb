@@ -114,7 +114,7 @@ function CForm({
 		const entryFound = entries.find((entry: IFormEntry) => {
 			return entry.type == "version";
 		});
-		if (!entryFound) return {};
+		if (!entryFound || isManaged()) return {};
 		return {
 			[entryFound.field ?? getFormTypeDefaultField("version")]: {
 				major: 1,
