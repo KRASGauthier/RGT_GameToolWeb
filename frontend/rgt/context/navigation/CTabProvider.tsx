@@ -77,7 +77,11 @@ function CTabProvider({ forceHome, children }: CTabProviderProps) {
 
 	const openTab = useCallback(
 		(entry: ITabEntryContext, open?: boolean) => {
-			if (tabs.find((check: ITabEntryContext) => check.value == entry.value)) return;
+			if (tabs.find((check: ITabEntryContext) => check.value == entry.value))
+			{
+				if (open) navigateTo(entry);
+				return;
+			}
 			setTabs((prev: ITabEntryContext[]) => {
 				return [...prev, entry];
 			});
