@@ -95,7 +95,9 @@ export const apiUserUploadAvatar = async (
 		"notif",
 	);
 	if (!apiCheckReponse(data, "user", { type: "notif", handler: push })) return;
-	if (data.data) setUser(data.data.user);
+	if (!data.data) return;
+	if (data.data.user.avatar) data.data.user.avatar += `?v=${Date.now()}`;
+	setUser(data.data.user);
 };
 
 export const apiChangePassword = async (
