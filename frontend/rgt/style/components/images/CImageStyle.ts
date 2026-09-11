@@ -75,6 +75,7 @@ export const CImageStyle = ({
 			width: "100%",
 			height: "100%",
 			objectFit: "cover",
+			left: 0,
 			border: styled ? "solid 3px " + appTheme.colors.primary[0] : undefined,
 			borderRadius: styled ? appTheme.shapes.radius.medium : undefined,
 		},
