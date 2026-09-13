@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import { verifyJWT } from "../rgt/middleware/jwt.js";
 import projectRouter from "./modules/project/router.js";
+import imageRouter from "./statics/images/router.js";
 
 const app = express();
 
@@ -22,10 +23,7 @@ app.use(
 );
 app.use(express.json());
 app.use(helmet());
-app.use(
-	STATIC_IMAGES,
-	express.static(process.env.BACKEND_UPLOADE_LOCATION ?? "/home/app/uploaded-dev"),
-);
+app.use(STATIC_IMAGES, imageRouter);
 app.use(cookieParser());
 
 //ROUTING

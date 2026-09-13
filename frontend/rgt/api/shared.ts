@@ -1,8 +1,9 @@
 import axios from "axios";
-import { API_BASE } from "../../src/consts";
+import { API_BASE, API_BASE_SIMPLE } from "../../src/consts";
 import { type IAPIData, type IAPIErrors, type TAPIChecker } from "../types/api/TAPI";
 import { apiMakeError } from "./errors";
 import type { IErrorReturnOptions, TErrorReturn, TErrorReturnTypes } from "../types/TError";
+import type { IAppNotif } from "../types/TEvents";
 
 export const api = axios.create({
 	baseURL: API_BASE,
@@ -122,7 +123,7 @@ export const apiGetData = async <_T>(
 	options?: IErrorReturnOptions,
 ): Promise<IAPIData<_T>> => {
 	try {
-		const response = await api.get<_T>(path);
+		const response = await api.get<_T>(API_BASE_SIMPLE + path);
 		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))
@@ -138,7 +139,7 @@ export const apiPostData = async <_Req, _Res>(
 	options?: IErrorReturnOptions,
 ): Promise<IAPIData<_Res>> => {
 	try {
-		const response = await api.post<_Res>(path, request);
+		const response = await api.post<_Res>(API_BASE_SIMPLE + path, request);
 		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))
@@ -154,7 +155,7 @@ export const apiPutData = async <_Req, _Res>(
 	options?: IErrorReturnOptions,
 ): Promise<IAPIData<_Res>> => {
 	try {
-		const response = await api.put<_Res>(path, request);
+		const response = await api.put<_Res>(API_BASE_SIMPLE + path, request);
 		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))
@@ -170,7 +171,7 @@ export const apiPatchData = async <_Req, _Res>(
 	options?: IErrorReturnOptions,
 ): Promise<IAPIData<_Res>> => {
 	try {
-		const response = await api.patch<_Res>(path, request);
+		const response = await api.patch<_Res>(API_BASE_SIMPLE + path, request);
 		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))
@@ -186,11 +187,32 @@ export const apiDeleteData = async <_Req, _Res>(
 	options?: IErrorReturnOptions,
 ): Promise<IAPIData<_Res>> => {
 	try {
-		const response = await api.delete<_Res>(path, { data: request });
+		const response = await api.delete<_Res>(API_BASE_SIMPLE + path, { data: request });
 		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))
 			return { ...apiMakeError(e.response?.status, e.response?.data, type, options) };
 		return { ...apiMakeError(undefined, undefined, type, options) };
+	}
+};
+
+//--------------------------------------------------
+//                      BLOB
+//--------------------------------------------------
+export const apiGetImageBlob = async (
+	path: string,
+	push: (notif: IAppNotif) => void,
+): Promise<Blob | undefined> => {
+	try {
+		const data = await api.get(path, {
+			responseType: "blob",
+		});
+		if (!data.data) throw {};
+		return data.data as Blob;
+	} catch {
+		push({
+			severity: "error",
+			message: `Failed to load: ${path}`,
+		});
 	}
 };

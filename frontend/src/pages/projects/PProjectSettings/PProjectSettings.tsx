@@ -102,7 +102,13 @@ function PProjectSettings({}: PProjectSettingsProps) {
 			</Stack>
 			<CSplitterRow sx={{ my: "auto" }} />
 			<Stack sx={{ flex: 1, mx: "25px", mt: "40px" }} direction={"column"}>
-				<CImage onEdit={handleImageEdit} src={project.cover ?? ""} styled editable />
+				<CImage
+					onEdit={handleImageEdit}
+					protectedRoute
+					src={project.cover ?? ""}
+					styled
+					editable
+				/>
 			</Stack>
 		</Stack>
 	);

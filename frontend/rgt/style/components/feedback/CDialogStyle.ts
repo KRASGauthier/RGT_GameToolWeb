@@ -2,6 +2,11 @@ import type { SxProps, Theme } from "@mui/material";
 import { colorGetBackground, sizeToString } from "../../../utils/UStyles";
 import { appTheme } from "../../../../src/style/theme";
 import type { TSize } from "../../../types/TStyles";
+import {
+	imageStylingGetStyling,
+	type IImageStylingObject,
+	type TImageStyling,
+} from "../images/CImageStyle";
 
 export interface IDialogStyle {
 	main: SxProps<Theme>;
@@ -50,17 +55,24 @@ export interface IDialogImageStyle {
 	main: SxProps<Theme>;
 	empty: SxProps<Theme>;
 	image: SxProps<Theme>;
+	brokenStack: SxProps<Theme>;
+	brokenImage: SxProps<Theme>;
 }
 
 export interface CDialogImageStyleProps {
 	aspectRatio: string;
 	editable?: boolean;
+	styled?: boolean;
+	styling?: TImageStyling;
 }
 
 export const CDialogImageStyle = ({
 	aspectRatio,
 	editable,
+	styled,
+	styling = "grey",
 }: CDialogImageStyleProps): IDialogImageStyle => {
+	const localStyling: IImageStylingObject = imageStylingGetStyling(styling);
 	const [x, y] = aspectRatio.split("/").map(Number);
 
 	return {
@@ -73,12 +85,7 @@ export const CDialogImageStyle = ({
 		empty: {
 			border: "solid 3px " + appTheme.colors.primary[0],
 			borderRadius: appTheme.shapes.radius.small,
-			background: colorGetBackground(
-				[appTheme.colors.greys[2], appTheme.colors.greys[3]],
-				undefined,
-				"linear",
-				135,
-			),
+			background: localStyling.background,
 			cursor: editable ? "pointer" : undefined,
 		},
 		image: {
@@ -89,6 +96,20 @@ export const CDialogImageStyle = ({
 			borderRadius: appTheme.shapes.radius.small,
 			border: "solid 3px " + appTheme.colors.primary[0],
 			cursor: editable ? "pointer" : undefined,
+		},
+		brokenStack: {
+			border: styled ? "solid 3px " + appTheme.colors.primary[0] : undefined,
+			borderRadius: styled ? appTheme.shapes.radius.medium : undefined,
+			background: localStyling.backgroundBorken,
+			position: "absolute",
+			inset: 0,
+			justifyContent: "center",
+			alignItems: "center",
+		},
+		brokenImage: {
+			color: localStyling.imageBrokenColor,
+			height: "35%",
+			width: "35%",
 		},
 	};
 };

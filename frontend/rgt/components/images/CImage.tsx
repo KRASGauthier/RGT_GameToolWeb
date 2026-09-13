@@ -5,10 +5,14 @@ import {
 	type IImageStyle,
 	type TImageStyling,
 } from "../../style/components/images/CImageStyle";
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { sxMerger } from "../../utils/UStyles";
 import HideImageIcon from "@mui/icons-material/HideImage";
 import CDialogImage from "../feedback/dialogs/CDialogImage";
+import { apiGetImageBlob } from "../../api/shared";
+import { useNotif } from "../../context/app/CAppNotifContext";
+import CSkeleton from "../feedback/skeleton/CSkeleton";
+import BrokenImageIcon from "@mui/icons-material/BrokenImage";
 
 export interface CImageProps extends GCompProps, BoxProps {
 	src: string;
@@ -21,6 +25,8 @@ export interface CImageProps extends GCompProps, BoxProps {
 	onEdit?: (file: File) => void;
 	expandable?: boolean;
 	extras?: ReactNode | ReactNode[];
+
+	protectedRoute?: boolean;
 }
 
 function CImage({
@@ -35,13 +41,32 @@ function CImage({
 
 	onEdit,
 	extras,
+	protectedRoute,
 	sx,
 	...other
 }: CImageProps) {
 	const [expended, setExpended] = useState<boolean>(false);
+	const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
+	const [error, setError] = useState<boolean>(false);
 	const style: IImageStyle = useMemo(() => {
 		return CImageStyle({ aspectRatio, styled, styling });
 	}, [aspectRatio, styled, styling]);
+	const oldSource = useRef<string | undefined>(undefined);
+	const { push } = useNotif();
+
+	//====================== EVENT ======================
+	useEffect(() => {
+		if (!protectedRoute || (imageUrl && oldSource.current === src)) return;
+		oldSource.current = src;
+		apiGetImageBlob(src, push).then((res: Blob | undefined) => {
+			if (!res) {
+				setError(true);
+				return;
+			}
+			setError(false);
+			setImageUrl(URL.createObjectURL(res));
+		});
+	}, [protectedRoute, imageUrl, src, push]);
 
 	//====================== NODE ======================
 	const emptyNode = (
@@ -70,7 +95,27 @@ function CImage({
 			}}
 			{...other}
 		>
-			<Box sx={sxMerger(style.image, sx ? sx : {})} component={"img"} src={src}></Box>
+			{!error && imageUrl && (
+				<Box
+					sx={sxMerger(style.image, sx ? sx : {})}
+					component={"img"}
+					src={protectedRoute ? imageUrl : src}
+				></Box>
+			)}
+			{!error && protectedRoute && !imageUrl && (
+				<CSkeleton sx={sxMerger(style.image, sx ? sx : {})} />
+			)}
+			{error && (
+				<Stack
+					direction={"row"}
+					sx={style.brokenStack}
+					onClick={() => {
+						if (expandable || editable) setExpended(true);
+					}}
+				>
+					<BrokenImageIcon fontSize="large" sx={style.brokenImage} />
+				</Stack>
+			)}
 		</Box>
 	);
 	const expandePopup = (
@@ -84,6 +129,11 @@ function CImage({
 			}}
 			open={expended}
 			extras={extras}
+			protectedRoute={protectedRoute}
+			imageUrl={imageUrl}
+			styled={styled}
+			styling={styling}
+			parentError={error}
 		></CDialogImage>
 	);
 
