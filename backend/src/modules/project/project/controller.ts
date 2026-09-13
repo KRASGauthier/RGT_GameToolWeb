@@ -7,15 +7,15 @@ import {
 	TAPIProjectCreateChecker,
 	TAPIProjectModify,
 	TAPIProjectModifyChecker,
-} from "../../types/api/project/TAPIProject.js";
-import { checkApi } from "../../../rgt/util/UApi.js";
-import { hasUser } from "../../../rgt/util/UError.js";
+} from "../../../types/api/project/TAPIProject.js";
+import { checkApi } from "../../../../rgt/util/UApi.js";
+import { hasUser } from "../../../../rgt/util/UError.js";
 import { MProject } from "./schema.js";
-import { IProject } from "../../types/data/project/TProject.js";
-import { hasProject } from "../../util/UError.js";
+import { IProject } from "../../../types/data/project/TProject.js";
+import { hasProject } from "../../../util/UError.js";
 import sharp from "sharp";
-import { makeFrontPath, makePath } from "../../../rgt/util/UImages.js";
-import { IMG_PROJECT, IMG_PROJECT_COVER, IMG_PROJECT_UID } from "../../consts.js";
+import { makeFrontPath, makePath } from "../../../../rgt/util/UImages.js";
+import { IMG_PROJECT, IMG_PROJECT_COVER, IMG_PROJECT_UID } from "../../../consts.js";
 
 //--------------------------------------------------
 //                     MANAGE

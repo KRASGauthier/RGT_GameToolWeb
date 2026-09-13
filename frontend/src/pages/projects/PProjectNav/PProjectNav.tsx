@@ -14,8 +14,9 @@ import type { TListMenuGroupData } from "../../../../rgt/components/data/lists/s
 import { Stack } from "@mui/material";
 import { ROUTE_PROJECT, ROUTE_PROJECT_ID, ROUTE_PROJECT_SECCTION } from "../../../consts";
 import { useMemo } from "react";
-import PProjectSettings from "../PProjectSettings/PProjectSettings";
+import PProjectSettings from "../project/PProjectSettings/PProjectSettings";
 import CProjectProvider from "../../../context/CProjectContext";
+import PProjectTodo from "../project/PProjectTodo/PProjectTodo";
 
 //--------------------------------------------------
 //                     SECTIONS
@@ -101,6 +102,8 @@ function PProjectNavSub({}: PProjectNavProps) {
 		switch (section) {
 			case EProjectSections.options:
 				return <PProjectSettings />;
+			case EProjectSections.todo:
+				return <PProjectTodo />;
 		}
 	}, [section]);
 

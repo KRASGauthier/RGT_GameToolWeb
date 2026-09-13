@@ -1,15 +1,15 @@
 import { Model, Schema, Types } from "mongoose";
-import { IDBData } from "../../../rgt/types/db/TDBTypes.js";
+import { IDBData } from "../../../../rgt/types/db/TDBTypes.js";
 import {
 	IProject,
 	TProjectEngineTypesConsts,
 	TProjectLanguageTypesConsts,
-} from "../../types/data/project/TProject.js";
-import { PROJECT_GAME_NAME_MAX, PROJECT_NAME_MAX, PROJECT_NAME_MIN } from "../../consts.js";
-import { versionSchema } from "../../../rgt/schemas/versionSchema.js";
-import { appDB } from "../../../rgt/middleware/db.js";
-import { User } from "../../../rgt/modules/users/schema.js";
-import { getDefaultSchema } from "../../../rgt/util/USchema.js";
+} from "../../../types/data/project/TProject.js";
+import { PROJECT_GAME_NAME_MAX, PROJECT_NAME_MAX, PROJECT_NAME_MIN } from "../../../consts.js";
+import { versionSchema } from "../../../../rgt/schemas/versionSchema.js";
+import { appDB } from "../../../../rgt/middleware/db.js";
+import { User } from "../../../../rgt/modules/users/schema.js";
+import { getDefaultSchema } from "../../../../rgt/util/USchema.js";
 
 export interface IProjectDB
 	extends Omit<IProject, "uid" | "owner" | "ownerName" | "created" | "lastOpened">, IDBData {

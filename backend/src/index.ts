@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { API_BASE_SIMPLE, API_PROJECT, STATIC_IMAGES } from "./consts.js";
+import { API_BASE_SIMPLE, API_PROJECT, API_TODO, STATIC_IMAGES } from "./consts.js";
 import { checkMongoDB } from "../rgt/middleware/db.js";
 import userRouter from "../rgt/modules/users/router.js";
 import { API_AUTH, API_USER } from "../rgt/consts.js";
@@ -9,8 +9,10 @@ import authRouter from "../rgt/modules/auth/router.js";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import { verifyJWT } from "../rgt/middleware/jwt.js";
-import projectRouter from "./modules/project/router.js";
+import projectRouter from "./modules/project/project/router.js";
 import imageRouter from "./statics/images/router.js";
+import { verifyProject } from "./middleware/project.js";
+import todoRouter from "./modules/project/todo/router.js";
 
 const app = express();
 
@@ -37,6 +39,7 @@ app.use(API_BASE_SIMPLE + API_USER, userRouter);
 
 //PROJECT
 app.use(API_BASE_SIMPLE + API_PROJECT, verifyJWT, projectRouter);
+app.use(API_BASE_SIMPLE + API_TODO, verifyJWT, verifyProject, todoRouter);
 
 app.use(errorMiddleware);
 

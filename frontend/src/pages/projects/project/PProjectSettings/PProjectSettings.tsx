@@ -1,16 +1,16 @@
 import { Stack } from "@mui/material";
-import type { GPageProps } from "../../../../rgt/pages/shared/pageCommon";
-import CSplitterRow from "../../../../rgt/components/splitters/CSplitterRow";
-import CForm, { type TFormDataType } from "../../../../rgt/components/inputs/form/CForm";
-import { PROJECT_GAME_NAME_MAX, PROJECT_NAME_MAX, PROJECT_NAME_MIN } from "../../../consts";
-import { useProject } from "../../../context/CProjectContext";
-import CSplitterCollumn from "../../../../rgt/components/splitters/CSplitterCollumn";
-import CText from "../../../../rgt/components/text/CText";
-import { appTheme } from "../../../style/theme";
-import CChip from "../../../../rgt/components/data/chip/CChip";
-import { DProjectEngine, DProjectLanguages } from "../../../types/data/project/TProject";
-import type { IVersion } from "../../../../rgt/types/TShared";
-import CImage from "../../../../rgt/components/images/CImage";
+import type { GPageProps } from "../../../../../rgt/pages/shared/pageCommon";
+import CSplitterRow from "../../../../../rgt/components/splitters/CSplitterRow";
+import CForm, { type TFormDataType } from "../../../../../rgt/components/inputs/form/CForm";
+import { PROJECT_GAME_NAME_MAX, PROJECT_NAME_MAX, PROJECT_NAME_MIN } from "../../../../consts";
+import { useProject } from "../../../../context/CProjectContext";
+import CSplitterCollumn from "../../../../../rgt/components/splitters/CSplitterCollumn";
+import CText from "../../../../../rgt/components/text/CText";
+import { appTheme } from "../../../../style/theme";
+import CChip from "../../../../../rgt/components/data/chip/CChip";
+import { DProjectEngine, DProjectLanguages } from "../../../../types/data/project/TProject";
+import type { IVersion } from "../../../../../rgt/types/TShared";
+import CImage from "../../../../../rgt/components/images/CImage";
 
 export interface PProjectSettingsProps extends GPageProps {}
 

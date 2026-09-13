@@ -1,6 +1,6 @@
 import type { Request } from "express";
 import { HydratedDocument } from "mongoose";
-import { IProjectDB, IProjectDBMethods } from "../modules/project/schema.js";
+import { IProjectDB, IProjectDBMethods } from "../modules/project/project/schema.js";
 
 export const hasProject: (
 	req: Request,

@@ -121,9 +121,10 @@ export const apiGetData = async <_T>(
 	path: string,
 	type?: TErrorReturnTypes,
 	options?: IErrorReturnOptions,
+	query?: Record<string, string | number>
 ): Promise<IAPIData<_T>> => {
 	try {
-		const response = await api.get<_T>(API_BASE_SIMPLE + path);
+		const response = await api.get<_T>(API_BASE_SIMPLE + path, query ? {params: query} : undefined);
 		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))
@@ -137,9 +138,10 @@ export const apiPostData = async <_Req, _Res>(
 	request: _Req,
 	type?: TErrorReturnTypes,
 	options?: IErrorReturnOptions,
+	query?: Record<string, string | number>
 ): Promise<IAPIData<_Res>> => {
 	try {
-		const response = await api.post<_Res>(API_BASE_SIMPLE + path, request);
+		const response = await api.post<_Res>(API_BASE_SIMPLE + path, request, query ? {params: query} : undefined);
 		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))
@@ -153,9 +155,10 @@ export const apiPutData = async <_Req, _Res>(
 	request: _Req,
 	type?: TErrorReturnTypes,
 	options?: IErrorReturnOptions,
+	query?: Record<string, string | number>
 ): Promise<IAPIData<_Res>> => {
 	try {
-		const response = await api.put<_Res>(API_BASE_SIMPLE + path, request);
+		const response = await api.put<_Res>(API_BASE_SIMPLE + path, request, query ? {params: query} : undefined);
 		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))
@@ -169,9 +172,10 @@ export const apiPatchData = async <_Req, _Res>(
 	request: _Req,
 	type?: TErrorReturnTypes,
 	options?: IErrorReturnOptions,
+	query?: Record<string, string | number>
 ): Promise<IAPIData<_Res>> => {
 	try {
-		const response = await api.patch<_Res>(API_BASE_SIMPLE + path, request);
+		const response = await api.patch<_Res>(API_BASE_SIMPLE + path, request, query ? {params: query} : undefined);
 		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))
@@ -185,9 +189,10 @@ export const apiDeleteData = async <_Req, _Res>(
 	request: _Req,
 	type?: TErrorReturnTypes,
 	options?: IErrorReturnOptions,
+	query?: Record<string, string | number>
 ): Promise<IAPIData<_Res>> => {
 	try {
-		const response = await api.delete<_Res>(API_BASE_SIMPLE + path, { data: request });
+		const response = await api.delete<_Res>(API_BASE_SIMPLE + path, { data: request, params: query ? query : undefined });
 		return { status: response.status, data: response.data };
 	} catch (e: unknown) {
 		if (axios.isAxiosError<IAPIErrors>(e))

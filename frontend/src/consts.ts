@@ -36,9 +36,13 @@ export const API_BASE_SIMPLE = "/API";
 export const STATIC_IMAGES = "/images";
 
 //--------------------- project ---------------------
+	//Project
 export const API_PROJECT = "/projects";
 export const API_PROJECT_TARGET = "/:uid";
 export const API_PROJECT_TARGET_PICTURE = "/picture";
+
+	//Todo
+export const API_TODO = "/todo";
 
 //====================== CONSTS ======================
 export const AUTH_MIN_USER = 3;
