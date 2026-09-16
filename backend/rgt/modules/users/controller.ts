@@ -8,6 +8,9 @@ import {
 	IAPIUserPatchSelf,
 	IAPIUserRegister,
 	IAPIChangePassword,
+	IAPIUserSearch,
+	IAPIUserSearchChecker,
+	IAPIUserList,
 } from "../../types/api/users/TAPIUsers.js";
 import argon2 from "argon2";
 import { IMG_USERS, IMG_USERS_AVATAR, PASSWORD_MAX, PASSWORD_MIN } from "../../consts.js";
@@ -36,19 +39,20 @@ function checkPassword(pwd: string) {
 }
 
 //--------------------------------------------------
-//                    MANAGE
+//                    ACCESS
 //--------------------------------------------------
-export const postUser = async (req: Request, res: Response) => {
-	checkField("user", req.body);
-	const data: IAPIUserRegister = req.body as IAPIUserRegister;
-	checkPassword(data.user.password);
-	await User.create({
-		...data.user,
-		password: await argon2.hash(data.user.password.trim()),
+//Shared
+export const userGetSearch = async (req: Request, res: Response) => {
+	const data: IAPIUserSearch = checkApi<IAPIUserSearch>(req.body, IAPIUserSearchChecker);
+	const users = await User.find({
+		username: { $regex: data.search.trim().toLocaleLowerCase(), $options: "i" },
 	});
-	res.status(201).json({});
+	res.status(200).json({
+		users: users.map((user) => {
+			return user.getUserBase();
+		}),
+	} as IAPIUserList);
 };
-
 export const postUserAvailable = async (req: Request, res: Response) => {
 	if (!("username" in req.body)) {
 		res.status(200).json({ available: false } as IAPIUserCheckAvailableRcv);
@@ -60,9 +64,7 @@ export const postUserAvailable = async (req: Request, res: Response) => {
 	} as IAPIUserCheckAvailableRcv);
 };
 
-//--------------------------------------------------
-//                      INFO
-//--------------------------------------------------
+//Self
 export const getUserSelf = async (req: Request, res: Response) => {
 	if (!req.user) throw { code: 400, message: "Missing user id" };
 
@@ -73,17 +75,20 @@ export const getUserSelf = async (req: Request, res: Response) => {
 		user: user.getUserFull(),
 	} as IAPIUserGetSelfFull);
 };
-export const getUserSelfFull = async (req: Request, res: Response) => {
-	if (!req.user) throw { code: 400, message: "Missing user id" };
 
-	const user = await User.findById(req.user);
-	if (!user) throw { code: 404, message: "User not found" };
-
-	res.status(200).json({
-		user: user.getUserFull(),
-	} as IAPIUserGetSelfFull);
+//--------------------------------------------------
+//                      MANAGE
+//--------------------------------------------------
+export const postUser = async (req: Request, res: Response) => {
+	checkField("user", req.body);
+	const data: IAPIUserRegister = req.body as IAPIUserRegister;
+	checkPassword(data.user.password);
+	await User.create({
+		...data.user,
+		password: await argon2.hash(data.user.password.trim()),
+	});
+	res.status(201).json({});
 };
-
 export const patchUserSelf = async (req: Request, res: Response) => {
 	if (!req.user) throw { code: 400, message: "Missing user id" };
 	const update: IAPIUserPatchSelf = checkApi<IAPIUserPatchSelf>(

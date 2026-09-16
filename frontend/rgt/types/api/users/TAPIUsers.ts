@@ -1,15 +1,24 @@
-import type { IUserFull, IUserRegister } from "../../data/TUser";
+import type { IUserBase, IUserFull, IUserRegister } from "../../data/TUser";
 import type { TAPIChecker } from "../TAPI";
 
 //--------------------------------------------------
 //                    SEND
 //--------------------------------------------------
-export interface IAPIUserRegister {
-	user: IUserRegister;
+//ACCESS
+export interface IAPIUserSearch {
+	search: string;
 }
+export const IAPIUserSearchChecker: TAPIChecker = {
+	search: { type: "string" },
+};
 
 export interface IAPIUserCheckAvailable {
 	username: string;
+}
+
+//MANAGE
+export interface IAPIUserRegister {
+	user: IUserRegister;
 }
 
 export type IAPIUserPatchSelf = Partial<
@@ -37,6 +46,31 @@ export const IAPIChangePasswordChecker: TAPIChecker = {
 export interface IAPIUserCheckAvailableRcv {
 	available: boolean;
 }
+
+export interface IAPIUserList {
+	users: IUserBase[];
+}
+export const IAPIUserListChecker: TAPIChecker = {
+	users: {
+		type: "array",
+		checker: {
+			uid: {
+				type: "string",
+			},
+			username: {
+				type: "string",
+			},
+			avatar: {
+				type: "string",
+				optional: true,
+			},
+			initials: {
+				type: "string",
+				optional: true,
+			},
+		},
+	},
+};
 
 export interface IAPIUserGetSelfFull {
 	user: IUserFull;
