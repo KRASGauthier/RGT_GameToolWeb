@@ -3,18 +3,22 @@ import { DEFAULT_DEBOUNCED_TIME } from "../consts";
 
 export interface IDebounceOutput<_Args extends unknown[]> {
 	call: (...args: _Args) => void;
+	stop: () => void;
 }
 export const useDebounced = <_Args extends unknown[]>(
 	cb: (...args: _Args) => void,
 	time: number = DEFAULT_DEBOUNCED_TIME,
 ): IDebounceOutput<_Args> => {
 	const to: React.RefObject<number> = useRef<number>(-1);
-
-	const call = (...args: _Args) => {
+	const stop = () => {
 		if (to.current != -1) {
 			clearTimeout(to.current);
 			to.current = -1;
 		}
+	};
+
+	const call = (...args: _Args) => {
+		stop();
 
 		to.current = setTimeout(() => {
 			to.current = -1;
@@ -24,5 +28,6 @@ export const useDebounced = <_Args extends unknown[]>(
 
 	return {
 		call,
+		stop,
 	};
 };
