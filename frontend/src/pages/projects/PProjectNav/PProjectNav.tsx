@@ -16,6 +16,8 @@ import { ROUTE_PROJECT, ROUTE_PROJECT_ID, ROUTE_PROJECT_SECCTION } from "../../.
 import { useMemo } from "react";
 import PProjectSettings from "../PProjectSettings/PProjectSettings";
 import CProjectProvider from "../../../context/CProjectContext";
+import PersonIcon from "@mui/icons-material/Person";
+import PProjectUsers from "../PProjectUsers/PProjectUsers";
 
 //--------------------------------------------------
 //                     SECTIONS
@@ -28,6 +30,7 @@ export const EProjectSections = {
 	roadmap: "roadmap",
 	settings: "settings",
 	options: "options",
+	users: "users",
 } as const satisfies Record<string, string>;
 
 export const DProjectMenuComp: TListMenuCompData[] = [
@@ -74,6 +77,11 @@ export const DProjectMenuGroups: TListMenuGroupData[] = [
 				display: "Options",
 				icon: <TuneRounded />,
 			},
+			{
+				value: EProjectSections.users,
+				display: "Users",
+				icon: <PersonIcon />,
+			},
 		],
 	},
 ];
@@ -101,6 +109,8 @@ function PProjectNavSub({}: PProjectNavProps) {
 		switch (section) {
 			case EProjectSections.options:
 				return <PProjectSettings />;
+			case EProjectSections.users:
+				return <PProjectUsers />;
 		}
 	}, [section]);
 
