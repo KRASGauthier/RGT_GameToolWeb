@@ -14,48 +14,41 @@ export interface IImageStylingObject {
 
 const stylings = {
 	grey: {
-		background: colorGetBackground(
-			[appTheme.colors.greys[2], appTheme.colors.greys[3]],
-			undefined,
-			"linear",
-			135,
-		),
-		backgroundBorken: colorGetBackground(
-			[appTheme.colors.greys[1], appTheme.colors.greys[2]],
-			undefined,
-			"linear",
-			135,
-		),
+		background: colorGetBackground([appTheme.colors.greys[2], appTheme.colors.greys[3]], {
+			positions: undefined,
+			type: "linear",
+			angle: 135,
+		}),
+		backgroundBorken: colorGetBackground([appTheme.colors.greys[1], appTheme.colors.greys[2]], {
+			positions: undefined,
+			type: "linear",
+			angle: 135,
+		}),
 		imageBrokenColor: appTheme.colors.error[5],
 	},
 	"primary-dark": {
-		background: colorGetBackground(
-			[appTheme.colors.primary[2], appTheme.colors.quinary[2]],
-			[-25, 125],
-			"linear",
-			135,
-		),
-		backgroundBorken: colorGetBackground(
-			[appTheme.colors.greys[2], appTheme.colors.greys[3]],
-			[-25, 125],
-			"linear",
-			135,
-		),
+		background: colorGetBackground([appTheme.colors.primary[2], appTheme.colors.quinary[2]], {
+			positions: [-25, 125],
+			type: "linear",
+			angle: 135,
+		}),
+		backgroundBorken: colorGetBackground([appTheme.colors.greys[2], appTheme.colors.greys[3]], {
+			positions: [-25, 125],
+			type: "linear",
+			angle: 135,
+		}),
 		imageBrokenColor: appTheme.colors.error[6],
 	},
 	"secondary-dark": {
 		background: colorGetBackground(
 			[appTheme.colors.secondary[2], appTheme.colors.quaternary[2]],
-			[-25, 125],
-			"linear",
-			135,
+			{ positions: [-25, 125], type: "linear", angle: 135 },
 		),
-		backgroundBorken: colorGetBackground(
-			[appTheme.colors.greys[2], appTheme.colors.greys[3]],
-			[-25, 125],
-			"linear",
-			135,
-		),
+		backgroundBorken: colorGetBackground([appTheme.colors.greys[2], appTheme.colors.greys[3]], {
+			positions: [-25, 125],
+			type: "linear",
+			angle: 135,
+		}),
 		imageBrokenColor: appTheme.colors.error[6],
 	},
 } as const satisfies Record<string, IImageStylingObject>;

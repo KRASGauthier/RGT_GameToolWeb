@@ -64,3 +64,12 @@ export type TColorSimple = {
 	b: number;
 };
 export type TColorAlteration = "shift-saturation" | "shift-brightness" | "shift-hue";
+
+export type TColorGradiantType = "linear" | "radial";
+export interface IColorBackground {
+	positions?: number[];
+	type?: TColorGradiantType;
+	angle?: number | string;
+	opacities?: number | number[];
+	position?: { x: string | number; y: string | number };
+}

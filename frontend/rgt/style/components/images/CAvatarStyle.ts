@@ -29,7 +29,11 @@ export const CAvatarStyle = ({ styling }: CAvatarStyleProps): IAvatarStyle => {
 
 	return {
 		main: {
-			background: colorGetBackground(background, undefined, bgType, bgRotation),
+			background: colorGetBackground(background, {
+				positions: undefined,
+				type: bgType,
+				angle: bgRotation,
+			}),
 		},
 	};
 };

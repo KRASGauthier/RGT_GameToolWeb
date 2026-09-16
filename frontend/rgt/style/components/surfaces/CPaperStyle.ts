@@ -24,9 +24,7 @@ export const CPaperStyle = ({ elevation, styling, padding }: CPaperStyleProps): 
 	//BACKGROUND
 	let background = colorGetBackground(
 		[appTheme.colors.quaternary[4], appTheme.colors.quaternary[3]],
-		undefined,
-		"linear",
-		165,
+		{ positions: undefined, type: "linear", angle: 165 },
 	);
 	if (styling == "normal-wavy")
 		background = colorGetBackground(
@@ -35,17 +33,14 @@ export const CPaperStyle = ({ elevation, styling, padding }: CPaperStyleProps): 
 				appTheme.colors.quaternary[3],
 				appTheme.colors.quaternary[4],
 			],
-			undefined,
-			"linear",
-			165,
+			{ positions: undefined, type: "linear", angle: 165 },
 		);
 	if (styling == "grey")
-		background = colorGetBackground(
-			[appTheme.colors.greys[4], appTheme.colors.greys[3]],
-			undefined,
-			"linear",
-			165,
-		);
+		background = colorGetBackground([appTheme.colors.greys[4], appTheme.colors.greys[3]], {
+			positions: undefined,
+			type: "linear",
+			angle: 165,
+		});
 
 	return {
 		main: {
@@ -83,9 +78,7 @@ export const CPaperTitleStyle = ({ padding }: CPaperTitleStyleProps): TPaperTitl
 			py: "5px",
 			background: colorGetBackground(
 				[appTheme.colors.tertiary[5], appTheme.colors.tertiary[3]],
-				undefined,
-				"linear",
-				125,
+				{ positions: undefined, type: "linear", angle: 125 },
 			),
 			textAlign: "center",
 		},

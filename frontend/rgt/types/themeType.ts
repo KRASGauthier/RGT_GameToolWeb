@@ -49,6 +49,7 @@ export interface IThemeSpacing {
 	main: string;
 	searchTop: string;
 	grid: string;
+	tiny: string;
 	small: string;
 	medium: string;
 	mediumLarge: string;

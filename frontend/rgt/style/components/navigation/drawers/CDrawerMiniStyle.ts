@@ -36,9 +36,7 @@ export const CDrawerMiniStyle = ({
 					colorGetAtPos(appTheme.colors.greys[2], appTheme.colors.greys[1], 0.5) + "60",
 					colorGetAtPos(appTheme.colors.greys[2], appTheme.colors.greys[1], 0.5) + "60",
 				],
-				undefined,
-				"linear",
-				180,
+				{ positions: undefined, type: "linear", angle: 180 },
 			),
 			boxShadow: shadowGenerate(getQuadStyle(elevation) ?? 50),
 

@@ -1,5 +1,6 @@
 import type { SxProps, Theme } from "@mui/material";
 import type {
+	IColorBackground,
 	TColor,
 	TColorAlteration,
 	TColorSimple,
@@ -84,34 +85,40 @@ export function getScaledRadius(borderRadius: number | string, divisor = 1) {
 //--------------------------------------------------
 //               COLOR MANAGEMENT
 //--------------------------------------------------
-export function colorGetBackground(
-	colors: string | string[],
-	positions?: number[],
-	type?: "linear" | "radial",
-	angle?: number | string,
-	position?: { x: string | number; y: string | number },
-): string {
-	if (typeof colors == "string") return colors;
 
-	if (!type) type = "linear";
-	if (!angle) angle = 0;
-	if (!positions) {
-		positions = [];
+export function colorGetBackground(colors: string | string[], options?: IColorBackground): string {
+	if (typeof colors == "string") return colors;
+	if (!options) options = {};
+
+	if (!options.type) options.type = "linear";
+	if (!options.angle) options.angle = 0;
+	if (!options.positions) {
+		options.positions = [];
 		colors.forEach((_: string, index: number) => {
-			positions?.push((1 / (colors.length - 1)) * index * 100);
+			options.positions?.push((1 / (colors.length - 1)) * index * 100);
 		});
 	}
 
-	let finalStr = type + "-gradient(";
-	if (type == "linear") finalStr += typeof angle == "string" ? angle : angle + "deg";
-	if (type == "radial" && position) {
+	let finalStr = options.type + "-gradient(";
+	if (options.type == "linear")
+		finalStr += typeof options.angle == "string" ? options.angle : options.angle + "deg";
+	if (options.type == "radial" && options.position) {
 		finalStr += "circle at ";
-		finalStr += typeof position.x == "string" ? position.x : position.x + "% ";
-		finalStr += typeof position.y == "string" ? position.y : position.y + "%";
+		finalStr +=
+			typeof options.position.x == "string" ? options.position.x : options.position.x + "% ";
+		finalStr +=
+			typeof options.position.y == "string" ? options.position.y : options.position.y + "%";
 	}
 	colors.forEach((item, index) => {
+		if (!options.positions) return;
+		if (options.opacities != undefined)
+			item += Math.trunc(
+				(typeof options.opacities == "number"
+					? options.opacities
+					: options.opacities[index]) * 255,
+			).toString(16);
 		if (finalStr.lastIndexOf("(") != finalStr.length - 1) finalStr += ", ";
-		finalStr += item + " " + positions[index] + "%";
+		finalStr += item + " " + options.positions[index] + "%";
 	});
 	finalStr += ")";
 

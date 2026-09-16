@@ -149,19 +149,21 @@ export const CButtonStyle = ({
 	const current: IButtonStyling = stylingContent[currentStyling] as IButtonStyling;
 
 	//====================== COLOR ======================
-	const background = colorGetBackground(current.normal, undefined, current.type ?? "linear", 145);
-	const backgroundHover = colorGetBackground(
-		current.hovered,
-		undefined,
-		current.type ?? "linear",
-		145,
-	);
-	const backgroundDisabled = colorGetBackground(
-		current.disabled,
-		undefined,
-		current.type ?? "linear",
-		145,
-	);
+	const background = colorGetBackground(current.normal, {
+		positions: undefined,
+		type: current.type ?? "linear",
+		angle: 145,
+	});
+	const backgroundHover = colorGetBackground(current.hovered, {
+		positions: undefined,
+		type: current.type ?? "linear",
+		angle: 145,
+	});
+	const backgroundDisabled = colorGetBackground(current.disabled, {
+		positions: undefined,
+		type: current.type ?? "linear",
+		angle: 145,
+	});
 
 	//====================== TEXT ======================
 	const textColor = current.text ?? appTheme.colors.white;
@@ -225,18 +227,16 @@ export const CButtonStyle = ({
 			height: appTheme.shapes.header.height * 0.8 + "px",
 			width: appTheme.shapes.header.height * 0.8 + "px",
 			background: checked
-				? colorGetBackground(
-						[appTheme.colors.primary[8], appTheme.colors.quinary[7]],
-						undefined,
-						"linear",
-						160,
-					)
-				: colorGetBackground(
-						[appTheme.colors.primary[6], appTheme.colors.quaternary[7]],
-						undefined,
-						"linear",
-						160,
-					),
+				? colorGetBackground([appTheme.colors.primary[8], appTheme.colors.quinary[7]], {
+						positions: undefined,
+						type: "linear",
+						angle: 160,
+					})
+				: colorGetBackground([appTheme.colors.primary[6], appTheme.colors.quaternary[7]], {
+						positions: undefined,
+						type: "linear",
+						angle: 160,
+					}),
 
 			"&:hover::before": {
 				opacity: 0,

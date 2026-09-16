@@ -11,12 +11,10 @@ interface ICChipStylingComponent {
 }
 const DChipStylings = {
 	primary: {
-		color: colorGetBackground(
-			[appTheme.colors.primary[5], appTheme.colors.primary[6]],
-			undefined,
-			"linear",
-			175,
-		),
+		color: colorGetBackground([appTheme.colors.primary[5], appTheme.colors.primary[6]], {
+			type: "linear",
+			angle: 175,
+		}),
 	},
 } as const satisfies Record<string, ICChipStylingComponent>;
 export type TChipStyling = keyof typeof DChipStylings;
