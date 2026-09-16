@@ -5,7 +5,7 @@ import type { IFormEntry, TFormDataType } from "../../../../rgt/components/input
 import { PProfileStyle } from "../../../style/pages/profiles/PProfileStyle";
 import { useState, useEffect } from "react";
 import { useNotif } from "../../../../rgt/context/app/CAppNotifContext";
-import { apiUserGetFullSelf, apiUserPatchSelf } from "../../../../rgt/api/user/userAPI";
+import { apiUserGetSelf, apiUserPatchSelf } from "../../../../rgt/api/user/userAPI";
 import type { IUserFull } from "../../../../rgt/types/data/TUser";
 
 export interface PProfileContactProps extends GCompProps {}
@@ -19,7 +19,7 @@ function PProfileContact({}: PProfileContactProps) {
 
 	//====================== EFFECT ======================
 	useEffect(() => {
-		apiUserGetFullSelf(setUser, push);
+		apiUserGetSelf(setUser, push);
 	}, [push]);
 
 	const profileContactEntries: IFormEntry[] = [
