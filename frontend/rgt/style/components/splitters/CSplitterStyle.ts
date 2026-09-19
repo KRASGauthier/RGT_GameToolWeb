@@ -14,6 +14,7 @@ export interface CSplitterStyleProps {
 	spacing: string | number;
 	color?: string;
 	elevation: number;
+	stack: boolean;
 }
 
 export const CSplitterStyle = ({
@@ -23,11 +24,16 @@ export const CSplitterStyle = ({
 	spacing,
 	color,
 	elevation,
+	stack,
 }: CSplitterStyleProps): TSplitterStyle => {
 	if (position == "row") {
 		return {
 			main: {
-				height: typeof secondSize == "number" ? secondSize + "%" : secondSize,
+				height: stack
+					? "auto"
+					: typeof secondSize == "number"
+						? secondSize + "%"
+						: secondSize,
 				width: size + "px",
 				mx: typeof spacing == "number" ? spacing + "px" : spacing,
 
@@ -35,12 +41,13 @@ export const CSplitterStyle = ({
 				borderRadius: appTheme.shapes.radius.small,
 				boxShadow: shadowGenerate(elevation),
 				overflow: "visible",
+				alignSelf: stack ? "stretch" : undefined,
 			},
 		};
 	}
 	return {
 		main: {
-			width: typeof secondSize == "number" ? secondSize + "%" : secondSize,
+			width: stack ? "auto" : typeof secondSize == "number" ? secondSize + "%" : secondSize,
 			height: size + "px",
 			my: typeof spacing == "number" ? spacing + "px" : spacing,
 
@@ -48,6 +55,7 @@ export const CSplitterStyle = ({
 			borderRadius: appTheme.shapes.radius.small,
 			boxShadow: shadowGenerate(elevation),
 			overflow: "visible",
+			alignSelf: stack ? "stretch" : undefined,
 		},
 	};
 };

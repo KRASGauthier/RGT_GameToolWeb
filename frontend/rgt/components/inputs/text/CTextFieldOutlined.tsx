@@ -1,6 +1,6 @@
-import { TextField, type TextFieldProps } from "@mui/material";
+import { InputAdornment, TextField, type TextFieldProps } from "@mui/material";
 import type { GCompProps } from "../../shared/ccommon";
-import { memo } from "react";
+import { memo, type ReactNode } from "react";
 import {
 	CTextFieldOutlinedStyle,
 	type ITextFieldOutlinedStyle,
@@ -11,6 +11,10 @@ import type { CInputOutlinedStyling } from "../../../style/components/inputs/sha
 import type { TQuadStyle } from "../../../types/TStyles";
 
 export interface CTextFieldOutlinedProps extends GCompProps, Omit<TextFieldProps, "variant"> {
+	//ADORMENT
+	startIcon?: ReactNode;
+
+	//STYLING
 	styling?: CInputOutlinedStyling;
 
 	xPadding?: string | number;
@@ -26,11 +30,22 @@ export interface CTextFieldOutlinedProps extends GCompProps, Omit<TextFieldProps
 	borderWidth?: string | number;
 }
 
-function CTextFieldOutlined({ sx, ...other }: CTextFieldOutlinedProps) {
+function CTextFieldOutlined({ startIcon, sx, ...other }: CTextFieldOutlinedProps) {
 	const style: ITextFieldOutlinedStyle = CTextFieldOutlinedStyle({ ...other });
 
 	return (
 		<TextField
+			slotProps={
+				startIcon
+					? {
+							input: {
+								startAdornment: (
+									<InputAdornment position="start">{startIcon}</InputAdornment>
+								),
+							},
+						}
+					: undefined
+			}
 			sx={sxMerger(style.main, sx ? sx : {})}
 			variant="outlined"
 			{...other}

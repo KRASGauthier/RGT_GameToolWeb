@@ -31,6 +31,14 @@ export interface IThemeColor {
 	white: string;
 }
 
+export interface IThemeGradientRotations {
+	main: number;
+}
+
+export interface IThemeGradient {
+	rotations: IThemeGradientRotations;
+}
+
 //--------------------------------------------------
 //                    SHAPE
 //--------------------------------------------------
@@ -97,6 +105,7 @@ export interface IThemeLayer {
 //--------------------------------------------------
 export interface IAppTheme {
 	colors: IThemeColor;
+	gradients: IThemeGradient;
 	shapes: IThemeShape;
 	fonts: IThemeText;
 	animations: IThemeAnimation;
