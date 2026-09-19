@@ -16,7 +16,7 @@ import CProtectedRoute from "../rgt/components/routes/CProtectedRoute";
 import PHome from "./pages/PHome/PHome";
 import PBaseTabPage from "../rgt/pages/shared/PBaseTabPage";
 import PProjectNew from "./pages/projects/PProjectNew/PProjectNew";
-import { DIconLibrary } from "./icons/IIconLibrary";
+import { DIconLibraryTsx } from "./icons/IIconLibrary";
 import PProjectNav from "./pages/projects/PProjectNav/PProjectNav";
 import PProfile from "./pages/PProfile/PProfile";
 
@@ -29,7 +29,9 @@ function App() {
 					<Routes>
 						<Route path={ROUTE_AUTH} element={<PAuth />} />
 						<Route element={<CProtectedRoute />}>
-							<Route element={<PBaseTabPage forceHome iconLibrary={DIconLibrary} />}>
+							<Route
+								element={<PBaseTabPage forceHome iconLibrary={DIconLibraryTsx} />}
+							>
 								<Route index element={<PHome />} />
 								<Route path={ROUTE_PROFILE} element={<PProfile />} />
 								<Route

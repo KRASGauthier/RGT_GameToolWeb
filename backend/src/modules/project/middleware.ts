@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
-import { MProject } from "../modules/project/schema.js";
-import { hasUser } from "../../rgt/util/UError.js";
+import { MProject } from "./schema.js";
+import { hasUser } from "../../../rgt/util/UError.js";
 
 export const verifyProject = async (req: Request, res: Response, next: NextFunction) => {
 	hasUser(req);

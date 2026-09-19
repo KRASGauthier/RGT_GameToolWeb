@@ -125,6 +125,12 @@ export const appTheme: IAppTheme = {
 		white: "#ffffff",
 	},
 
+	gradients: {
+		rotations: {
+			main: 135,
+		},
+	},
+
 	shapes: {
 		radius: {
 			tiny: "5px",

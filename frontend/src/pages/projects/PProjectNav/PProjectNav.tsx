@@ -7,17 +7,19 @@ import {
 	RouteRounded,
 	SettingsRounded,
 	TuneRounded,
+	Person as PersonIcon,
+	Groups as GroupsIcon,
 } from "@mui/icons-material";
+import { Stack } from "@mui/material";
+import { useMemo } from "react";
 import CDrawerMenu from "../../../../rgt/components/navigation/drawers/CDrawerMenu";
 import type { TListMenuCompData } from "../../../../rgt/components/data/lists/subs/CListMenuComp";
 import type { TListMenuGroupData } from "../../../../rgt/components/data/lists/subs/CListMenuGroup";
-import { Stack } from "@mui/material";
 import { ROUTE_PROJECT, ROUTE_PROJECT_ID, ROUTE_PROJECT_SECCTION } from "../../../consts";
-import { useMemo } from "react";
-import PProjectSettings from "../PProjectSettings/PProjectSettings";
 import CProjectProvider from "../../../context/CProjectContext";
-import PersonIcon from "@mui/icons-material/Person";
+import PProjectSettings from "../PProjectSettings/PProjectSettings";
 import PProjectUsers from "../PProjectUsers/PProjectUsers";
+import PProjectGroups from "../PProjectGroups/PProjectGroups";
 
 //--------------------------------------------------
 //                     SECTIONS
@@ -31,6 +33,7 @@ export const EProjectSections = {
 	settings: "settings",
 	options: "options",
 	users: "users",
+	groups: "groups",
 } as const satisfies Record<string, string>;
 
 export const DProjectMenuComp: TListMenuCompData[] = [
@@ -82,6 +85,11 @@ export const DProjectMenuGroups: TListMenuGroupData[] = [
 				display: "Users",
 				icon: <PersonIcon />,
 			},
+			{
+				value: EProjectSections.groups,
+				display: "Groups",
+				icon: <GroupsIcon />,
+			},
 		],
 	},
 ];
@@ -111,6 +119,8 @@ function PProjectNavSub({}: PProjectNavProps) {
 				return <PProjectSettings />;
 			case EProjectSections.users:
 				return <PProjectUsers />;
+			case EProjectSections.groups:
+				return <PProjectGroups />;
 		}
 	}, [section]);
 
