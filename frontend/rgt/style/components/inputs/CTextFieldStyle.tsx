@@ -16,7 +16,7 @@ export interface ITextFieldOutlinedStyle {
 export interface CTextFieldOutlinedStyleProps extends CTextFieldOutlinedProps {}
 
 export const CTextFieldOutlinedStyle = ({
-	styling,
+	styling = "neutral",
 	fontSize,
 	weight,
 	fontFamily,
@@ -42,8 +42,8 @@ export const CTextFieldOutlinedStyle = ({
 	if (!borderWidth) borderWidth = "2px";
 
 	let colors: CInputOutlinedColor = getLightColor();
-	if (styling && styling == "neutral") colors = getNeutralColor();
-	if (styling && styling == "valid") colors = getValidColor();
+	if (styling == "neutral") colors = getNeutralColor();
+	if (styling == "valid") colors = getValidColor();
 
 	return {
 		main: {

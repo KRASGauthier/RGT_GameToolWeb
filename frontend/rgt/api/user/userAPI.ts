@@ -4,17 +4,21 @@ import {
 	API_USER_SELF_PASSWORD,
 	API_USER_SELF,
 	API_USER_SELF_AVATAR,
+	API_USER_REGISTER,
 } from "../../consts";
 import type { IAPIData, TErrorInfo } from "../../types/api/TAPI";
-import type {
-	IAPIChangePassword,
-	IAPIUserCheckAvailable,
-	IAPIUserCheckAvailableRcv,
-	IAPIUserGetSelfFull,
-	IAPIUserPatchSelf,
-	IAPIUserRegister,
+import {
+	IAPIUserListChecker,
+	type IAPIUserSearch,
+	type IAPIChangePassword,
+	type IAPIUserCheckAvailable,
+	type IAPIUserCheckAvailableRcv,
+	type IAPIUserGetSelfFull,
+	type IAPIUserList,
+	type IAPIUserPatchSelf,
+	type IAPIUserRegister,
 } from "../../types/api/users/TAPIUsers";
-import type { IUserFull, IUserRegister } from "../../types/data/TUser";
+import type { IUserBase, IUserFull, IUserRegister } from "../../types/data/TUser";
 import type { IAppNotif } from "../../types/TEvents";
 import {
 	apiCheckReponse,
@@ -25,19 +29,20 @@ import {
 } from "../shared";
 
 //--------------------------------------------------
-//                   REGISTERING
+//                   ACCESS
 //--------------------------------------------------
-export const apiUserRegister = async (
-	user: IUserRegister,
+//--------------------- SHARED ---------------------
+export const apiUserGetUserSearch = async (
+	search: string,
 	push: (notif: IAppNotif) => void,
-	onErrorInfo: (info: TErrorInfo) => void,
-): Promise<boolean> => {
-	const data: IAPIData<{}> = await apiPostData<IAPIUserRegister, {}>(API_USER, { user }, "notif");
-	if (!apiCheckReponseError(data, { type: "notif", handler: push })) {
-		if (data.errorInfo) onErrorInfo(data.errorInfo);
-		return false;
-	}
-	return true;
+): Promise<IUserBase[]> => {
+	const data: IAPIData<IAPIUserList> = await apiPostData<IAPIUserSearch, IAPIUserList>(
+		API_USER,
+		{ search },
+		"notif",
+	);
+	if (!apiCheckReponse(data, IAPIUserListChecker, { type: "notif", handler: push })) return [];
+	return data.data?.users ?? [];
 };
 
 export const apiUserCheckAvailable = async (
@@ -53,10 +58,8 @@ export const apiUserCheckAvailable = async (
 	return data.data.available;
 };
 
-//--------------------------------------------------
-//                      INFOS
-//--------------------------------------------------
-export const apiUserGetFullSelf = async (
+//--------------------- SELF ---------------------
+export const apiUserGetSelf = async (
 	setUser: React.Dispatch<React.SetStateAction<IUserFull | undefined>>,
 	push: (notif: IAppNotif) => void,
 ) => {
@@ -69,6 +72,25 @@ export const apiUserGetFullSelf = async (
 	setUser(data.data.user);
 };
 
+//--------------------------------------------------
+//                      MANAGE
+//--------------------------------------------------
+export const apiUserRegister = async (
+	user: IUserRegister,
+	push: (notif: IAppNotif) => void,
+	onErrorInfo: (info: TErrorInfo) => void,
+): Promise<boolean> => {
+	const data: IAPIData<{}> = await apiPostData<IAPIUserRegister, {}>(
+		API_USER + API_USER_REGISTER,
+		{ user },
+		"notif",
+	);
+	if (!apiCheckReponseError(data, { type: "notif", handler: push })) {
+		if (data.errorInfo) onErrorInfo(data.errorInfo);
+		return false;
+	}
+	return true;
+};
 export const apiUserPatchSelf = async (
 	changes: IAPIUserPatchSelf,
 	push: (notif: IAppNotif) => void,

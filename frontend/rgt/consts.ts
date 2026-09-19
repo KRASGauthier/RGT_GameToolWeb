@@ -11,6 +11,7 @@ export const API_USER_SELF = "/self";
 export const API_USER_SELF_AVATAR = "/avatar";
 export const API_USER_SELF_PASSWORD = "/password";
 export const API_USER_CHECK_AVAILABLE = "/available";
+export const API_USER_REGISTER = "/register";
 
 //====================== IMAGES ======================
 export const IMG_USERS = "/users";

@@ -6,7 +6,7 @@ import { uErrorResponse } from "./ULog.js";
 export const handleError = (error: unknown, res: Response) => {
 	if (error instanceof mongoose.Error.ValidationError) {
 		uErrorResponse(error.message, 400);
-		const outError: IAPIErrors = { error: [error.message] } as IAPIErrors;
+		const outError: IAPIErrors = { error: ["Incorect field or value"] } as IAPIErrors;
 		res.status(400).json(outError);
 		return;
 	} else if (error instanceof mongoose.mongo.MongoServerError && error.code == 11000) {

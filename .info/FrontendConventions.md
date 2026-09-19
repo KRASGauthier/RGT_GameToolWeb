@@ -499,7 +499,7 @@ They may receive:
 For example:
 
 ```ts
-apiUserGetFullSelf(setUserFull, push);
+apiUserGetSelf(setUserFull, push);
 ```
 
 They may perform the request and apply the resulting state/UI behavior directly.

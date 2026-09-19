@@ -58,13 +58,14 @@ if [[ -f "$ICON_SOURCE" ]]; then
 	)
 
 	{
-		echo -n "export type TIconLibrary = "
-		
-		for i in "${!ICON_KEYS[@]}"; do
-			[[ $i -gt 0 ]] && echo -n " | "
-			echo -n "\"${ICON_KEYS[$i]}\""
+		echo "export const DIconLibrary = ["
+
+		for key in "${ICON_KEYS[@]}"; do
+			echo "	\"$key\","
 		done
 
-		echo ";"
+		echo "] as const;"
+		echo
+		echo "export type TIconLibrary = (typeof DIconLibrary)[number];"
 	} > "$ICON_DEST"
 fi

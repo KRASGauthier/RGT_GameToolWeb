@@ -17,9 +17,7 @@ export const PProjectNewStyle = ({}: PProjectNewStyleProps): IProjectNewStyle =>
 			borderRadius: appTheme.shapes.radius.tiny,
 			background: colorGetBackground(
 				[appTheme.colors.secondary[6], appTheme.colors.quinary[7]],
-				undefined,
-				"linear",
-				180,
+				{ positions: undefined, type: "linear", angle: 180 },
 			),
 			color: appTheme.colors.white,
 		},

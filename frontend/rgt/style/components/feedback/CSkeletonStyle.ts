@@ -16,12 +16,11 @@ const DSkeletonStyleStyling = {
 	},
 	"rectangle-light": {
 		radius: appTheme.shapes.radius.small,
-		background: colorGetBackground(
-			[appTheme.colors.greys[8], appTheme.colors.greys[7]],
-			undefined,
-			"linear",
-			150,
-		),
+		background: colorGetBackground([appTheme.colors.greys[8], appTheme.colors.greys[7]], {
+			positions: undefined,
+			type: "linear",
+			angle: 150,
+		}),
 	},
 } as const satisfies Record<string, ISkeletonStyleStyling>;
 export type TSkeletonStyleStyling = keyof typeof DSkeletonStyleStyling;

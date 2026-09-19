@@ -125,6 +125,12 @@ export const appTheme: IAppTheme = {
 		white: "#ffffff",
 	},
 
+	gradients: {
+		rotations: {
+			main: 135,
+		},
+	},
+
 	shapes: {
 		radius: {
 			tiny: "5px",
@@ -141,6 +147,7 @@ export const appTheme: IAppTheme = {
 			main: "5px",
 			grid: "5px",
 			searchTop: "5px",
+			tiny: "5px",
 			small: "10px",
 			medium: "15px",
 			mediumLarge: "25px",
@@ -253,21 +260,19 @@ const appThemeBase: ThemeOptions = {
 
 				body: {
 					background:
-						colorGetBackground(
-							[appTheme.colors.primary[5] + "14", "transparent"],
-							[0, 40],
-							"radial",
-							180,
-							{ x: 100, y: 100 },
-						) +
+						colorGetBackground([appTheme.colors.primary[5] + "14", "transparent"], {
+							positions: [0, 40],
+							type: "radial",
+							angle: 180,
+							position: { x: 100, y: 100 },
+						}) +
 						", " +
-						colorGetBackground(
-							[appTheme.colors.quinary[5] + "14", "transparent"],
-							[0, 50],
-							"radial",
-							180,
-							{ x: 0, y: 0 },
-						) +
+						colorGetBackground([appTheme.colors.quinary[5] + "14", "transparent"], {
+							positions: [0, 50],
+							type: "radial",
+							angle: 180,
+							position: { x: 0, y: 0 },
+						}) +
 						", " +
 						colorGetBackground(
 							[
@@ -276,10 +281,9 @@ const appThemeBase: ThemeOptions = {
 								appTheme.colors.quaternary[1],
 								appTheme.colors.quinary[0],
 							],
-							[0, 46, 60, 100],
-							"linear",
-							150,
+							{ positions: [0, 46, 60, 100], type: "linear", angle: 150 },
 						),
+
 					backgroundAttachment: "fixed",
 				},
 			}),

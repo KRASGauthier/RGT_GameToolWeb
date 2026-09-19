@@ -6,9 +6,10 @@ import {
 	projectModify,
 	projectModifyPicture,
 } from "./controller.js";
-import { API_PROJECT_TARGET, API_PROJECT_TARGET_PICTURE } from "../../consts.js";
-import { verifyProject } from "../../middleware/project.js";
+import { API_GROUPS, API_PROJECT_TARGET, API_PROJECT_TARGET_PICTURE } from "../../consts.js";
+import { verifyProject } from "./middleware.js";
 import { uploadInMemory } from "../../../rgt/middleware/upload.js";
+import groupRouter from "./groups/router.js";
 
 const projectRouter = Router();
 
@@ -22,5 +23,8 @@ projectRouter.patch(
 	verifyProject,
 	projectModifyPicture,
 );
+
+//GOUPS
+projectRouter.use(API_PROJECT_TARGET + API_GROUPS, verifyProject, groupRouter);
 
 export default projectRouter;

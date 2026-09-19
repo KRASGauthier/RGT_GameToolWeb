@@ -17,24 +17,20 @@ export interface CCardStyleProps {
 export const CCardStyle = ({ elevation, styling }: CCardStyleProps): ICardStyle => {
 	let background: string = colorGetBackground(
 		[appTheme.colors.quaternary[4], appTheme.colors.quaternary[3]],
-		undefined,
-		"linear",
-		165,
+		{ positions: undefined, type: "linear", angle: 165 },
 	);
 	if (styling == "grey")
-		background = colorGetBackground(
-			[appTheme.colors.greys[4], appTheme.colors.greys[3]],
-			undefined,
-			"linear",
-			165,
-		);
+		background = colorGetBackground([appTheme.colors.greys[4], appTheme.colors.greys[3]], {
+			positions: undefined,
+			type: "linear",
+			angle: 165,
+		});
 	else if (styling == "grey-light")
-		background = colorGetBackground(
-			[appTheme.colors.greys[8], appTheme.colors.greys[7]],
-			undefined,
-			"linear",
-			165,
-		);
+		background = colorGetBackground([appTheme.colors.greys[8], appTheme.colors.greys[7]], {
+			positions: undefined,
+			type: "linear",
+			angle: 165,
+		});
 
 	return {
 		main: {

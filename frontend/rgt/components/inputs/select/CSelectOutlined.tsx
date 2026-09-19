@@ -10,11 +10,12 @@ import {
 import type { CInputOutlinedStyling } from "../../../style/components/inputs/sharedStyle";
 import type { TQuadStyle } from "../../../types/TStyles";
 
+export interface ISelectOutlinedValues {
+	value: string | number;
+	display: string;
+}
 export interface CSelectOutlinedProps extends GCompProps, Omit<SelectProps, "variant"> {
-	selection: {
-		value: string | number;
-		display: string;
-	}[];
+	selection: ISelectOutlinedValues[];
 	label?: string;
 
 	styling?: CInputOutlinedStyling;

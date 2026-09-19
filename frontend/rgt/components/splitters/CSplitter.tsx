@@ -16,6 +16,7 @@ export interface CSplitterProps extends GCompProps {
 	color?: string;
 	elevation?: number;
 	position: CSplitterPosition;
+	stack?: boolean;
 }
 
 function CSplitter({
@@ -25,12 +26,13 @@ function CSplitter({
 	spacing = 5,
 	color,
 	elevation = 0,
+	stack = true,
 	sx,
 	...other
 }: CSplitterProps) {
 	const style: TSplitterStyle = useMemo(() => {
-		return CSplitterStyle({ position, size, secondSize, spacing, color, elevation });
-	}, [position, size, color, secondSize, spacing, elevation]);
+		return CSplitterStyle({ position, size, secondSize, spacing, color, elevation, stack });
+	}, [position, size, color, secondSize, spacing, elevation, stack]);
 
 	return <Box sx={sxMerger(style.main, sx ? sx : {})} {...other}></Box>;
 }

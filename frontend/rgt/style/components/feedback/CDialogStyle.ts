@@ -23,9 +23,7 @@ export const CDialogStyle = ({ marginPaper }: CDialogStyleProps): IDialogStyle =
 		main: {
 			background: colorGetBackground(
 				[appTheme.colors.primary[5], appTheme.colors.primary[8]],
-				undefined,
-				"linear",
-				150,
+				{ positions: undefined, type: "linear", angle: 150 },
 			),
 
 			"& .MuiDialog-paper": {
@@ -33,20 +31,18 @@ export const CDialogStyle = ({ marginPaper }: CDialogStyleProps): IDialogStyle =
 			},
 		},
 		content: {
-			background: colorGetBackground(
-				[appTheme.colors.greys[1], appTheme.colors.greys[2]],
-				undefined,
-				"linear",
-				150,
-			),
+			background: colorGetBackground([appTheme.colors.greys[1], appTheme.colors.greys[2]], {
+				positions: undefined,
+				type: "linear",
+				angle: 150,
+			}),
 		},
 		action: {
-			background: colorGetBackground(
-				[appTheme.colors.greys[5], appTheme.colors.greys[6]],
-				undefined,
-				"linear",
-				150,
-			),
+			background: colorGetBackground([appTheme.colors.greys[5], appTheme.colors.greys[6]], {
+				positions: undefined,
+				type: "linear",
+				angle: 150,
+			}),
 		},
 	};
 };

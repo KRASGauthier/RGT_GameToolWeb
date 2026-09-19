@@ -36,9 +36,14 @@ export const API_BASE_SIMPLE = "/API";
 export const STATIC_IMAGES = "/images";
 
 //--------------------- project ---------------------
+//Main
 export const API_PROJECT = "/projects";
 export const API_PROJECT_TARGET = "/:uid";
 export const API_PROJECT_TARGET_PICTURE = "/picture";
+
+//Groups
+export const API_GROUPS = "/groups";
+export const API_GROUPS_TARGET = "/:group";
 
 //====================== CONSTS ======================
 export const AUTH_MIN_USER = 3;
@@ -50,3 +55,5 @@ export const AUTH_LAST_NAME_MAX = 100;
 export const PROJECT_NAME_MIN = 3;
 export const PROJECT_NAME_MAX = 30;
 export const PROJECT_GAME_NAME_MAX = 256;
+
+export const PROJECT_GROUP_NAME_MAX = 30;

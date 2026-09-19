@@ -4,7 +4,7 @@ import CForm from "../../../../rgt/components/inputs/form/CForm";
 import type { IFormEntry, TFormDataType } from "../../../../rgt/components/inputs/form/CForm";
 import { useState, useEffect, useRef, type ChangeEvent, useMemo } from "react";
 import {
-	apiUserGetFullSelf,
+	apiUserGetSelf,
 	apiUserPatchSelf,
 	apiUserUploadAvatar,
 	apiUserCheckAvailable,
@@ -31,7 +31,7 @@ function PProfileInformation({}: PProfileInformationProps) {
 
 	//====================== EFFECT ======================
 	useEffect(() => {
-		apiUserGetFullSelf(setUser, push);
+		apiUserGetSelf(setUser, push);
 	}, [push]);
 
 	const style = useMemo(() => {

@@ -97,9 +97,7 @@ export const CListMenuCompStyle = ({
 						(getQuadStyle(color, "focused") ?? appTheme.colors.primary[2]) + "2B",
 						(getQuadStyle(color, "focused") ?? appTheme.colors.primary[2]) + "1B",
 					],
-					undefined,
-					"linear",
-					90,
+					{ positions: undefined, type: "linear", angle: 90 },
 				),
 			},
 
@@ -115,9 +113,7 @@ export const CListMenuCompStyle = ({
 						(getQuadStyle(color, "focused") ?? appTheme.colors.primary[2]) + "2B",
 						(getQuadStyle(color, "focused") ?? appTheme.colors.primary[2]) + "1B",
 					],
-					undefined,
-					"linear",
-					90,
+					{ positions: undefined, type: "linear", angle: 90 },
 				),
 			},
 

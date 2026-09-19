@@ -27,9 +27,7 @@ export const CTabsHeadStyle = ({
 					appTheme.colors.quaternary[3],
 					appTheme.colors.quaternary[2],
 				],
-				undefined,
-				"linear",
-				155,
+				{ positions: undefined, type: "linear", angle: 155 },
 			),
 			minHeight: 0,
 			"& .MuiTabs-indicator": {
