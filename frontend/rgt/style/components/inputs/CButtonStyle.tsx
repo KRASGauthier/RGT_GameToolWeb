@@ -126,6 +126,7 @@ export type TButtonStylingTypes = keyof typeof stylingContent;
 //--------------------------------------------------
 //                      SX
 //--------------------------------------------------
+//====================== BUTTON ======================
 export interface IButtonStyle {
 	main: SxProps<Theme>;
 	text: SxProps<Theme>;
@@ -245,6 +246,7 @@ export const CButtonStyle = ({
 	};
 };
 
+//====================== BUTTON ICON ======================
 export interface IButtonIconStyle {
 	main: SxProps<Theme>;
 	icon: SxProps<Theme>;
@@ -266,6 +268,28 @@ export const CButtonIconStyle = ({ padding, size }: CButtonIconStyleProps): IBut
 		},
 		icon: {
 			fontSize: size ? appTheme.fonts.text.size[size] : undefined,
+		},
+	};
+};
+
+//====================== BUTTON COLOR ======================
+export interface IButtonColorStyle {
+	main: SxProps<Theme>;
+}
+
+export interface CButtonColorStyleProps {
+	color: string;
+}
+
+export const CButtonColorStyle = ({ color }: CButtonColorStyleProps): IButtonColorStyle => {
+	return {
+		main: {
+			minHeight: "25px",
+			background: color,
+			borderRadius: appTheme.shapes.radius.small,
+			"&::before": {
+				borderRadius: appTheme.shapes.radius.small,
+			},
 		},
 	};
 };

@@ -11,6 +11,7 @@ export interface IProjectGroupsEntryStyle {
 	main: SxProps<Theme>;
 	text: SxProps<Theme>;
 	splitters: SxProps<Theme>;
+	colorButton: SxProps<Theme>;
 }
 
 export interface PProjectGroupsEntryStyleProps {
@@ -39,6 +40,15 @@ export const PProjectGroupsEntryStyle = ({
 				colorAlterColor(color, ["shift-brightness", "shift-hue"], [0.2, -8]),
 				colorAlterColor(color, ["shift-brightness", "shift-hue"], [-0.15, -8]),
 			),
+		},
+		colorButton: {
+			border:
+				"solid 1px " +
+				colorGetTextColor(
+					color,
+					colorAlterColor(color, ["shift-brightness", "shift-hue"], [0.2, -8]),
+					colorAlterColor(color, ["shift-brightness", "shift-hue"], [-0.15, -8]),
+				),
 		},
 	};
 };

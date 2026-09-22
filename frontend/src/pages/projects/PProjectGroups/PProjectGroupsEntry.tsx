@@ -96,15 +96,16 @@ function PProjectGroupsEntry({ group, onEdit, onDelete }: PProjectGroupsEntryPro
 					/>
 					<CSplitterRow secondSize={"auto"} sx={style.splitters} />
 					<CButtonColor
-						onChange={(e) => {
+						sx={style.colorButton}
+						onChange={(color) => {
 							setEdit((prev) => {
 								return {
 									...prev,
-									color: e.target.value as TColorEntry,
+									color: color as TColorEntry,
 								};
 							});
 						}}
-						value={edit.color ?? group.color}
+						color={edit.color ?? group.color}
 					/>
 					<CSplitterRow secondSize={"auto"} sx={style.splitters} />
 					<CButtonIcon

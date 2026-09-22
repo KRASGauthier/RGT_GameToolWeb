@@ -14,7 +14,7 @@ export interface CIconSelectorProps<_T extends string> extends CPopoverProps {
 	onSelected?: (value: _T) => void;
 }
 
-export function CIconSelector<_T extends string>({
+function CIconSelector<_T extends string>({
 	library,
 	onSelected,
 	...other
