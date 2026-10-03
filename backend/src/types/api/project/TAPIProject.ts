@@ -65,7 +65,7 @@ export type TAPIProjectCreate = Omit<
 export const TAPIProjectCreateChecker: TAPIChecker = {
 	name: projectChecker.name,
 	title: projectChecker.title,
-	picture: projectChecker.picture,
+	cover: projectChecker.cover,
 	version: projectChecker.version,
 	engine: projectChecker.engine,
 	language: projectChecker.language,
