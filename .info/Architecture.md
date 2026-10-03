@@ -1,6 +1,6 @@
 # Architecture
 
-> High-level architecture of the Game Tool repository and the relationships between its main systems.
+> High-level architecture of the GameTool repository and the relationships between its main systems.
 
 ## Table of contents
 
@@ -22,9 +22,11 @@
 - [Frontend and backend contracts](#frontend-and-backend-contracts)
   - [Shared API contracts](#shared-api-contracts)
   - [Shared data contracts](#shared-data-contracts)
+  - [Shared icons and generic types](#shared-icons-and-generic-types)
   - [Shared constants](#shared-constants)
-  - [`share.sh`](#sharesh)
+  - [`.system/share.sh`](#systemsharesh)
 - [Main application flow](#main-application-flow)
+  - [Frontend shell](#frontend-shell)
   - [Frontend to backend](#frontend-to-backend)
   - [Backend to database](#backend-to-database)
   - [Serialization](#serialization)
@@ -36,7 +38,6 @@
 - [Related documentation](#related-documentation)
 
 ---
-
 ## Overview
 
 Game Tool is a full-stack TypeScript application composed of:
@@ -66,53 +67,65 @@ project/
 ├── backend/
 ├── .system/
 ├── .info/
+│   └── SecurityConcerns.md
+├── Important.md
 ├── README.md
 ├── Roadmap.md
+├── todo.md
 ├── Makefile
-└── share.sh
+├── default_env
+└── docker-compose.dev.yaml
 ```
 
 ### `frontend/`
 
 Contains the React application.
 
-It includes both:
+It is split between:
 
 ```text
 frontend/rgt/
 frontend/src/
 ```
 
-The frontend is also the authoritative source for shared frontend/backend contracts.
+The frontend is also the authoritative source for the shared frontend/backend contracts synchronized by `.system/share.sh`.
 
-See [`Frontend.md`](./Frontend.md) for frontend-specific architecture.
+See [`Frontend.md`](./Frontend.md).
 
 ### `backend/`
 
 Contains the Node.js / Express application.
 
-It includes both:
+It is split between:
 
 ```text
 backend/rgt/
 backend/src/
 ```
 
-The backend consumes synchronized copies of the shared API/data contracts defined on the frontend.
+The backend consumes generated/backend-compatible copies of shared contracts originating on the frontend.
 
-See [`Backend.md`](./Backend.md) for backend-specific architecture.
+See [`Backend.md`](./Backend.md).
 
 ### `.system/`
 
-Contains shared infrastructure used to bootstrap and synchronize RGT-based projects.
+Contains the reusable RGT project infrastructure used to:
 
-Its responsibilities include:
+- initialize a new RGT-based project;
+- synchronize the reusable project baseline between projects;
+- synchronize frontend-authoritative contracts to the backend;
+- hold bootstrap/default files.
 
-- project initialization/default files;
-- synchronization scripts;
-- shared RGT repository integration.
+Important scripts include:
 
-`.system` is not normal application feature code.
+```text
+.system/manage.sh
+.system/init.sh
+.system/sync.sh
+.system/share.sh
+```
+
+`.system/` is infrastructure, not normal GameTool feature code.
 
 ### Root files
 
@@ -120,12 +133,16 @@ Important root-level files include:
 
 | File | Purpose |
 |---|---|
-| `README.md` | Main project entry point and documentation index. |
-| `Roadmap.md` | Product and development roadmap. |
-| `Makefile` | Main command interface for development workflows. |
-| `share.sh` | Frontend → backend contract synchronization. |
+| `README.md` | Main project description and documentation entry point. |
+| `Important.md` | Compact operational reference. |
+| `Roadmap.md` | Product/development progression. |
+| `todo.md` | Small technical tasks that should not be lost while development continues. |
+| `Makefile` | Main command router for development and synchronization. |
+| `default_env` | Shareable environment template. |
+| `.env` | Real local environment values. It is intentionally synchronized by the local RGT sync system but must not be committed to Git. |
+| `docker-compose.dev.yaml` | Development Docker services. |
 
----
+Security-specific follow-up information lives in [`SecurityConcerns.md`](./SecurityConcerns.md).
 
 ## Code ownership
 
@@ -170,7 +187,7 @@ The location is decided by ownership and reusability.
 
 ### Dependency direction
 
-The normal dependency direction is:
+The normal dependency direction remains:
 
 ```text
 src
@@ -178,18 +195,25 @@ src
 rgt
 ```
 
-Project-specific code may consume shared RGT infrastructure.
+Project-specific code may consume RGT infrastructure.
 
-RGT must not import arbitrary project-specific `src/` code.
+RGT must not import arbitrary project-specific `src/` code. However, RGT deliberately depends on a small number of project-owned integration points that are guaranteed by the RGT baseline.
 
-A small number of project files are deliberately guaranteed by the project bootstrap and may be consumed by RGT, such as:
+Current important integration points include:
 
-- frontend `src/style/theme.ts`;
-- project constants;
-- backend project constants;
-- synchronized contracts/constants.
+```text
+frontend/src/style/theme.ts
+frontend/src/consts.ts
+backend/src/backendConsts.ts
+backend/src/link/user.ts
+synchronized project contracts/constants
+```
 
-These are explicit integration points, not a general exception.
+`backend/src/link/user.ts` is an intentional extension hook. The shared RGT user schema calls it so an application can create or link application-specific user data while the global account remains stored in the shared users database.
+
+The hook must exist even when its implementation is empty.
+
+These guaranteed files are explicit integration points, not permission for RGT to depend freely on `src/`.
 
 ### Moving code between `src/` and `rgt/`
 
@@ -219,26 +243,23 @@ The project contains its own working copies of frontend and backend RGT code.
 
 Collaborators normally edit the project copy directly.
 
-Changes can later be propagated to or pulled from the central shared RGT repository.
+Changes can later be propagated to or pulled from the saved/shared RGT baseline.
 
 ### Project defaults
 
-`.system/defaults` and related initialization files define mandatory or default project baseline files.
+`.system/defaults/` and `.system/init.sh` define the bootstrap baseline for a new RGT-based project.
 
-These defaults ensure that certain project-specific integration files exist even when RGT depends on them.
+The initializer is active infrastructure. Its purpose is to avoid rebuilding the whole development environment for every new application.
 
-This is why some otherwise unusual dependencies from RGT into guaranteed project files are acceptable.
+The baseline is expected to evolve with RGT. It may temporarily lag behind the current project until a new project is initialized and the missing requirements are discovered/fixed.
+
+The bootstrap/default system is therefore maintained pragmatically when it is used, rather than being treated as a separately perfected template at all times.
 
 ### RGT synchronization
 
-RGT synchronization is handled by the `.system` synchronization infrastructure.
+RGT synchronization is broader than only copying `frontend/rgt/` and `backend/rgt/`.
 
-Important environment variables include:
-
-```text
-SYSTEM_SYNC_PROJECT_LOCATION
-SYSTEM_SYNC_SAVE_LOCATION
-```
+It is a shared project-environment synchronization system used so a new RGT application can reuse the established development baseline.
 
 Main commands:
 
@@ -251,11 +272,35 @@ Direction:
 
 ```text
 make sync up
-project RGT → shared RGT repository
+SYSTEM_SYNC_PROJECT_LOCATION → SYSTEM_SYNC_SAVE_LOCATION
 
 make sync down
-shared RGT repository → project RGT
+SYSTEM_SYNC_SAVE_LOCATION → SYSTEM_SYNC_PROJECT_LOCATION
 ```
+
+Current explicit targets include:
+
+```text
+.system/
+Makefile
+docker-compose.dev.yaml
+default_env
+.gitignore
+.env
+frontend/rgt/
+backend/rgt/
+```
+
+The script also synchronizes top-level files inside `frontend/` and `backend/`, except:
+
+```text
+package.json
+package-lock.json
+```
+
+This means files such as Dockerfiles, init scripts, TypeScript configuration, ESLint configuration, Prettier configuration, and Vite configuration can be part of the shared baseline.
+
+`.env` synchronization is intentional for this private/local workflow. `.env` is not a Git-tracked source file and must remain private.
 
 Synchronization uses:
 
@@ -263,131 +308,167 @@ Synchronization uses:
 rsync --delete
 ```
 
-This is synchronization, **not merge**.
-
-Files that no longer exist on the source side can therefore be deleted on the destination side.
-
----
+It is synchronization, **not merge**. Files present only on the destination side can be removed.
 
 ## Frontend and backend contracts
+
+The frontend is the source of truth for TypeScript contracts and constants that must exist on both application sides.
 
 ### Shared API contracts
 
 Shared API contracts live under:
 
 ```text
-types/api/
+src/types/api/
+rgt/types/api/
 ```
 
-They define request/response payloads used by both frontend and backend.
-
-The frontend copy is authoritative.
+They define request/response structures and runtime checker definitions used by both sides.
 
 ### Shared data contracts
 
 Shared application data structures live under:
 
 ```text
-types/data/
+src/types/data/
+rgt/types/data/
 ```
 
-They are intended to remain aligned between:
+The frontend representation is authoritative. Backend copies are regenerated through the sharing script.
 
-- frontend;
-- backend;
-- serialized database data;
+### Shared icons and generic types
 
-where practical.
+The synchronization also includes:
 
-The frontend copy is authoritative.
+```text
+src/types/icons/
+rgt/types/components/
+rgt/types/TShared.ts
+rgt/types/TStyles.ts
+```
+
+The frontend icon library remains the rich/React-side implementation. `.system/share.sh` generates a backend-safe `TIconLibrary` containing only the allowed icon keys.
 
 ### Shared constants
 
-Shared constants also originate on the frontend.
-
-Backend-only constants remain backend-specific and belong in backend constant files such as:
+The following are also synchronized:
 
 ```text
-backendConsts.ts
+frontend/src/consts/   → backend/src/consts/
+frontend/src/consts.ts → backend/src/consts.ts
+frontend/rgt/consts.ts → backend/rgt/consts.ts
 ```
 
-### `share.sh`
-
-`share.sh` is separate from RGT synchronization.
-
-Its purpose is to synchronize shared frontend/backend contracts.
-
-Approximate synchronization:
+Backend-only values remain backend-owned, for example:
 
 ```text
-frontend/src/types/api   → backend/src/types/api
-frontend/src/types/data  → backend/src/types/data
-
-frontend/rgt/types/api   → backend/rgt/types/api
-frontend/rgt/types/data  → backend/rgt/types/data
-
-frontend project constants → backend equivalents
-frontend RGT constants     → backend equivalents
+backend/src/backendConsts.ts
+backend/rgt/backendConsts.ts
 ```
 
-The backend copies are generated/backend-compatible representations.
+### `.system/share.sh`
 
-`share.sh` performs transformations where required, including:
+`make share` runs `.system/share.sh`.
 
-- removing frontend-only / React-specific imports and types;
-- adapting import paths for backend `.js` resolution.
+Current synchronized content includes:
 
-Do not edit synchronized backend copies expecting those changes to survive.
+```text
+frontend/src/types/api        → backend/src/types/api
+frontend/src/types/data       → backend/src/types/data
+frontend/src/types/icons      → backend/src/types/icons
 
-Modify the frontend source of truth.
+frontend/rgt/types/api        → backend/rgt/types/api
+frontend/rgt/types/data       → backend/rgt/types/data
+frontend/rgt/types/components → backend/rgt/types/components
 
----
+frontend/rgt/types/TShared.ts → backend/rgt/types/TShared.ts
+frontend/rgt/types/TStyles.ts → backend/rgt/types/TStyles.ts
+
+frontend/src/consts           → backend/src/consts
+frontend/src/consts.ts        → backend/src/consts.ts
+frontend/rgt/consts.ts        → backend/rgt/consts.ts
+```
+
+Backend transformations currently include:
+
+- removing React-only type imports;
+- converting `ReactNode` to backend-safe `string`;
+- adding `.js` to relative backend TypeScript imports;
+- adapting synchronized constant syntax for the backend;
+- generating the backend icon-key union from the frontend icon library.
+
+Synchronized backend files are generated representations. Edit the frontend source of truth and rerun:
+
+```bash
+make share
+```
 
 ## Main application flow
 
-### Frontend to backend
+### Frontend shell
 
-The normal application request path is:
+The active frontend shell is approximately:
 
 ```text
-React UI
-   ↓
-Frontend domain API function
-   ↓
-Shared frontend API helper
-   ↓
-HTTP / Axios
-   ↓
-Express backend
+CAppNotifContext
+└── App
+    └── BrowserRouter
+        └── ThemeProvider
+            └── CAuthContext
+                └── Routes
+                    ├── PAuth
+                    └── CProtectedRoute
+                        └── PBaseTabPage / CTabProvider
+                            ├── PHome
+                            ├── PProfile
+                            ├── PProjectNew
+                            └── PProjectNav / CProjectProvider
 ```
 
-The frontend should use the shared API contracts that describe the backend payload.
+Authentication owns the in-memory access token. Project tabs are persistent through `localStorage`.
+
+### Frontend to backend
+
+The normal request path is:
+
+```text
+React UI / Context
+      ↓
+Frontend domain API function
+      ↓
+RGT API helper
+      ↓
+Axios
+      ↓
+Express router
+      ↓
+Middleware
+      ↓
+Controller
+```
+
+The shared Axios instance uses credentials so the HttpOnly refresh cookie can travel with authentication requests.
 
 ### Backend to database
 
-The normal backend flow is:
+The backend uses two named Mongoose connections:
 
 ```text
-Express router
-   ↓
-Middleware
-   ↓
-Controller
-   ↓
-Mongoose
-   ↓
-MongoDB
+appDB.main
+appDB.users
 ```
 
-The current architecture intentionally allows controllers to use Mongoose directly.
+`main` contains application/GameTool data such as projects and groups.
 
-There is no general service/repository layer requirement.
+`users` is the global RGT user database. The intent is for RGT applications to share the same user database/infrastructure so one global account can be reused across applications.
+
+Application-specific user information must not be forced into the global user document. The RGT user schema exposes the required `src/link/user.ts` hook so each application can create/link its own user-side data when needed.
+
+Current GameTool project access is owner-based. The project-user/member system is still work in progress.
 
 ### Serialization
 
-Database documents are not intended to be exposed directly as API responses.
-
-The backend converts Mongoose data into the appropriate shared application representation before sending it to the frontend.
+Database documents are converted before crossing the API boundary.
 
 Common normalization includes:
 
@@ -397,28 +478,33 @@ MongoDB _id
 application uid
 ```
 
-Schemas/models own the conversion logic when appropriate.
+Models/schemas may expose standard conversion methods such as:
 
----
+```text
+getUserBase()
+getUserFull()
+getProjectFull()
+getJSON()
+```
+
+Hydrated Mongoose documents should not be returned directly as public API payloads.
 
 ## Development architecture
 
 The current Docker architecture is **development-only**.
 
-No production architecture should be inferred from it.
-
 ### Docker services
 
-The main development services are:
+The development environment contains:
 
 ```text
 MongoDB
 Mongo Express
-Frontend Node
-Backend Node
+Frontend Node/Vite
+Backend Node/Express
 ```
 
-The Node development image used by the project is based on:
+The current development Node image is based on:
 
 ```text
 node:24-alpine
@@ -426,46 +512,47 @@ node:24-alpine
 
 ### Bind mounts
 
-Frontend and backend source code is bind-mounted from the host into:
+Frontend and backend source trees are bind-mounted into:
 
 ```text
-/home/app
+/home/app/
 ```
 
-Docker provides the development runtime/environment.
-
-The source code is not normally baked into the development image.
+Database data and uploaded development files are also persisted through configured local/bind-mounted volumes.
 
 ### Makefile
 
-The Makefile is the main command router for normal development operations.
+The Makefile is the normal project command interface.
 
-Examples include:
+Common commands:
 
 ```bash
-make dev
-make build
-make run
-make rund
-make re
-make red
-make down
-make clean
-make wipe
+make dev build
+make dev build f
+make dev run
+make dev rund
+make dev re
+make dev red
+make dev down
+make dev clean
+make dev wipe
+
 make share
 make sync up
 make sync down
 make help
 ```
 
-Use the Makefile when an equivalent project command already exists.
+The build path runs `make share` before Docker build.
 
 > [!CAUTION]
-> `make dev clean` currently removes **all Docker images and volumes on the host**, not only Game Tool resources.
+> `make dev clean` currently removes **all Docker images and volumes on the host**, not only GameTool resources.
+
+`make dev wipe` also prunes Docker builder cache.
 
 ### Development ports
 
-Stable development host ports:
+Current default host ports:
 
 | Service | Port |
 |---|---:|
@@ -473,9 +560,7 @@ Stable development host ports:
 | Backend API | `8082` |
 | Mongo Express | `8083` |
 
-MongoDB itself is not normally exposed through a host port.
-
----
+The backend listens on port `8080` inside its container. MongoDB is not normally exposed through a host port.
 
 ## Related documentation
 
@@ -486,3 +571,4 @@ MongoDB itself is not normally exposed through a host port.
 - [`SharedConventions.md`](./SharedConventions.md) — shared coding conventions.
 - [`FrontendConventions.md`](./FrontendConventions.md) — frontend coding conventions.
 - [`BackendConventions.md`](./BackendConventions.md) — backend coding conventions.
+- [`SecurityConcerns.md`](./SecurityConcerns.md) — security items that should be reviewed as the project approaches production.

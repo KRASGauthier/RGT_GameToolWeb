@@ -44,12 +44,11 @@
   - [Generated files](#generated-files)
 
 ---
-
 ## Naming
 
 ### Prefixes
 
-The project uses prefixes to make the role of a structure immediately visible.
+The project uses prefixes when the role of an exported/shared structure benefits from being immediately visible.
 
 Core prefixes include:
 
@@ -57,16 +56,30 @@ Core prefixes include:
 |---|---|
 | `C...` | React component |
 | `P...` | Page or page-owned React content |
-| `U...` | Utility-oriented file or structure |
+| `U...` | Utility-oriented file/structure |
 | `T...` | Type or type-oriented structure |
 | `I...` | Interface / data structure |
-| `G...` | Global or base interface |
+| `G...` | Global/base interface |
 | `E...` | Centralized enum-like value structure |
-| `S...` | Mongoose schema |
-| `M...` | Mongoose model |
+| `S...` | Exported/shared Mongoose schema |
+| `M...` | Exported Mongoose model |
 | `api...` | Frontend API function |
 
-Use the prefix that describes the role of the structure, not simply its implementation type.
+Prefixes are mainly valuable where names cross file/module boundaries.
+
+Local/private implementation variables do not need a prefix solely to satisfy a naming pattern.
+
+For Mongoose specifically:
+
+```text
+const projectSchema = ...
+export const SSharedSchema = ...
+export const MProject = ...
+```
+
+The `S...` prefix was dropped for ordinary local/private schema variables. Use it when the schema itself is exported/shared.
+
+The `M...` prefix is the current standard for exported Mongoose models. Existing older exports do not need rename-only cleanup.
 
 ### Files and exports
 
@@ -89,15 +102,27 @@ Named exports are natural when a file intentionally contains several meaningful 
 
 General function names should describe what the function does.
 
-Event callbacks use the `on...` prefix.
+Frontend callback **props** use the `on...` convention:
 
-This applies to:
+```ts
+onClick
+onChange
+onDelete
+onSendEdit
+```
 
-- callback props;
-- local event functions;
-- event/signal handlers.
+Local functions that handle those callbacks/events normally use descriptive `handle...` names:
 
-Do not mechanically rename event callbacks to `handle...`.
+```ts
+handleCreate
+handleChange
+handleDelete
+handleSendEdit
+```
+
+A local function can still use another descriptive name when `handle...` adds no value.
+
+Do not force backend/domain functions into event-handler naming. Their names should describe their module and action according to the backend conventions.
 
 ### API contract names
 
@@ -174,9 +199,9 @@ type expression
 
 ### Function return types
 
-Named functions should explicitly declare their non-void return type.
+Named functions should explicitly declare return types whenever practical.
 
-Example:
+Preferred:
 
 ```ts
 function getName(): string {
@@ -184,9 +209,13 @@ function getName(): string {
 }
 ```
 
-`void` may be omitted when the function does not return a value.
+The goal is to make return contracts visible without making signatures unusably noisy.
 
-Inline callbacks may rely on inference when appropriate.
+It is acceptable to rely on inference when the explicit type would be excessively large, awkward, or implementation-heavy, for example some complex Mongoose hydrated-document return types.
+
+Inline callbacks can rely on inference when the type is obvious from context.
+
+For named functions, explicit typing should still be used as much as reasonably possible.
 
 ### `any`
 
@@ -452,7 +481,7 @@ Do not add section comments mechanically to every small file.
 
 ### `TODO` comments
 
-Use `TODO` for intentionally unfinished or temporary work.
+Use `TODO` comments for small, local unfinished work that belongs next to the code.
 
 Example:
 
@@ -460,9 +489,13 @@ Example:
 // TODO: Replace temporary implementation
 ```
 
-No separate mandatory `TEMP` / `FIXME` convention is required.
+Project-level technical tasks that should survive beyond one source file belong in the root:
 
----
+```text
+todo.md
+```
+
+Do not scatter the same project-wide task across multiple source comments.
 
 ## Constants and hard-coded values
 
@@ -482,15 +515,17 @@ There is no rigid centralized configuration architecture.
 
 Direct environment access is acceptable when a value is rare and local.
 
-Repeated backend values may be exposed through the appropriate backend constants file.
+Repeated backend values may be exposed through an appropriate backend constants file.
 
-When a new project environment variable is introduced, it should normally also be added to `default_env` with a safe, empty, or default value.
+`default_env` contains shareable/default environment structure.
 
-Secrets must not be committed.
+The real `.env` contains environment-specific/private values.
+
+`.env` is intentionally included in the private/local RGT synchronization baseline, but it must not be committed to Git or treated as public/shareable project documentation.
+
+JWT secrets are intentionally provisioned through the real environment. Rotating production JWT secrets invalidates active JWT sessions.
 
 Do not refactor environment handling solely for architectural purity.
-
----
 
 ## General principles
 
@@ -534,14 +569,21 @@ The documentation will continue evolving with the project.
 
 Generated output is not source code.
 
-Generated folders such as:
+This includes build output such as:
 
 ```text
 dist/
 ```
 
-must not be manually edited.
+and backend files synchronized/generated by:
 
-They are build/distribution output and should not be treated as authoritative project files.
+```bash
+make share
+```
 
-Make changes in the source and regenerate the output.
+The frontend is authoritative for synchronized API/data/icon contracts and shared constants.
+
+Do not manually edit a synchronized backend copy expecting the change to survive.
+
+Edit the frontend source of truth and regenerate the backend representation.
+

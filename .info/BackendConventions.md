@@ -32,7 +32,6 @@
 - [Validation](#validation-1)
 
 ---
-
 ## Modules
 
 ### Organization
@@ -80,43 +79,87 @@ Do not treat the current router shape as an immutable architectural law. The imp
 
 ### Controllers
 
-Controller function names begin with the HTTP verb they handle:
+Controller names should begin with the **module/domain**, followed by a descriptive action.
+
+Preferred pattern:
 
 ```text
-get...
-post...
-put...
-patch...
-delete...
+<module><Action>
 ```
 
 Examples:
 
 ```ts
-getUser
-postUser
-patchUser
-deleteUser
+projectGet
+projectModify
+groupCreate
+groupDelete
+userGetSearch
 ```
+
+Do not force controller names to mirror HTTP verbs when a descriptive action is clearer.
+
+The router already defines the HTTP method.
+
+Older code may still use names such as:
+
+```text
+postAuth
+patchUserSelf
+createProject
+```
+
+Those do not need unrelated rename-only cleanup. New/refactored module code should follow the module-first pattern.
 
 Controllers contain request-specific backend logic and may interact directly with Mongoose.
 
-Avoid unnecessary abstraction layers between the controller and the database.
-
----
+Avoid unnecessary service/repository layers.
 
 ## Mongoose
 
 ### Schema and model naming
 
-Mongoose-specific prefixes are:
+Prefixes are used when the exported/shared identifier benefits from immediately exposing its role.
+
+Current Mongoose convention:
 
 ```text
-S...  → Mongoose schema
-M...  → Mongoose model
+local/private schema variable
+→ descriptive camelCase
 ```
 
-These prefixes are reserved specifically for Mongoose schema/model structures.
+Example:
+
+```ts
+const projectSchema = new Schema(...);
+```
+
+If a schema itself must be exported/shared, use:
+
+```text
+S...
+```
+
+Example:
+
+```ts
+export const SImage = ...
+```
+
+Exported Mongoose models use:
+
+```text
+M...
+```
+
+Examples:
+
+```ts
+MProject
+MGroup
+```
+
+The current RGT `User` model predates the newer `M...` model standard. It does not need to be renamed solely for cleanup, but new exported models should use `M...`.
 
 ### Document typing
 
@@ -193,22 +236,20 @@ Do not create builder/conversion layers for every schema by default.
 
 ### Schema versions
 
-Database-backed shared structures may use:
+Database-backed structures currently include:
 
 ```text
 schemaVersion
 globalVersion
 ```
 
-`schemaVersion` identifies the version of that specific/local schema.
+`schemaVersion` identifies the version of the specific schema.
 
-`globalVersion` identifies the global/shared data-format version.
+`globalVersion` currently comes from the application's `GLOBAL_SCHEMA_VERSION` through the shared RGT schema helper.
 
-No migration framework is currently established.
+No migration framework is established yet.
 
-Do not invent or document a migration implementation that does not yet exist.
-
----
+The long-term relationship between an application-owned `globalVersion` and documents stored in the shared cross-application users database is not decided. Do not invent a migration/versioning policy for that case until the migration system is actually designed.
 
 ## Constants
 
@@ -339,27 +380,23 @@ Shared API contracts live in:
 types/api/
 ```
 
-They are authoritative for both frontend and backend.
+The frontend source is authoritative and the backend receives generated copies through `make share`.
 
-Do not redefine the same request or response payload independently on the backend when a shared contract already exists.
+Do not redefine the same request/response payload independently on the backend.
 
-Shared API contract naming follows:
+Shared API contract naming follows the established `IAPI...` / `TAPI...` structures already present in the codebase.
 
-```text
-IAPI + Group + Description
-```
+Runtime contract checking uses shared `TAPIChecker` definitions where practical.
 
-For example:
+Backend request payloads can be normalized/validated through:
 
 ```ts
-IAPIUserCheckAvailable
+checkApi<T>(req.body, Checker);
 ```
 
-Keep names short but explanatory.
+Current checker behavior validates primitive types, nested object checkers, required/optional fields, unexpected fields, and whether array values are arrays.
 
-Do not mechanically add `Request` / `Response` suffixes when the operation name already makes the distinction clear.
-
-Separate request/response structures or suffixes such as `Rcv` can still be used when they genuinely improve clarity.
+Nested validation of each array entry is planned and tracked in the root `todo.md`.
 
 ### Success responses
 
@@ -399,19 +436,22 @@ Frontend validation exists for UX.
 
 Backend validation is authoritative for trust and persistence.
 
-Every value received from the frontend must be validated again on the backend where relevant.
-
-General tendency:
+Use the strongest natural validation layer:
 
 ```text
 Mongoose can enforce it naturally
 → schema validation
 
-Mongoose is not the right place
-→ explicit backend validation
+shared request shape
+→ TAPIChecker / checkApi
+
+cross-field/domain rule
+→ explicit controller/module validation
 ```
 
-Never trust frontend validation as sufficient backend protection.
+Examples of cross-field/domain validation include engine/language compatibility, permissions, ownership, and relationships between project data.
 
----
+The current engine/language compatibility rule is enforced by the frontend creation UI but is not yet mirrored on the backend. That backend validation task is tracked in `todo.md`.
+
+Never trust frontend validation as sufficient backend protection.
 

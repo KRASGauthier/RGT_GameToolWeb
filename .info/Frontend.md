@@ -21,9 +21,14 @@
   - [`types/`](#types)
   - [`utils/`](#utils)
 - [Application architecture](#application-architecture)
+  - [Application shell](#application-shell)
+  - [Tabs and navigation](#tabs-and-navigation)
+  - [Authentication state](#authentication-state)
+  - [Project state](#project-state)
+  - [Notifications](#notifications)
   - [Pages and reusable components](#pages-and-reusable-components)
-  - [Contexts and global state](#contexts-and-global-state)
   - [API flow](#api-flow)
+  - [Runtime API checking](#runtime-api-checking)
   - [Shared contracts](#shared-contracts)
   - [Styling and theme](#styling-and-theme)
 - [RGT integration](#rgt-integration)
@@ -37,19 +42,22 @@
 - [Related documentation](#related-documentation)
 
 ---
-
 ## Overview
 
-The frontend is a React + TypeScript application built with Vite and MUI/Emotion.
+The frontend is a **React + TypeScript** application built with Vite and MUI/Emotion.
 
 Its code is split between:
 
-- reusable cross-project infrastructure in `rgt/`;
-- Game Tool-specific application code in `src/`.
+```text
+frontend/rgt/
+frontend/src/
+```
 
-The frontend is also the authoritative source for the shared frontend/backend API and data contracts that are synchronized to the backend.
+`rgt/` contains reusable cross-application frontend infrastructure.
 
----
+`src/` contains GameTool-specific pages, project flows, theme/configuration, and project-domain code.
+
+The frontend is also the authoritative source for contracts/constants synchronized to the backend.
 
 ## Structure
 
@@ -116,7 +124,7 @@ It belongs to the shared/system-level frontend foundation rather than applicatio
 
 The frontend copy is authoritative for constants shared with the backend.
 
-Shared constants are synchronized to the backend through `share.sh`, including API paths and other values that must remain aligned between both sides.
+Shared constants are synchronized to the backend through `.system/share.sh`, including API paths and other values that must remain aligned between both sides.
 
 Use centralized constants instead of scattering shared or API-related hard-coded values through the frontend.
 
@@ -158,14 +166,27 @@ Dedicated page content should normally remain in the page structure instead of b
 
 ### `context/`
 
-Contains React contexts and providers used to expose shared frontend state and behavior.
+Contains React contexts/providers used for shared frontend state and behavior.
 
-Application code should normally consume them through dedicated hooks such as:
+Current important contexts include:
+
+```text
+CAppNotifContext
+CAuthContext
+CTabProvider
+CProjectProvider
+```
+
+Application code should consume contexts through dedicated hooks when provided:
 
 ```ts
+useNotif();
 useAuth();
-useUser();
+useTab();
+useProject();
 ```
+
+Keep local state local. Move state into Context only when ownership genuinely spans enough of the tree.
 
 ### `hooks/`
 
@@ -218,110 +239,223 @@ Small helpers used by only one file should normally remain local rather than bei
 
 ## Application architecture
 
+### Application shell
+
+The current application shell is approximately:
+
+```text
+CAppNotifContext
+└── App
+    └── BrowserRouter
+        └── ThemeProvider
+            └── CAuthContext
+                └── Routes
+                    ├── PAuth
+                    └── CProtectedRoute
+                        └── PBaseTabPage
+                            ├── PHome
+                            ├── PProfile
+                            ├── PProjectNew
+                            └── PProjectNav
+```
+
+`PBaseTabPage` owns the persistent tab shell through `CTabProvider`.
+
+The older `src/pages/shared/PBasePage.tsx` may be legacy; do not use it as the primary example for the active application shell.
+
+### Tabs and navigation
+
+`CTabProvider` persists open tabs through `localStorage`.
+
+A project tab identifies the selected game project and routes into `PProjectNav`.
+
+`PProjectNav` currently defines sections for:
+
+```text
+home
+todo
+bugs
+roadmap
+options
+users
+groups
+```
+
+The project area is still under active implementation.
+
+`PProjectSettings` and `PProjectGroups` are wired current pages.
+
+`PProjectUsers` / `PProjectUsersCards` are current work in progress and must not be treated as legacy.
+
+`PProject` is an active project page file even though the current navigation wiring is still evolving.
+
+### Authentication state
+
+`CAuthContext` owns:
+
+```text
+token
+user
+status
+login
+refresh
+logout
+logoutEverywhere
+```
+
+The access token is kept in application memory.
+
+The shared Axios request interceptor injects:
+
+```text
+Authorization: Bearer <token>
+```
+
+A response interceptor handles `401` responses by performing one refresh attempt and retrying the original request.
+
+Concurrent frontend refresh requests are collapsed through a single in-flight refresh promise.
+
+The refresh token itself is handled by the backend through an HttpOnly cookie and `withCredentials: true`.
+
+### Project state
+
+`CProjectProvider` owns the currently opened project for project pages.
+
+It loads the project from the current project/tab route parameter and exposes:
+
+```text
+project
+modify(...)
+modifyPicture(...)
+```
+
+Current project settings allow editing:
+
+- project name;
+- game title;
+- version;
+- cover image.
+
+Engine and language are chosen at project creation and are not editable in the current settings UI.
+
+### Notifications
+
+`CAppNotifContext` is mounted above the main application and exposes notification state through `useNotif()`.
+
+Domain API functions can receive `push` so request failures/success information can be handled outside page bodies.
+
 ### Pages and reusable components
 
-The frontend distinguishes between reusable UI infrastructure and application content.
-
-Reusable UI building blocks belong in `components/`.
+Reusable UI infrastructure belongs in `components/`.
 
 Dedicated application content belongs in `pages/`.
 
-A page can contain subordinate page-owned nodes. These remain part of the page layer rather than becoming generic reusable components simply because they are implemented as React components.
-
-### Contexts and global state
-
-Contexts are used when state or behavior needs to be shared across a sufficiently broad or deep part of the frontend.
-
-State that is local to a component should remain local.
-
-State should only move upward or into Context when the actual ownership and usage justify it.
+Page-owned subcomponents can remain next to the owning page rather than being promoted into generic components.
 
 ### API flow
 
-Frontend API implementation is centralized under `api/`.
+Normal frontend request flow:
 
-Domain API functions intentionally handle more than raw transport when useful. They may receive:
+```text
+Page / Component / Context
+        ↓
+Domain API function
+        ↓
+RGT shared API helper
+        ↓
+Axios instance
+        ↓
+Backend
+```
 
-- setters;
-- callbacks;
-- notification functions;
-- navigation functions;
-- error setters.
+Domain API functions may intentionally receive UI handlers such as setters, notification callbacks, and error setters.
 
-This allows request/result handling to remain outside page/component bodies.
+### Runtime API checking
 
-Generic request behavior is handled by shared API helpers.
+Shared `TAPIChecker` definitions can be used by `apiCheckReponse(...)` to verify response structure at runtime.
+
+Current checker behavior validates primitive types, nested object checkers, required/optional fields, unexpected fields, and array container type.
+
+Per-entry validation for nested array checkers is not implemented yet and is tracked in the root `todo.md`.
 
 ### Shared contracts
 
-The frontend is authoritative for shared API and data contracts.
-
-The main synchronized areas are:
+The frontend is authoritative for synchronized:
 
 ```text
 src/types/api
 src/types/data
+src/types/icons
+
 rgt/types/api
 rgt/types/data
+rgt/types/components
+rgt/types/TShared.ts
+rgt/types/TStyles.ts
+
+src/consts
+src/consts.ts
+rgt/consts.ts
 ```
 
-The backend receives transformed copies through `share.sh`.
-
-Frontend and backend should not independently redefine the same shared payload when a shared contract already exists.
+The backend receives generated/backend-compatible copies through `make share`.
 
 ### Styling and theme
 
-`src/style/theme.ts` is the authoritative Game Tool design source.
+`src/style/theme.ts` is the authoritative GameTool design source.
 
-`appTheme: IAppTheme` contains the main project design values, including concepts such as:
+`appTheme: IAppTheme` contains project design values such as:
 
 - colors;
 - spacing;
 - radii;
 - fonts;
-- animation;
+- animations;
+- gradients;
 - layers.
 
-The MUI theme is derived for framework integration and is secondary to `appTheme`.
-
----
+The MUI theme exists for framework integration and is secondary to `appTheme`.
 
 ## RGT integration
 
 ### Reusable frontend code
 
-RGT is the preferred destination for frontend code that is genuinely reusable across projects.
+Cross-project reusable frontend infrastructure belongs in `frontend/rgt/`.
 
-If code starts in `src/` and later becomes reusable, it can be moved into `rgt/`.
+Current examples include:
 
-The move must not create arbitrary dependencies from RGT back into Game Tool-specific code.
+- shared API helpers;
+- authentication;
+- app notifications;
+- persistent tab navigation;
+- reusable components;
+- common hooks;
+- route protection;
+- styles/types/utilities.
 
 ### Allowed project dependencies
 
-Some project files are guaranteed by project bootstrap/defaults and can intentionally be consumed by RGT.
+RGT must not import arbitrary GameTool `src/` code.
 
-Important examples include:
+Project-owned integration points can be consumed when the RGT baseline guarantees them.
 
-- `src/style/theme.ts`;
-- project constants;
-- synchronized constants and contracts.
+Current important examples include:
 
-These are deliberate integration points, not permission for RGT to import arbitrary `src/` modules.
+```text
+src/style/theme.ts
+src/consts.ts
+synchronized project contracts/constants
+```
 
 ### Contract synchronization
 
-`share.sh` is responsible for synchronizing shared frontend/backend contracts.
+`make share` runs `.system/share.sh`.
 
-The frontend side is authoritative.
+The frontend is authoritative.
 
-The synchronization performs backend-specific transformations where required, including:
+The sharing script copies the configured contract/constant surfaces to the backend and performs backend-specific transformations.
 
-- removing frontend-only/React-specific type dependencies;
-- adapting import paths for backend `.js` resolution.
-
-Backend synchronized copies should not be edited as the source of truth.
-
----
+Do not maintain the synchronized backend copies independently.
 
 ## Development flow
 
@@ -379,3 +513,4 @@ Use the project Makefile as the normal project command interface when an equival
 - [`SharedConventions.md`](./SharedConventions.md) — conventions shared by frontend and backend.
 - [`RGT.md`](./RGT.md) — RGT ownership and synchronization.
 - [`GettingStarted.md`](./GettingStarted.md) — development environment and commands.
+- [`SecurityConcerns.md`](./SecurityConcerns.md) — security follow-up items.

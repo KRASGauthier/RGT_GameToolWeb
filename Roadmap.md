@@ -17,22 +17,23 @@
 
 ## Phase 1 — User Home & Projects
 
-- [ ] **User**
-  - [ ] Authentication
-  - [ ] Home menu
-  - [ ] Personal settings
+- [x] **User**
+  - [x] Authentication
+  - [x] Home menu
+  - [x] Personal settings
 
 - [ ] **Projects**
-  - [ ] Project listing
-    - [ ] Display projects available to the user
-    - [ ] Project selection
-  - [ ] Project creation
+  - [x] Project listing
+    - [x] Display projects available to the user
+    - [x] Project selection
+  - [x] Project creation
   - [ ] Project management
     - [ ] Project information
-    - [ ] Project settings
+    - [x] Project settings
     - [ ] Team management
       - [ ] Project members
       - [ ] Member management
+      - [x] Group management
 
 ---
 

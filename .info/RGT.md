@@ -1,6 +1,6 @@
 # RGT
 
-> Shared cross-project infrastructure used by Game Tool and the workflow for synchronizing it with the central RGT repository.
+> Shared cross-project infrastructure, bootstrap baseline, and synchronization workflow used by GameTool and other RGT applications.
 
 ## Table of contents
 
@@ -19,13 +19,15 @@
   - [Environment variables](#environment-variables)
   - [`make sync up`](#make-sync-up)
   - [`make sync down`](#make-sync-down)
+  - [Synchronized baseline](#synchronized-baseline)
   - [`rsync --delete`](#rsync---delete)
 - [Shared contracts](#shared-contracts)
-  - [`share.sh`](#sharesh)
+  - [`.system/share.sh`](#systemsharesh)
   - [Frontend as source of truth](#frontend-as-source-of-truth)
   - [Synchronized content](#synchronized-content)
   - [Backend transformations](#backend-transformations)
 - [Project defaults](#project-defaults)
+- [Shared users across RGT applications](#shared-users-across-rgt-applications)
 - [Workflow](#workflow)
   - [Editing RGT](#editing-rgt)
   - [Propagating changes](#propagating-changes)
@@ -33,25 +35,32 @@
 - [Related documentation](#related-documentation)
 
 ---
-
 ## Overview
 
-RGT is the reusable infrastructure layer shared between Game Tool and other projects.
+RGT is the reusable infrastructure layer shared between GameTool and other applications.
 
-Both frontend and backend contain an RGT tree:
+The code layer lives in:
 
 ```text
 frontend/rgt/
 backend/rgt/
 ```
 
-Game Tool keeps a working copy of RGT inside the project repository.
+The RGT system also includes the `.system/` bootstrap/synchronization infrastructure and a saved shared project baseline.
 
-Collaborators normally edit that project copy directly. Changes can later be propagated to the central shared RGT repository.
+The purpose is practical: a new RGT application should not require rebuilding the entire development environment and common infrastructure from zero.
 
-RGT synchronization and frontend/backend contract synchronization are two separate systems.
+Two synchronization systems must remain conceptually separate:
 
----
+```text
+make sync up/down
+shared project/RGT baseline synchronization
+```
+
+```text
+make share
+frontend-authoritative contracts → backend generated copies
+```
 
 ## Ownership
 
@@ -158,170 +167,190 @@ This can include:
 
 ### Guaranteed project files
 
-A small number of project files are guaranteed by the project bootstrap/default structure and may intentionally be consumed by RGT.
+RGT may depend on a small number of project-owned integration files when the RGT baseline guarantees their existence.
 
-Important examples include:
+Current important examples include:
 
 ```text
 frontend/src/style/theme.ts
 frontend/src/consts.ts
 backend/src/backendConsts.ts
-synchronized constants and contracts
+backend/src/link/user.ts
+synchronized project constants/contracts
 ```
 
-These are explicit integration points.
+`backend/src/link/user.ts` is an intentional extension hook used by the reusable user schema.
 
-They do not allow RGT to freely depend on arbitrary `src/` files.
+The global RGT user is shared between applications, while an application may need additional application-specific user data. The hook gives the application a place to create/link that data.
 
----
+The hook must exist even when empty.
+
+It is called from the shared user `pre("save")` lifecycle, so project/application-specific implementations should be safe to call repeatedly.
+
+These integration points do **not** allow RGT to import arbitrary `src/` modules.
 
 ## RGT synchronization
 
 ### `.system`
 
-`.system/` contains the infrastructure used to initialize and synchronize RGT-based projects.
+`.system/` contains the infrastructure used to initialize and synchronize RGT-based applications.
 
-It includes synchronization scripts and project defaults.
+Important scripts:
 
-This system is separate from normal application feature code.
+```text
+.system/manage.sh
+.system/init.sh
+.system/sync.sh
+.system/share.sh
+```
 
 ### Environment variables
 
-RGT synchronization uses:
+Synchronization uses:
 
 ```text
 SYSTEM_SYNC_PROJECT_LOCATION
 SYSTEM_SYNC_SAVE_LOCATION
 ```
 
-These define the relevant project and shared RGT locations used by the synchronization scripts.
+The locations represent the active project baseline and the saved/shared baseline.
 
 ### `make sync up`
-
-Push the project RGT copy to the shared RGT repository:
 
 ```bash
 make sync up
 ```
 
-Direction:
-
-```text
-Game Tool RGT
-      ↓
-Shared RGT repository
-```
-
-Use this after project-side RGT changes are ready to be propagated.
+Copies the active project baseline toward the saved/shared location.
 
 ### `make sync down`
-
-Pull the shared RGT repository into the project:
 
 ```bash
 make sync down
 ```
 
-Direction:
+Copies the saved/shared baseline toward the active project.
+
+### Synchronized baseline
+
+The synchronization is intentionally broader than only `rgt/`.
+
+Current explicit targets include:
 
 ```text
-Shared RGT repository
-      ↓
-Game Tool RGT
+.system/
+Makefile
+docker-compose.dev.yaml
+default_env
+.gitignore
+.env
+frontend/rgt/
+backend/rgt/
 ```
 
-Use this when the project needs the current shared RGT version.
+It also adds top-level files from:
+
+```text
+frontend/
+backend/
+```
+
+except:
+
+```text
+package.json
+package-lock.json
+```
+
+This allows shared development configuration such as Dockerfiles, init scripts, TypeScript configuration, ESLint configuration, Prettier configuration, and Vite configuration to move with the RGT baseline while package manifests remain project-owned.
+
+`.env` is intentionally synchronized as part of this private/local RGT workflow. It must remain excluded from Git and must not be treated as a shareable source file.
 
 ### `rsync --delete`
 
 > [!WARNING]
-> RGT synchronization uses `rsync --delete`.
+> Synchronization uses `rsync --delete`.
 
-Synchronization is **not a merge**.
+This is **not a merge**.
 
-If a file exists only on the destination side, synchronization can remove it.
-
-Always treat the chosen synchronization direction as authoritative for that operation.
-
----
+A destination-only file can be removed when it is absent from the selected source. Verify the direction before running the command.
 
 ## Shared contracts
 
-### `share.sh`
+### `.system/share.sh`
 
-`share.sh` synchronizes shared frontend/backend contracts.
+`make share` synchronizes frontend-authoritative contracts/constants to backend-compatible generated copies.
 
-It is **not part of RGT synchronization**.
-
-The two systems solve different problems:
-
-```text
-RGT sync
-Project RGT ↔ Shared RGT repository
-```
-
-```text
-share.sh
-Frontend contracts → Backend generated copies
-```
+It is separate from `make sync up/down`.
 
 ### Frontend as source of truth
 
-The frontend is authoritative for shared frontend/backend contracts.
+When a synchronized type, API contract, icon-key contract, or shared constant changes, edit the frontend source.
 
-When a synchronized API contract, data contract, or shared constant must change, modify the frontend source.
-
-Do not modify the generated backend copy expecting the change to survive.
+Do not manually maintain the generated backend copy.
 
 ### Synchronized content
 
-`share.sh` synchronizes approximately:
+Current synchronization includes:
 
 ```text
-frontend/src/types/api
-    → backend/src/types/api
+frontend/src/types/api        → backend/src/types/api
+frontend/src/types/data       → backend/src/types/data
+frontend/src/types/icons      → backend/src/types/icons
 
-frontend/src/types/data
-    → backend/src/types/data
+frontend/rgt/types/api        → backend/rgt/types/api
+frontend/rgt/types/data       → backend/rgt/types/data
+frontend/rgt/types/components → backend/rgt/types/components
 
-frontend/rgt/types/api
-    → backend/rgt/types/api
+frontend/rgt/types/TShared.ts → backend/rgt/types/TShared.ts
+frontend/rgt/types/TStyles.ts → backend/rgt/types/TStyles.ts
 
-frontend/rgt/types/data
-    → backend/rgt/types/data
-```
-
-It also synchronizes:
-
-```text
-frontend project constants
-    → backend equivalents
-
-frontend RGT constants
-    → backend equivalents
+frontend/src/consts           → backend/src/consts
+frontend/src/consts.ts        → backend/src/consts.ts
+frontend/rgt/consts.ts        → backend/rgt/consts.ts
 ```
 
 ### Backend transformations
 
-Backend copies are adapted as part of synchronization.
+`.system/share.sh` currently:
 
-Transformations can include:
+- removes React-only type imports;
+- converts `ReactNode` to `string`;
+- adds `.js` to relative backend imports;
+- adapts synchronized constant syntax;
+- generates the backend `TIconLibrary` from the keys of the frontend icon library.
 
-- removing React-specific imports;
-- removing frontend-only types;
-- converting import paths to backend-compatible `.js` paths.
-
-The backend copy is therefore a generated backend representation of the frontend source, not an independently maintained contract.
-
----
+The backend result is generated output, not an independent source of truth.
 
 ## Project defaults
 
-`.system/defaults` and related initialization files define the mandatory/default project baseline.
+`.system/defaults/` and `.system/init.sh` provide the starting baseline for a new RGT application.
 
-They ensure that RGT-based projects contain the files that shared infrastructure expects.
+The initialization system is active and intentional.
 
-This is also what allows RGT to rely on a small number of guaranteed project integration files without treating arbitrary `src/` code as shared infrastructure.
+Its purpose is to create enough of the expected project-owned structure for RGT to operate without manually rebuilding every common file.
+
+The defaults are maintained pragmatically. They can temporarily lag behind the newest RGT requirements until a new application is initialized and a missing dependency/file/configuration is discovered.
+
+When a new RGT application is started, run the initializer, fix the baseline where it breaks, and propagate the corrected baseline for future projects.
+
+Package manifests are intentionally not part of normal `make sync up/down`, so initialization/default package manifests remain important for bringing a new project up to a usable dependency baseline.
+
+## Shared users across RGT applications
+
+The user account system is RGT-level infrastructure.
+
+The intended long-term deployment uses one shared MongoDB infrastructure and one shared users database across RGT applications.
+
+Consequences:
+
+- a user has one global account/password across applications;
+- global user validation rules must stay aligned across applications;
+- application-specific information must live outside the global user document;
+- global user assets such as avatars are part of the shared RGT user infrastructure;
+- `backend/src/link/user.ts` exists so each application can create/link its own user representation.
+
+Current refresh tokens are stored directly on the shared user document. Application-scoping of shared-user sessions is tracked as a production task in the root `todo.md`.
 
 ---
 
@@ -348,7 +377,7 @@ When reusable RGT changes are ready:
 make sync up
 ```
 
-This propagates the project RGT copy to the shared RGT repository.
+This propagates the selected project/shared baseline to the saved RGT baseline.
 
 ### Pulling shared changes
 
@@ -358,7 +387,7 @@ When shared RGT has changed elsewhere:
 make sync down
 ```
 
-This updates the project copy from the shared repository.
+This updates the project/shared baseline from the saved RGT baseline.
 
 Because synchronization uses `--delete`, make sure the chosen direction is correct before running it.
 
@@ -371,3 +400,4 @@ Because synchronization uses `--delete`, make sure the chosen direction is corre
 - [`Backend.md`](./Backend.md) — backend structure.
 - [`GettingStarted.md`](./GettingStarted.md) — day-to-day development commands.
 - [`SharedConventions.md`](./SharedConventions.md) — shared coding conventions.
+- [`SecurityConcerns.md`](./SecurityConcerns.md) — security follow-up items.

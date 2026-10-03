@@ -8,6 +8,7 @@
 - [Environment setup](#environment-setup)
   - [Create `.env`](#create-env)
   - [Local directories](#local-directories)
+  - [RGT project initialization](#rgt-project-initialization)
 - [Start the project](#start-the-project)
   - [Foreground](#foreground)
   - [Detached](#detached)
@@ -22,7 +23,6 @@
 - [Help](#help)
 
 ---
-
 ## Requirements
 
 Install:
@@ -30,7 +30,8 @@ Install:
 - Docker;
 - Docker Compose;
 - Make;
-- Git.
+- Git;
+- a Bash-compatible shell with `rsync` for the `.system` synchronization scripts.
 
 The project uses **npm** inside the frontend and backend development containers.
 
@@ -40,21 +41,46 @@ The project uses **npm** inside the frontend and backend development containers.
 
 ### Create `.env`
 
-Create the root `.env` file from the provided template:
+Create the root `.env` from the template:
 
 ```bash
 cp default_env .env
 ```
 
-Then fill in the required local values.
+Fill in the local values required by your development environment.
 
-When a new environment variable is introduced, it should normally also be added to `default_env` with a safe, empty, or default value.
+The real `.env` contains environment-specific/private values and is not committed to Git.
 
-Do not commit secrets.
+JWT secrets are supplied directly through the real environment:
+
+```text
+JWT_ACCESS_SECRET
+JWT_REFRESH_SECRET
+```
+
+Each developer/environment can use its own values because development databases/environments are independent.
+
+Production secrets are expected to remain stable for that environment. Rotating them intentionally invalidates existing JWT sessions and effectively logs users out.
+
+The RGT synchronization system intentionally includes `.env` so the private/local shared RGT baseline can carry the environment when desired. That does **not** make `.env` a Git/shared-public file.
 
 ### Local directories
 
 Make sure the local paths configured in `.env` exist where required, especially database/upload locations used by Docker.
+
+---
+
+### RGT project initialization
+
+The RGT bootstrap system is available through:
+
+```bash
+.system/manage.sh init <name> [fix]
+```
+
+It initializes a new RGT-based frontend/backend from `.system/defaults/`.
+
+The defaults are maintained pragmatically. If initialization exposes an outdated default or missing dependency, fix the baseline as part of bringing that new project up rather than assuming the template is always perfect in isolation.
 
 ---
 
@@ -133,23 +159,29 @@ The normal development build flow already performs sharing before building.
 
 ### RGT synchronization
 
-Project RGT → shared RGT repository:
+Synchronize the active project/shared RGT baseline toward the saved baseline:
 
 ```bash
 make sync up
 ```
 
-Shared RGT repository → project RGT:
+Synchronize the saved baseline toward the active project:
 
 ```bash
 make sync down
 ```
 
-RGT synchronization uses `rsync --delete`.
+This synchronization is intentionally broader than only `frontend/rgt` and `backend/rgt`.
+
+It includes `.system`, shared development configuration, RGT trees, and selected top-level frontend/backend files.
+
+`package.json` and `package-lock.json` are excluded from normal sync.
+
+`.env` is intentionally included in this private/local sync workflow but remains Git-ignored.
+
+Synchronization uses `rsync --delete`.
 
 It is synchronization, not merge.
-
----
 
 ## Validation
 

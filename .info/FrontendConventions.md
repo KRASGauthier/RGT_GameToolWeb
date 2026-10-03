@@ -39,7 +39,6 @@
   - [Frontend validation](#frontend-validation)
 
 ---
-
 ## Components
 
 ### Naming
@@ -512,31 +511,35 @@ Return values are appropriate when the caller genuinely needs a semantic result,
 
 `types/api/` contains the authoritative frontend/backend API contracts.
 
-The frontend copy is the source of truth.
+The frontend copy is the source of truth and is synchronized to the backend by `make share`.
 
-Frontend and backend should not independently redefine the same request/response payload when a shared contract already exists.
+`TAPIChecker` definitions can accompany important contracts to provide lightweight runtime validation on both sides.
 
 `IAPIData<_T>` is frontend API-helper infrastructure around Axios handling.
 
 It is not the backend HTTP response format.
 
----
+When an API returns arrays, checker definitions may include the intended nested entry checker. The current runtime only validates the array container; per-entry nested array validation is tracked in the root `todo.md`.
 
 ## Forms and validation
 
 ### `CForm`
 
-`CForm` is only for real form workflows containing multiple related fields or pieces of information.
+`CForm` is the standard managed form/editor abstraction when its validation/edit workflow is useful.
 
-Examples:
+It is appropriate for:
 
-- login;
-- registration;
-- structured multi-field editors.
+- multi-field forms;
+- registration/login;
+- structured settings editors;
+- managed edit/validate/cancel flows;
+- a single field when `CForm`'s managed behavior genuinely simplifies the interaction.
 
-Do not use `CForm` around a simple standalone input such as a single rename field.
+Current code uses `CForm` for both multi-field editors and some single-field managed edits such as version/profile settings.
 
-Standalone inputs should use their appropriate input component directly.
+Do not wrap every isolated input in `CForm` mechanically.
+
+If the field only needs a normal controlled input with no form/edit workflow, use the appropriate input wrapper directly.
 
 ### Frontend validation
 
