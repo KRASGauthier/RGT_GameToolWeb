@@ -18,12 +18,14 @@ import CSplitterCollumn from "../../../rgt/components/splitters/CSplitterCollumn
 import { versionToString } from "../../../rgt/types/TShared";
 import { useTab } from "../../../rgt/context/navigation/CTabProvider";
 import { ROUTE_PROJECT, ROUTE_PROJECT_ID } from "../../consts";
+import type { IProjectUser } from "../../types/data/project/TProjectUser";
 
 export interface PHomeProjectCardProps extends GPageProps {
 	project: IProject;
+	owner?: IProjectUser;
 }
 
-function PHomeProjectCard({ project }: PHomeProjectCardProps) {
+function PHomeProjectCard({ project, owner }: PHomeProjectCardProps) {
 	const { openTab } = useTab();
 
 	const style: IHomeProjectCardStyle = useMemo(() => {
@@ -91,7 +93,9 @@ function PHomeProjectCard({ project }: PHomeProjectCardProps) {
 				{getTextInfo("Language", "language", (value: string): string => {
 					return DProjectLanguages[value as TProjectLanguageTypes].display;
 				})}
-				{getTextInfo("Owner", "ownerName")}
+				{getTextInfo("Owner", "owner", owner ? () => {
+					return owner.username
+				}: undefined)}
 				<CSplitterCollumn sx={{ mx: "auto" }} color={appTheme.colors.quaternary[6]} />
 				{getTextInfo("Created", "created")}
 				{getTextInfo("Last openned", "lastOpened")}

@@ -124,7 +124,7 @@ function PProjectNew({}: PProjectNewProps) {
 				<CSplitterRow
 					color={appTheme.colors.primary[2]}
 					elevation={20}
-					sx={{ my: "auto" }}
+					sx={{ my: "10px" }}
 				/>
 				<Stack
 					spacing={appTheme.shapes.spacing.medium}

@@ -1,4 +1,4 @@
-import type { IVersion } from "../../../../rgt/types/TShared.js";
+import type { IVersion, TUID } from "../../../../rgt/types/TShared.js";
 
 export const TProjectEngineTypesConsts = ["unrealEngine", "godot", "rgtSystem"] as const;
 export type TProjectEngineTypes = (typeof TProjectEngineTypesConsts)[number];
@@ -61,8 +61,7 @@ export const DProjectEngine: Record<TProjectEngineTypes, IProjectEngine> = {
 //                       DATA
 //--------------------------------------------------
 export interface IProject {
-	owner: string;
-	ownerName?: string;
+	owner: TUID;
 	uid: string;
 	name: string;
 	title?: string;

@@ -15,6 +15,7 @@ import {
 } from "../../types/api/project/TAPIProject";
 import type { IProject } from "../../types/data/project/TProject";
 import { generatePath } from "react-router";
+import type { IProjectUser } from "../../types/data/project/TProjectUser";
 
 //--------------------------------------------------
 //                    SHARED
@@ -86,6 +87,7 @@ export const apiProjectSetImage = async (
 //--------------------------------------------------
 export const apiGetUserProject = async (
 	setProjects: React.Dispatch<React.SetStateAction<IProject[] | undefined>>,
+	setOwners: React.Dispatch<React.SetStateAction<IProjectUser[] | undefined>>,
 	push: (notif: IAppNotif) => void,
 ) => {
 	const data: IAPIData<IAPIProjectGetFromUser> = await apiGetData<IAPIProjectGetFromUser>(
@@ -94,11 +96,13 @@ export const apiGetUserProject = async (
 	);
 	if (!apiCheckReponse(data, IAPIProjectGetFromUserChecker, { type: "notif", handler: push })) {
 		setProjects([]);
+		setOwners([]);
 		return;
 	}
 
 	if (!data.data) {
 		setProjects([]);
+		setOwners([]);
 		return;
 	}
 
@@ -108,11 +112,13 @@ export const apiGetUserProject = async (
 			project.lastOpened = new Date(project.lastOpened);
 	});
 	setProjects(data.data.projects);
+	setOwners(data.data.owners);
 };
 
 export const apiGetProject = async (
 	uid: string,
 	setProjects: React.Dispatch<React.SetStateAction<IProject | undefined>>,
+	setUsers: React.Dispatch<React.SetStateAction<IProjectUser[] | undefined>>,
 	setError: React.Dispatch<React.SetStateAction<ReactNode>>,
 ) => {
 	const data: IAPIData<IAPIProjectGet> = await apiGetData<IAPIProjectGet>(
@@ -120,7 +126,9 @@ export const apiGetProject = async (
 	);
 	if (!apiCheckReponse(data, IAPIProjectGetChecker, { type: "error", handler: setError })) {
 		setProjects(undefined);
+		setUsers([]);
 		return;
 	}
 	setProjects(data.data?.project);
+	setUsers(data.data?.users);
 };

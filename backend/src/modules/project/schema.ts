@@ -8,12 +8,12 @@ import {
 import { PROJECT_GAME_NAME_MAX, PROJECT_NAME_MAX, PROJECT_NAME_MIN } from "../../consts.js";
 import { versionSchema } from "../../../rgt/schemas/versionSchema.js";
 import { appDB } from "../../../rgt/middleware/db.js";
-import { User } from "../../../rgt/modules/users/schema.js";
 import { getDefaultSchema } from "../../../rgt/util/USchema.js";
 
 export interface IProjectDB
-	extends Omit<IProject, "uid" | "owner" | "ownerName" | "created" | "lastOpened">, IDBData {
+	extends Omit<IProject, "uid" | "owner" | "users" | "ownerName" | "created" | "lastOpened">, IDBData {
 	owner: Types.ObjectId;
+	users: Types.ObjectId[];
 
 	createdAt: Date;
 	updatedAt: Date;
@@ -47,6 +47,13 @@ const projectSchema = new Schema<IProjectDB, Model<IProjectDB>, IProjectDBMethod
 			type: versionSchema,
 			required: true,
 		},
+		users: {
+			type: [{ 
+				type: Schema.Types.ObjectId, 
+				ref: "user" 
+			}],
+    		default: [],
+		},
 		engine: {
 			type: String,
 			enum: TProjectEngineTypesConsts,
@@ -73,6 +80,8 @@ projectSchema.set("toJSON", {
 		cover: ret.cover,
 		version: ret.version,
 
+		users: ret.users.map((user) => user.toString()),
+
 		engine: ret.engine,
 		language: ret.language,
 
@@ -81,16 +90,16 @@ projectSchema.set("toJSON", {
 });
 
 projectSchema.method("getProjectFull", async function (): Promise<IProject> {
-	const owner = await User.findById(this.owner);
 
 	return {
 		owner: this.owner.toString(),
-		ownerName: owner ? owner.username : undefined,
 		uid: this._id.toString(),
 		name: this.name,
 		title: this.title,
 		cover: this.cover,
 		version: this.version,
+
+		users: this.users.map((user) => user.toString()),
 
 		engine: this.engine,
 		language: this.language,

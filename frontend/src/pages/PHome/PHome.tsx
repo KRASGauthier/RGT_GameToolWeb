@@ -17,6 +17,7 @@ import { useNotif } from "../../../rgt/context/app/CAppNotifContext";
 import type { IProject } from "../../types/data/project/TProject";
 import PHomeProjectCard from "./PHomeProjectCard";
 import CSkeleton from "../../../rgt/components/feedback/skeleton/CSkeleton";
+import type { IProjectUser } from "../../types/data/project/TProjectUser";
 
 export interface PHomeProps extends GCompProps {}
 
@@ -26,12 +27,13 @@ function PHome({}: PHomeProps) {
 	//====================== DATA ======================
 	const { user, logout } = useAuth();
 	const [projects, setProjects] = useState<IProject[] | undefined>(undefined);
+	const [owners, setOwners] = useState<IProjectUser[] | undefined>(undefined);
 	const navigate = useNavigate();
 	const { push } = useNotif();
 
 	//====================== EVENT ======================
 	useEffect(() => {
-		apiGetUserProject(setProjects, push);
+		apiGetUserProject(setProjects, setOwners, push);
 	}, [push]);
 
 	//====================== NODE ======================
@@ -45,7 +47,7 @@ function PHome({}: PHomeProps) {
 		</Grid>
 	);
 	const projectList: ReactNode = useMemo(() => {
-		if (!projects) {
+		if (!projects || !owners) {
 			const skeletonList: ReactNode[] = [];
 			for (let i = 0; i < 3; i++)
 				skeletonList.push(
@@ -63,7 +65,7 @@ function PHome({}: PHomeProps) {
 		return projects.map((project: IProject) => {
 			return (
 				<Grid key={project.uid} size={12 / GRID_COUNT}>
-					<PHomeProjectCard project={project} />
+					<PHomeProjectCard owner={owners.find((owner) => owner.project == project.uid && owner.uid == project.owner)} project={project} />
 				</Grid>
 			);
 		});

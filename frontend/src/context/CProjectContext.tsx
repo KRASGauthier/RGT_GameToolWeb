@@ -13,18 +13,21 @@ import CInfoCard from "../../rgt/components/feedback/info/CInfoCard";
 import { apiGetProject, apiProjectModify, apiProjectSetImage } from "../api/project/projectAPI";
 import type { TAPIProjectModify } from "../types/api/project/TAPIProject";
 import { useNotif } from "../../rgt/context/app/CAppNotifContext";
+import type { IProjectUser } from "../types/data/project/TProjectUser";
 
 //--------------------------------------------------
 //                      CONTEXT
 //--------------------------------------------------
 export interface IProjectContext {
 	project: IProject | undefined;
+	users: IProjectUser[] | undefined;
 	modify: (data: TAPIProjectModify) => Promise<boolean>;
 	modifyPicture: (file: File) => Promise<boolean>;
 }
 
 const projectContext: Context<IProjectContext> = createContext<IProjectContext>({
 	project: undefined,
+	users: [],
 	modify: async () => {
 		return true;
 	},
@@ -47,13 +50,14 @@ export interface CProjectProviderProps {
 function CProjectProvider({ children }: CProjectProviderProps) {
 	//====================== DATA ======================
 	const [project, setProject] = useState<IProject | undefined>();
+	const [users, setUsers] = useState<IProjectUser[] | undefined>();
 	const [error, setError] = useState<ReactNode | undefined>();
 	const { tab } = useParams();
 	const { push } = useNotif();
 
 	//====================== EVENT ======================
 	useEffect(() => {
-		if (tab) apiGetProject(tab, setProject, setError);
+		if (tab) apiGetProject(tab, setProject, setUsers, setError);
 	}, [tab]);
 
 	const modify = useCallback(
@@ -84,7 +88,7 @@ function CProjectProvider({ children }: CProjectProviderProps) {
 	if (!project) return <CInfoCard>Loading...</CInfoCard>;
 
 	return (
-		<projectContext.Provider value={{ project, modify, modifyPicture }}>
+		<projectContext.Provider value={{ project, users, modify, modifyPicture }}>
 			{children}
 		</projectContext.Provider>
 	);
