@@ -48,6 +48,7 @@ export interface IThemeRadius {
 	medium: number | string;
 	large: number | string;
 }
+export type TThemeRadius = keyof IThemeRadius;
 
 export interface IThemeHeader {
 	height: number;

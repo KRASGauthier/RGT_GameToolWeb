@@ -24,6 +24,7 @@ export default defineConfig([
 			"@typescript-eslint/no-empty-object-type": "off",
 			"no-empty-pattern": "off",
 			"react-refresh/only-export-components": "off",
+			"@typescript-eslint/no-unused-expressions": ["error", { allowTernary: true }],
 		},
 	},
 ]);

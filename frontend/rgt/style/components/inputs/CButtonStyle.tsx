@@ -8,7 +8,7 @@ import {
 import { appTheme } from "../../../../src/style/theme";
 import type { CButtonGlobalProps } from "../../../components/inputs/buttons/CButton";
 import type { TSize } from "../../../types/TStyles";
-import type { TFontSize } from "../../../types/themeType";
+import type { TFontSize, TThemeRadius } from "../../../types/themeType";
 
 //--------------------------------------------------
 //                    STYLING
@@ -169,12 +169,26 @@ export const CButtonStyle = ({
 	//====================== TEXT ======================
 	const textColor = current.text ?? appTheme.colors.white;
 	const textHoverColor = current.textHover ?? current.text ?? appTheme.colors.white;
+	console.log(
+		borderRadius,
+		sizeToString(
+			typeof borderRadius == "string" && borderRadius in appTheme.shapes.radius
+				? appTheme.shapes.radius[borderRadius as TThemeRadius]
+				: borderRadius,
+			sizeToString(appTheme.shapes.radius.large),
+		),
+	);
 
 	return {
 		main: {
 			background,
 			color: textColor,
-			borderRadius: sizeToString(borderRadius, sizeToString(appTheme.shapes.radius.large)),
+			borderRadius: sizeToString(
+				typeof borderRadius == "string" && borderRadius in appTheme.shapes.radius
+					? appTheme.shapes.radius[borderRadius as TThemeRadius]
+					: borderRadius,
+				sizeToString(appTheme.shapes.radius.large),
+			),
 			boxShadow: shadowGenerate(getQuadStyle(elevation) ?? 15),
 			p: padding ?? sizeToString(padding, "6px 16px"),
 
@@ -208,7 +222,9 @@ export const CButtonStyle = ({
 				},
 
 				borderRadius: sizeToString(
-					borderRadius,
+					typeof borderRadius == "string" && borderRadius in appTheme.shapes.radius
+						? appTheme.shapes.radius[borderRadius as TThemeRadius]
+						: borderRadius,
 					sizeToString(appTheme.shapes.radius.large),
 				),
 			},
@@ -255,15 +271,27 @@ export interface IButtonIconStyle {
 export interface CButtonIconStyleProps {
 	padding?: TSize;
 	size?: TFontSize;
+	borderRadius?: TSize | TThemeRadius;
 }
 
-export const CButtonIconStyle = ({ padding, size }: CButtonIconStyleProps): IButtonIconStyle => {
+export const CButtonIconStyle = ({
+	padding,
+	size,
+	borderRadius,
+}: CButtonIconStyleProps): IButtonIconStyle => {
+	const radius = sizeToString(
+		typeof borderRadius == "string" && borderRadius in appTheme.shapes.radius
+			? appTheme.shapes.radius[borderRadius as TThemeRadius]
+			: borderRadius,
+		sizeToString(appTheme.shapes.radius.small),
+	);
+
 	return {
 		main: {
-			borderRadius: appTheme.shapes.radius.small,
+			borderRadius: radius,
 			p: sizeToString(padding, "8px"),
 			"&::before": {
-				borderRadius: appTheme.shapes.radius.small,
+				borderRadius: radius,
 			},
 		},
 		icon: {

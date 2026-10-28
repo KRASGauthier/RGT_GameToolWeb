@@ -19,6 +19,7 @@ import { IMG_PROJECT, IMG_PROJECT_COVER, IMG_PROJECT_UID } from "../../consts.js
 import { projectUserCreate } from "./projectUsers/controller.js";
 import { MProjectUser } from "./projectUsers/schema.js";
 import { IProjectUser } from "../../types/data/project/TProjectUser.js";
+import { MGroup } from "./groups/schema.js";
 
 //--------------------------------------------------
 //                     MANAGE
@@ -96,6 +97,7 @@ export const projectGet = async (req: Request, res: Response) => {
 	hasProject(req);
 	if (!req.project) return;
 
+	//USERS
 	const users: IProjectUser[] = (await Promise.all(req.project.users.map(async (user) => {
 		const userFound = await MProjectUser.findOne({user: user, project: req.project._id});
 		if(userFound)
@@ -109,8 +111,12 @@ export const projectGet = async (req: Request, res: Response) => {
 		})
 	}
 
+	//Gorups
+	const groups = await MGroup.find({ project: req.project._id });
+
 	res.status(200).json({
 		project: await req.project.getProjectFull(),
 		users,
+		groups: await Promise.all(groups.map(async (group) => group.getJSON()))
 	} as IAPIProjectGet);
 };

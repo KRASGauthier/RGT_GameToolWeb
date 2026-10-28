@@ -16,6 +16,7 @@ import {
 import type { IProject } from "../../types/data/project/TProject";
 import { generatePath } from "react-router";
 import type { IProjectUser } from "../../types/data/project/TProjectUser";
+import type { IGroup } from "../../types/data/project/TGroups";
 
 //--------------------------------------------------
 //                    SHARED
@@ -118,7 +119,8 @@ export const apiGetUserProject = async (
 export const apiGetProject = async (
 	uid: string,
 	setProjects: React.Dispatch<React.SetStateAction<IProject | undefined>>,
-	setUsers: React.Dispatch<React.SetStateAction<IProjectUser[] | undefined>>,
+	setUsers: React.Dispatch<React.SetStateAction<IProjectUser[]>>,
+	setGroups: React.Dispatch<React.SetStateAction<IGroup[]>>,
 	setError: React.Dispatch<React.SetStateAction<ReactNode>>,
 ) => {
 	const data: IAPIData<IAPIProjectGet> = await apiGetData<IAPIProjectGet>(
@@ -126,9 +128,11 @@ export const apiGetProject = async (
 	);
 	if (!apiCheckReponse(data, IAPIProjectGetChecker, { type: "error", handler: setError })) {
 		setProjects(undefined);
+		setGroups([]);
 		setUsers([]);
 		return;
 	}
 	setProjects(data.data?.project);
-	setUsers(data.data?.users);
+	setUsers(data.data?.users ?? []);
+	setGroups(data.data?.groups ?? []);
 };

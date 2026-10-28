@@ -15,9 +15,9 @@ export interface CButtonIconProps extends CButtonGlobalProps, Omit<IconButtonPro
 	size?: TFontSize;
 }
 
-function CButtonIcon({ icon, size, padding, sx, ...other }: CButtonIconProps) {
-	const baseStyle: IButtonStyle = CButtonStyle({ padding, ...other });
-	const style: IButtonIconStyle = CButtonIconStyle({ size, padding });
+function CButtonIcon({ icon, size, padding, sx, borderRadius, ...other }: CButtonIconProps) {
+	const baseStyle: IButtonStyle = CButtonStyle({ padding, borderRadius, ...other });
+	const style: IButtonIconStyle = CButtonIconStyle({ size, padding, borderRadius });
 
 	const finalIcon: ReactElement = cloneElement(icon, {
 		sx: sxMerger(icon.props.sx ?? {}, style.icon),

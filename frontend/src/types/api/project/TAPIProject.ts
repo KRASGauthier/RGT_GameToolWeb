@@ -1,6 +1,8 @@
 import type { TAPIChecker } from "../../../../rgt/types/api/TAPI";
+import type { IGroup } from "../../data/project/TGroups";
 import type { IProject } from "../../data/project/TProject";
 import type { IProjectUser } from "../../data/project/TProjectUser";
+import { projectUserChecker } from "./TAPIProjectUser";
 
 //--------------------------------------------------
 //                    SHARED
@@ -60,34 +62,22 @@ const projectChecker: TAPIChecker = {
 	},
 };
 
-const projectUserChecker: TAPIChecker = {
+const groupChecker: TAPIChecker = {
 	uid: {
 		type: "string",
 	},
-	username: {
+	name: {
 		type: "string",
 	},
-	avatar: {
+	icon: {
 		type: "string",
+	},
+	color: {
+		type: "string",
+	},
+	count: {
+		type: "number",
 		optional: true,
-	},
-	initials: {
-		type: "string",
-		optional: true,
-	},
-	project: {
-		type: "string",
-	},
-	groups: {
-		type: "array",
-		checker: {
-			value: {
-				type: "string",
-			},
-		},
-	},
-	isOwner: {
-		type: "boolean",
 	},
 };
 
@@ -138,7 +128,7 @@ export const IAPIProjectChecker: TAPIChecker = {
 
 export interface IAPIProjectGetFromUser {
 	projects: IProject[];
-	owners: IProjectUser[]
+	owners: IProjectUser[];
 }
 export const IAPIProjectGetFromUserChecker: TAPIChecker = {
 	projects: {
@@ -154,6 +144,7 @@ export const IAPIProjectGetFromUserChecker: TAPIChecker = {
 export interface IAPIProjectGet {
 	project: IProject;
 	users: IProjectUser[];
+	groups: IGroup[];
 }
 export const IAPIProjectGetChecker: TAPIChecker = {
 	project: {
@@ -163,5 +154,9 @@ export const IAPIProjectGetChecker: TAPIChecker = {
 	users: {
 		type: "array",
 		checker: projectUserChecker,
+	},
+	groups: {
+		type: "array",
+		checker: groupChecker,
 	},
 };

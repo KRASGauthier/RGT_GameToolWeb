@@ -65,7 +65,12 @@ function PHome({}: PHomeProps) {
 		return projects.map((project: IProject) => {
 			return (
 				<Grid key={project.uid} size={12 / GRID_COUNT}>
-					<PHomeProjectCard owner={owners.find((owner) => owner.project == project.uid && owner.uid == project.owner)} project={project} />
+					<PHomeProjectCard
+						owner={owners.find(
+							(owner) => owner.project == project.uid && owner.uid == project.owner,
+						)}
+						project={project}
+					/>
 				</Grid>
 			);
 		});

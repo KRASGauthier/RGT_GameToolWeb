@@ -93,9 +93,15 @@ function PHomeProjectCard({ project, owner }: PHomeProjectCardProps) {
 				{getTextInfo("Language", "language", (value: string): string => {
 					return DProjectLanguages[value as TProjectLanguageTypes].display;
 				})}
-				{getTextInfo("Owner", "owner", owner ? () => {
-					return owner.username
-				}: undefined)}
+				{getTextInfo(
+					"Owner",
+					"owner",
+					owner
+						? () => {
+								return owner.username;
+							}
+						: undefined,
+				)}
 				<CSplitterCollumn sx={{ mx: "auto" }} color={appTheme.colors.quaternary[6]} />
 				{getTextInfo("Created", "created")}
 				{getTextInfo("Last openned", "lastOpened")}

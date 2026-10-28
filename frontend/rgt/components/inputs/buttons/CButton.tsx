@@ -8,6 +8,7 @@ import {
 import { memo } from "react";
 import { sxMerger } from "../../../utils/UStyles";
 import type { TQuadStyle, TSize } from "../../../types/TStyles";
+import type { TThemeRadius } from "../../../types/themeType";
 
 export interface CButtonGlobalProps extends GCompProps {
 	elevation?: TQuadStyle<number>;
@@ -15,7 +16,7 @@ export interface CButtonGlobalProps extends GCompProps {
 	styling?: TButtonStylingTypes;
 	checkedStyling?: TButtonStylingTypes;
 	padding?: TSize;
-	borderRadius?: TSize;
+	borderRadius?: TSize | TThemeRadius;
 
 	checked?: boolean;
 }

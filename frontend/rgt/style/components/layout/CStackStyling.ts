@@ -1,6 +1,8 @@
 import type { SxProps, Theme } from "@mui/material";
 import { colorGetBackground, shadowGenerate } from "../../../utils/UStyles";
 import { appTheme } from "../../../../src/style/theme";
+import type { TThemeRadius } from "../../../types/themeType";
+import type { TSize } from "../../../types/TStyles";
 
 //--------------------------------------------------
 //                    STYLINGS
@@ -33,18 +35,27 @@ export interface IStackStyling {
 }
 
 export interface CStackStylingProps {
+	borderRadius?: TSize | TThemeRadius;
 	styling?: TStackStyling;
 	overflow?: boolean;
 }
 
-export const CStackStyling = ({ styling = "default", overflow }: CStackStylingProps) => {
+export const CStackStyling = ({
+	borderRadius,
+	styling = "default",
+	overflow,
+}: CStackStylingProps) => {
 	const style = DStackStyling[styling] as IStackStylingObject;
 
 	return {
 		main: {
 			background: style.background,
 			flex: overflow ? 1 : undefined,
-			borderRadius: style.borderRadius,
+			borderRadius: borderRadius
+				? typeof borderRadius == "string" && borderRadius in appTheme.shapes.radius
+					? appTheme.shapes.radius[borderRadius as TThemeRadius]
+					: borderRadius
+				: style.borderRadius,
 			boxShadow: style.boxShadow,
 			overflow: overflow ? "visible" : "auto",
 		},
