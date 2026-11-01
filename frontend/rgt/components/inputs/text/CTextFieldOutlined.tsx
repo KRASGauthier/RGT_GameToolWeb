@@ -30,6 +30,25 @@ export interface CTextFieldOutlinedProps extends GCompProps, Omit<TextFieldProps
 	borderWidth?: string | number;
 }
 
+const filterProps = (props: CTextFieldOutlinedProps): TextFieldProps =>
+	Object.fromEntries(
+		Object.entries(props).filter(
+			([key]) =>
+				![
+					"startIcon",
+					"styling",
+					"xPadding",
+					"yPadding",
+					"elevation",
+					"fontSize",
+					"weight",
+					"fontFamily",
+					"borderRadius",
+					"borderWidth",
+				].includes(key),
+		),
+	) as TextFieldProps;
+
 function CTextFieldOutlined({ startIcon, sx, ...other }: CTextFieldOutlinedProps) {
 	const style: ITextFieldOutlinedStyle = CTextFieldOutlinedStyle({ ...other });
 
@@ -48,7 +67,7 @@ function CTextFieldOutlined({ startIcon, sx, ...other }: CTextFieldOutlinedProps
 			}
 			sx={sxMerger(style.main, sx ? sx : {})}
 			variant="outlined"
-			{...other}
+			{...filterProps(other)}
 		></TextField>
 	);
 }

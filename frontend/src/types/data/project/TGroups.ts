@@ -1,8 +1,9 @@
+import type { TUID } from "../../../../rgt/types/TShared";
 import type { TColorEntry } from "../../../../rgt/types/TStyles";
 import type { TIconLibrary } from "../../icons/TIconLibrary";
 
 export interface IGroup {
-	uid: string;
+	uid: TUID;
 	name: string;
 	icon: TIconLibrary;
 	color: TColorEntry;

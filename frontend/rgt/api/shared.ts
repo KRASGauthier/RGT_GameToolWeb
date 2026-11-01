@@ -39,7 +39,7 @@ export const apiCheckReponse = <_T extends object>(
 	data: IAPIData<_T>,
 	target: keyof _T | TAPIChecker,
 	errorCallback: TErrorReturn,
-): boolean => {
+): data is IAPIData<_T> & { data: _T } => {
 	//GLOBAL
 	if (data.error) {
 		if (errorCallback.type == "error") errorCallback.handler(data.error);

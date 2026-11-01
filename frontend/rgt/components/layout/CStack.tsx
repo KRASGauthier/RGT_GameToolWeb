@@ -7,16 +7,19 @@ import {
 } from "../../style/components/layout/CStackStyling";
 import { useMemo } from "react";
 import { sxMerger } from "../../utils/UStyles";
+import type { TSize } from "../../types/TStyles";
+import type { TThemeRadius } from "../../types/themeType";
 
 export interface CStackProps extends GCompProps, StackProps {
+	borderRadius?: TSize | TThemeRadius;
 	styling?: TStackStyling;
 	overflow?: boolean;
 }
 
-function CStack({ styling, overflow, sx, ...other }: CStackProps) {
+function CStack({ borderRadius, styling, overflow, sx, ...other }: CStackProps) {
 	const style: IStackStyling = useMemo(() => {
-		return CStackStyling({ styling, overflow });
-	}, [styling, overflow]);
+		return CStackStyling({ borderRadius, styling, overflow });
+	}, [borderRadius, styling, overflow]);
 
 	return <Stack sx={sxMerger(style.main, sx ? sx : {})} {...other} />;
 }

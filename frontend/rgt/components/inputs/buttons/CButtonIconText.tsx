@@ -5,7 +5,7 @@ import type { CButtonProps } from "./CButton";
 import CButton from "./CButton";
 import CText, { type CTextProps } from "../../text/CText";
 import { Stack, type SvgIconProps } from "@mui/material";
-import type { SystemCssProperties } from "@mui/system";
+import type { ResponsiveStyleValue, SystemCssProperties } from "@mui/system";
 import type { Theme } from "@mui/material";
 
 export interface CButtonIconTextProps extends Omit<CButtonProps, "startIcon" | "endIcon"> {
@@ -15,6 +15,8 @@ export interface CButtonIconTextProps extends Omit<CButtonProps, "startIcon" | "
 
 	justifyContent?: SystemCssProperties<Theme>["justifyContent"];
 	iconOnly?: boolean;
+
+	spacing?: ResponsiveStyleValue<string | number>;
 }
 
 function CButtonIconText({
@@ -25,6 +27,7 @@ function CButtonIconText({
 	children,
 	styling = "light",
 	textProps,
+	spacing,
 	sx,
 	...other
 }: CButtonIconTextProps) {
@@ -56,6 +59,7 @@ function CButtonIconText({
 					justifyContent: justifyContent ? justifyContent : "space-between",
 					minWidth: 0,
 				}}
+				spacing={spacing}
 			>
 				{startIconFinal}
 				{!iconOnly && (

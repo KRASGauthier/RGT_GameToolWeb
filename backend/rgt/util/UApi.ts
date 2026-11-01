@@ -1,6 +1,7 @@
 import { TAPIChecker } from "../types/api/TAPI.js";
 
 export function checkApiSub(data: Record<string, unknown>, checker: TAPIChecker) {
+	console.log(data);
 	for (const [key] of Object.entries(data)) {
 		if (!(key in checker))
 			throw {

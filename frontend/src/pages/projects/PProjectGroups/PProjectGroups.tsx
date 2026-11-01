@@ -17,7 +17,6 @@ import CFilter, {
 	CFILTER_INVERSE_SUFFIX,
 	type TFilterOut,
 } from "../../../../rgt/components/inputs/filters/CFilter";
-import { DIconLibraryTsx } from "../../../icons/IIconLibrary";
 import CDialogConfirm from "../../../../rgt/components/feedback/dialogs/CDialogConfirm";
 
 export interface PProjectGroupsProps {}
@@ -108,7 +107,6 @@ function PProjectGroups({}: PProjectGroupsProps) {
 			direction={"column"}
 		>
 			<CFilter
-				library={DIconLibraryTsx}
 				actions={["add"]}
 				entries={[
 					{

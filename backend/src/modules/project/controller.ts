@@ -16,6 +16,39 @@ import { hasProject } from "../../util/UError.js";
 import sharp from "sharp";
 import { makeFrontPath, makePath } from "../../../rgt/util/UImages.js";
 import { IMG_PROJECT, IMG_PROJECT_COVER, IMG_PROJECT_UID } from "../../consts.js";
+import { projectUserCreate } from "./projectUsers/controller.js";
+import { MProjectUser } from "./projectUsers/schema.js";
+import { IProjectUser } from "../../types/data/project/TProjectUser.js";
+import { MGroup } from "./groups/schema.js";
+
+//--------------------------------------------------
+//                     HELPER
+//--------------------------------------------------
+export const projectHelperGetUsers = async (req: Request): Promise<IProjectUser[]> => {
+	hasProject(req);
+	const users: IProjectUser[] = (
+		await Promise.all(
+			req.project.users.map(async (user) => {
+				const userFound = await MProjectUser.findOne({
+					user: user,
+					project: req.project._id,
+				});
+				if (userFound) return userFound.getData();
+			}),
+		)
+	).filter((user: IProjectUser | undefined) => (user ? true : false)) as IProjectUser[];
+	const owner = await MProjectUser.findOne({
+		user: req.project.owner.toString(),
+		project: req.project._id,
+	});
+	if (owner) {
+		users.push({
+			...(await owner.getData()),
+			isOwner: true,
+		});
+	}
+	return users;
+};
 
 //--------------------------------------------------
 //                     MANAGE
@@ -28,6 +61,9 @@ export const createProject = async (req: Request, res: Response) => {
 		owner: req.user,
 		...data,
 	});
+	console.log("END");
+
+	projectUserCreate(req.user, project._id.toString());
 
 	res.status(201).json({ project: project.toJSON<IProject>() } as IAPIProject);
 };
@@ -74,6 +110,16 @@ export const projectGetAllFromUser = async (req: Request, res: Response) => {
 				return project.getProjectFull();
 			}),
 		),
+		owners: await Promise.all(
+			projects.map(async (project) => {
+				const owner = await MProjectUser.findOne({
+					user: project.owner,
+					project: project.id,
+				});
+				if (!owner) return undefined;
+				return owner.getData();
+			}),
+		),
 	} as IAPIProjectGetFromUser);
 };
 
@@ -82,7 +128,15 @@ export const projectGet = async (req: Request, res: Response) => {
 	hasProject(req);
 	if (!req.project) return;
 
+	//USERS
+	const users = await projectHelperGetUsers(req);
+
+	//Gorups
+	const groups = await MGroup.find({ project: req.project._id });
+
 	res.status(200).json({
 		project: await req.project.getProjectFull(),
+		users,
+		groups: await Promise.all(groups.map(async (group) => group.getJSON())),
 	} as IAPIProjectGet);
 };
