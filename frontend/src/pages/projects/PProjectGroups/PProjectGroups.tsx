@@ -1,14 +1,7 @@
 import { Stack } from "@mui/material";
 import { appTheme } from "../../../style/theme";
-import {
-	apiGroupCreate,
-	apiGroupDelete,
-	apiGroupGet,
-	apiGroupModify,
-} from "../../../api/project/groupsAPI";
-import { useNotif } from "../../../../rgt/context/app/CAppNotifContext";
 import { useProject } from "../../../context/CProjectContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { IGroup } from "../../../types/data/project/TGroups";
 import PProjectGroupsEntry from "./PProjectGroupsEntry";
 import CStack from "../../../../rgt/components/layout/CStack";
@@ -24,34 +17,20 @@ export interface PProjectGroupsProps {}
 function PProjectGroups({}: PProjectGroupsProps) {
 	//====================== DATA ======================
 	const [filters, setFilters] = useState<TFilterOut>({});
-	const [groups, setGroups] = useState<(IGroup & { new?: boolean })[]>([]);
 	const [toDelete, setToDelete] = useState<string | undefined>(undefined);
-	const { push } = useNotif();
-	const { project } = useProject();
+	const { groups, addGroup, editGroup, deleteGroup } = useProject();
 
 	//====================== HANDLERS ======================
-	const handleNew = async () => {
-		if (!project) return;
-		const group: IGroup | undefined = await apiGroupCreate(project.uid, push);
-		if (!group) return;
-		setGroups((prev: IGroup[]) => {
-			return [...prev, { ...group, new: true }];
-		});
-	};
 	const handleEvent = (event: string) => {
 		switch (event) {
 			case "add":
-				handleNew();
+				addGroup();
 		}
 	};
 	const handleDeleteConfirmed = async () => {
-		if (!project) {
-			setToDelete(undefined);
+		if(!toDelete)
 			return;
-		}
-		const res: IGroup[] | boolean = await apiGroupDelete(project.uid, toDelete ?? "", push);
-		if (typeof res != "object") return;
-		setGroups(res);
+		await deleteGroup(toDelete)
 		setToDelete(undefined);
 	};
 	const handleDeleteCancelled = () => {
@@ -62,11 +41,7 @@ function PProjectGroups({}: PProjectGroupsProps) {
 	};
 
 	const onEdit = async (target: string, edit: TAPIGroupEdit): Promise<boolean> => {
-		if (!project) return false;
-		const res: IGroup[] | boolean = await apiGroupModify(project.uid, target, edit, push);
-		if (typeof res != "object") return res;
-		setGroups(res);
-		return true;
+		return await editGroup(target, edit);
 	};
 
 	const getFilteredGroups = (): IGroup[] => {
@@ -91,13 +66,6 @@ function PProjectGroups({}: PProjectGroupsProps) {
 			});
 	};
 
-	//====================== EVENTS ======================
-	useEffect(() => {
-		if (!project) return;
-		apiGroupGet(project.uid, push).then((groups: IGroup[]) => {
-			setGroups(groups);
-		});
-	}, [project, push]);
 
 	//====================== HANDLERS ======================
 

@@ -137,7 +137,7 @@ function PProjectGroupsEntry({ group, onEdit, onDelete }: PProjectGroupsEntryPro
 				</CText>
 				<CSplitterRow secondSize={"auto"} sx={style.splitters} />
 				<CText sx={sxMerger(style.text, { minWidth: "75px", textAlign: "center" })}>
-					0 users
+					{group.count ?? 0} user{(group.count ?? 0) > 1 ? "s" : ""}
 				</CText>
 				<CSplitterRow secondSize={"auto"} sx={style.splitters} />
 				<CButtonIcon

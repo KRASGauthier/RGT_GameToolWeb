@@ -12,6 +12,7 @@ export const DIconLibrary = [
 	"edit",
 	"delete",
 	"search",
+	"reset",
 	"tick",
 	"clear",
 	"upArrow",

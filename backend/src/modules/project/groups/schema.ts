@@ -7,6 +7,7 @@ import { cehckerIsColorEntry } from "../../../../rgt/util/UCheckers.js";
 import { DIconLibrary, TIconLibrary } from "../../../types/icons/TIconLibrary.js";
 import { TColorEntry } from "../../../../rgt/types/TStyles.js";
 import { PROJECT_GROUP_NAME_MAX } from "../../../consts.js";
+import { MProjectUser } from "../projectUsers/schema.js";
 
 export interface IGroupDB extends Omit<IGroup, "uid" | "icon" | "color" | "count">, IDBData {
 	project: Types.ObjectId;
@@ -60,11 +61,15 @@ groupSchema.set("toJSON", {
 });
 
 groupSchema.method("getJSON", async function (): Promise<IGroup> {
+
+	const count = (await MProjectUser.find({project: this.project, groups: this._id})).length
+
 	return {
 		uid: this._id.toString(),
 		name: this.name,
 		icon: this.icon as TIconLibrary,
 		color: this.color as TColorEntry,
+		count
 	};
 });
 

@@ -21,6 +21,8 @@ import {
 	apiProjectUserRemove,
 	apiProjectUserSetGroup,
 } from "../api/project/projectUserAPI";
+import { apiGroupCreate, apiGroupDelete, apiGroupModify } from "../api/project/groupsAPI";
+import type { TAPIGroupEdit } from "../types/api/project/TAPIGroups";
 
 //--------------------------------------------------
 //                      CONTEXT
@@ -33,6 +35,11 @@ export interface IProjectContext {
 	//====================== COMMON HANDLERS ======================
 	modify: (data: TAPIProjectModify) => Promise<boolean>;
 	modifyPicture: (file: File) => Promise<boolean>;
+
+	//====================== GROUPS ======================
+	addGroup: () => Promise<void>;
+	editGroup: (target: string, edit: TAPIGroupEdit) => Promise<boolean>;
+	deleteGroup: (target: string) => Promise<void>;
 
 	//====================== USERS HANDLERS ======================
 	addUser: (user: TUID) => Promise<void>;
@@ -50,6 +57,11 @@ const projectContext: Context<IProjectContext> = createContext<IProjectContext>(
 	modifyPicture: async () => {
 		return true;
 	},
+
+	addGroup: async () => {},
+	editGroup: async () => { return false; },
+	deleteGroup: async () => {},
+
 	addUser: async () => {},
 	deleteUser: async () => {},
 	modifyUserGroup: async () => {
@@ -72,7 +84,7 @@ function CProjectProvider({ children }: CProjectProviderProps) {
 	//====================== DATA ======================
 	const [project, setProject] = useState<IProject | undefined>();
 	const [users, setUsers] = useState<IProjectUser[]>([]);
-	const [groups, setGroups] = useState<IGroup[]>([]);
+	const [groups, setGroups] = useState<IGroup[] & { new?: boolean }>([]);
 	const [error, setError] = useState<ReactNode | undefined>();
 	const { tab } = useParams();
 	const { push } = useNotif();
@@ -104,6 +116,32 @@ function CProjectProvider({ children }: CProjectProviderProps) {
 		},
 		[tab, push],
 	);
+
+	//====================== GROUP HANDLERS ======================
+	const addGroup = useCallback(async () => {
+		if (!project) return;
+		const group: IGroup | undefined = await apiGroupCreate(project.uid, push);
+		if (!group) return;
+		setGroups((prev: IGroup[]) => {
+			return [...prev, { ...group, new: true }];
+		});
+	}, [project, push])
+
+	const editGroup = useCallback(async (target: string, edit: TAPIGroupEdit): Promise<boolean> => {
+		if (!project) return false;
+		const res: IGroup[] | boolean = await apiGroupModify(project.uid, target, edit, push);
+		if (typeof res != "object") return res;
+		setGroups(res);
+		return true;
+	}, [project, push])
+
+	const deleteGroup = useCallback(async (target: string) => {
+		if (!project)
+			return;
+		const res: IGroup[] | boolean = await apiGroupDelete(project.uid, target, push);
+		if (typeof res != "object") return;
+		setGroups(res);
+	}, [project, push])
 
 	//====================== USERS HANDLERS ======================
 	const addUser = useCallback(
@@ -156,6 +194,9 @@ function CProjectProvider({ children }: CProjectProviderProps) {
 				groups,
 				modify,
 				modifyPicture,
+				addGroup,
+				editGroup,
+				deleteGroup,
 				addUser,
 				deleteUser,
 				modifyUserGroup,
