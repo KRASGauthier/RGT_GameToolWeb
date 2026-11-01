@@ -80,11 +80,7 @@ const stylingContent = {
 	},
 	"grey-dark": {
 		normal: [appTheme.colors.greys[2], appTheme.colors.greys[3]],
-		hovered: [
-			appTheme.colors.greys[2],
-			appTheme.colors.greys[2],
-			appTheme.colors.greys[3],
-		],
+		hovered: [appTheme.colors.greys[2], appTheme.colors.greys[2], appTheme.colors.greys[3]],
 		disabled: [appTheme.colors.greys[0], appTheme.colors.greys[0]],
 	},
 	validate: {

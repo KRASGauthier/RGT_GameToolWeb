@@ -11,7 +11,9 @@ import { appDB } from "../../../rgt/middleware/db.js";
 import { getDefaultSchema } from "../../../rgt/util/USchema.js";
 
 export interface IProjectDB
-	extends Omit<IProject, "uid" | "owner" | "users" | "ownerName" | "created" | "lastOpened">, IDBData {
+	extends
+		Omit<IProject, "uid" | "owner" | "users" | "ownerName" | "created" | "lastOpened">,
+		IDBData {
 	owner: Types.ObjectId;
 	users: Types.ObjectId[];
 
@@ -48,11 +50,13 @@ const projectSchema = new Schema<IProjectDB, Model<IProjectDB>, IProjectDBMethod
 			required: true,
 		},
 		users: {
-			type: [{ 
-				type: Schema.Types.ObjectId, 
-				ref: "user" 
-			}],
-    		default: [],
+			type: [
+				{
+					type: Schema.Types.ObjectId,
+					ref: "user",
+				},
+			],
+			default: [],
 		},
 		engine: {
 			type: String,
@@ -90,7 +94,6 @@ projectSchema.set("toJSON", {
 });
 
 projectSchema.method("getProjectFull", async function (): Promise<IProject> {
-
 	return {
 		owner: this.owner.toString(),
 		uid: this._id.toString(),

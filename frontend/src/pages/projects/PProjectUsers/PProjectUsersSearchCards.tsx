@@ -12,15 +12,18 @@ export interface PProjectUsersSearchCardsProps {
 }
 
 function PProjectUsersSearchCards({ user }: PProjectUsersSearchCardsProps) {
-
-	const { addUser } =  useProject();
+	const { addUser } = useProject();
 
 	return (
 		<CCard sx={{ flexShrink: 0 }}>
 			<Stack direction={"row"} sx={{ alignItems: "center" }}>
 				<CAvatar user={user} />
 				<CText sx={{ ml: "5px" }}>{user.username}</CText>
-				<CButtonIcon sx={{ ml: "auto", mr: "5px" }} onClick={() => addUser(user.uid)} icon={<PersonAddIcon />} />
+				<CButtonIcon
+					sx={{ ml: "auto", mr: "5px" }}
+					onClick={() => addUser(user.uid)}
+					icon={<PersonAddIcon />}
+				/>
 			</Stack>
 		</CCard>
 	);

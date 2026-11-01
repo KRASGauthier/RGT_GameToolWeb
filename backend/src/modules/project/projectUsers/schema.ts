@@ -7,10 +7,10 @@ import { MProject } from "../schema.js";
 import { appDB } from "../../../../rgt/middleware/db.js";
 
 export interface IProjectUserDB
-	extends Omit<IProjectUser, "uid" | "project" | "groups" | "username" >, IDBData {
+	extends Omit<IProjectUser, "uid" | "project" | "groups" | "username">, IDBData {
 	user: Types.ObjectId;
 	project: Types.ObjectId;
-	groups: Types.ObjectId[]
+	groups: Types.ObjectId[];
 }
 
 export interface IProjectUserDBMethods {
@@ -32,39 +32,36 @@ const projectUserSchema = new Schema<IProjectUserDB, Model<IProjectUserDB>, IPro
 			required: true,
 		},
 		groups: {
-			type: [{ 
-				type: Schema.Types.ObjectId, 
-				ref: "group" 
-			}],
-    		default: [],
+			type: [
+				{
+					type: Schema.Types.ObjectId,
+					ref: "group",
+				},
+			],
+			default: [],
 		},
 		...getDefaultSchema(projectUserCurrentVersion),
 	},
 	{
 		timestamps: true,
 	},
-)
+);
 
 projectUserSchema.index({ user: 1, project: 1 }, { unique: true });
 
-
-projectUserSchema.method("getData", async function(): Promise<IProjectUser> {
-
+projectUserSchema.method("getData", async function (): Promise<IProjectUser> {
 	const user = await User.findById(this.user);
-	if(!user)
-		throw { code: "404", message: "User not found"}
+	if (!user) throw { code: "404", message: "User not found" };
 
-	const project = await MProject.findById(this.project)
-	if(!project)
-		throw { code: "404", message: "Project not found"}
+	const project = await MProject.findById(this.project);
+	if (!project) throw { code: "404", message: "Project not found" };
 
 	return {
 		...user.getUserBase(),
 		project: this.project.toString(),
-		groups: this.groups.map(group => group.toString()),
-		isOwner: project.owner.equals(user._id)
-	}
+		groups: this.groups.map((group) => group.toString()),
+		isOwner: project.owner.equals(user._id),
+	};
 });
-
 
 export const MProjectUser = appDB.main.model("projectUser", projectUserSchema);

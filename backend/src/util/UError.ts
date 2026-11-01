@@ -22,8 +22,8 @@ export const hasGroup: (
 
 export const hasProjectUser: (
 	req: Request,
-) => asserts req is Request & { projectUser: HydratedDocument<IProjectUserDB, IProjectUserDBMethods> } = (
-	req: Request,
-) => {
+) => asserts req is Request & {
+	projectUser: HydratedDocument<IProjectUserDB, IProjectUserDBMethods>;
+} = (req: Request) => {
 	if (!req.projectUser) throw { code: 400, message: "Missing project user" };
 };

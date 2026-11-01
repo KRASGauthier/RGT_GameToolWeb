@@ -26,20 +26,29 @@ import { MGroup } from "./groups/schema.js";
 //--------------------------------------------------
 export const projectHelperGetUsers = async (req: Request): Promise<IProjectUser[]> => {
 	hasProject(req);
-	const users: IProjectUser[] = (await Promise.all(req.project.users.map(async (user) => {
-		const userFound = await MProjectUser.findOne({user: user, project: req.project._id});
-		if(userFound)
-			return userFound.getData();
-	}))).filter((user: IProjectUser | undefined) => user ? true : false) as IProjectUser[];
-	const owner = await MProjectUser.findOne({user: req.project.owner.toString(), project: req.project._id})
-	if(owner) {
+	const users: IProjectUser[] = (
+		await Promise.all(
+			req.project.users.map(async (user) => {
+				const userFound = await MProjectUser.findOne({
+					user: user,
+					project: req.project._id,
+				});
+				if (userFound) return userFound.getData();
+			}),
+		)
+	).filter((user: IProjectUser | undefined) => (user ? true : false)) as IProjectUser[];
+	const owner = await MProjectUser.findOne({
+		user: req.project.owner.toString(),
+		project: req.project._id,
+	});
+	if (owner) {
 		users.push({
 			...(await owner.getData()),
-			isOwner: true
-		})
+			isOwner: true,
+		});
 	}
 	return users;
-}
+};
 
 //--------------------------------------------------
 //                     MANAGE
@@ -103,12 +112,14 @@ export const projectGetAllFromUser = async (req: Request, res: Response) => {
 		),
 		owners: await Promise.all(
 			projects.map(async (project) => {
-				const owner = await MProjectUser.findOne({user: project.owner, project: project.id})
-				if(!owner)
-					return undefined
+				const owner = await MProjectUser.findOne({
+					user: project.owner,
+					project: project.id,
+				});
+				if (!owner) return undefined;
 				return owner.getData();
-			}),	
-		)
+			}),
+		),
 	} as IAPIProjectGetFromUser);
 };
 
@@ -126,6 +137,6 @@ export const projectGet = async (req: Request, res: Response) => {
 	res.status(200).json({
 		project: await req.project.getProjectFull(),
 		users,
-		groups: await Promise.all(groups.map(async (group) => group.getJSON()))
+		groups: await Promise.all(groups.map(async (group) => group.getJSON())),
 	} as IAPIProjectGet);
 };

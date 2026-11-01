@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { useMemo, useState } from "react";
 import type { TIconLibrary } from "../../../../src/types/icons/TIconLibrary";
 import CPopover, { type CPopoverProps } from "../../feedback/popover/CPopover";

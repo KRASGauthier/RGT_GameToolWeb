@@ -18,7 +18,10 @@ import { useProject } from "../../../context/CProjectContext";
 import type { IProjectUser } from "../../../types/data/project/TProjectUser";
 import { appTheme } from "../../../style/theme";
 import CDialogConfirm from "../../../../rgt/components/feedback/dialogs/CDialogConfirm";
-import CFilter, { CFILTER_INVERSE_SUFFIX, type TFilterOut } from "../../../../rgt/components/inputs/filters/CFilter";
+import CFilter, {
+	CFILTER_INVERSE_SUFFIX,
+	type TFilterOut,
+} from "../../../../rgt/components/inputs/filters/CFilter";
 import type { ISelectorEntry } from "../../../../rgt/components/inputs/popover/CSelector";
 
 export interface PProjectUsersProps {}
@@ -40,15 +43,15 @@ function PProjectUsers({}: PProjectUsersProps) {
 	const [deletingUser, setDeletingUser] = useState<IProjectUser | null>(null);
 
 	//FILETR
-	const [filters, setFilters] = useState<TFilterOut>({})
+	const [filters, setFilters] = useState<TFilterOut>({});
 	const groupEntries: ISelectorEntry[] = useMemo(() => {
-			return groups.map((group): ISelectorEntry => ({
-				value: group.uid,
-				display: group.name,
-				icon: group.icon,
-				color: group.color,
-			}));
-		}, [groups]);
+		return groups.map((group): ISelectorEntry => ({
+			value: group.uid,
+			display: group.name,
+			icon: group.icon,
+			color: group.color,
+		}));
+	}, [groups]);
 
 	//====================== EVENTS ======================
 	const { call: callSearch, stop: stopSearch } = useDebounced(async () => {
@@ -67,45 +70,54 @@ function PProjectUsers({}: PProjectUsersProps) {
 
 	//====================== HANDLERS ======================
 	const handleDeleteUser = async () => {
-		if(!deletingUser)
-			return;
+		if (!deletingUser) return;
 		await deleteUser(deletingUser.uid);
-		setDeletingUser(null)
-	}
+		setDeletingUser(null);
+	};
 
 	//====================== NODES ======================
 	const getUsersNode = (): ReactNode => {
-		if(!project)
-			return;
-		const finalUsers: (IProjectUser | undefined)[] = project.users.map((projectUser: string): IProjectUser | undefined => {
-			return users.find((userCheck) => userCheck.uid == projectUser);
-		})
-		return (finalUsers.filter((user: IProjectUser | undefined) => {
-			if(!user)
-				return false;
-			if(typeof filters.name == "string" && filters.name != "" && !user.username.toLocaleLowerCase().includes(filters.name.toLocaleLowerCase()))
-				return false;
-			if(Array.isArray(filters.groups) && filters.groups.length > 0)
-			{
-				const count = filters.groups.filter((group: string) => user.groups.includes(group)).length;
-				if(filters.exclusive && count == 0)
-					return false; 
-				if(!filters.exclusive && count != filters.groups.length)
-					return false; 
-			}
-			return true;
-		}) as IProjectUser[])
-		.sort((user1: IProjectUser, user2: IProjectUser) => {
-			if (user1.username.toLocaleLowerCase() < user2.username.toLocaleLowerCase())
-				return filters["sort" + CFILTER_INVERSE_SUFFIX] ? 1 : -1;
-			else if (user1.username.toLocaleLowerCase() > user2.username.toLocaleLowerCase())
-				return filters["sort" + CFILTER_INVERSE_SUFFIX] ? -1 : 1;
-			return 0;
-		})
-		.map((user: IProjectUser): ReactNode => {
-			return <PProjectUsersCards onUserDelete={user => setDeletingUser(user)} user={user} />
-		});
-	}
+		if (!project) return;
+		const finalUsers: (IProjectUser | undefined)[] = project.users.map(
+			(projectUser: string): IProjectUser | undefined => {
+				return users.find((userCheck) => userCheck.uid == projectUser);
+			},
+		);
+		return (
+			finalUsers.filter((user: IProjectUser | undefined) => {
+				if (!user) return false;
+				if (
+					typeof filters.name == "string" &&
+					filters.name != "" &&
+					!user.username.toLocaleLowerCase().includes(filters.name.toLocaleLowerCase())
+				)
+					return false;
+				if (Array.isArray(filters.groups) && filters.groups.length > 0) {
+					const count = filters.groups.filter((group: string) =>
+						user.groups.includes(group),
+					).length;
+					if (filters.exclusive && count == 0) return false;
+					if (!filters.exclusive && count != filters.groups.length) return false;
+				}
+				return true;
+			}) as IProjectUser[]
+		)
+			.sort((user1: IProjectUser, user2: IProjectUser) => {
+				if (user1.username.toLocaleLowerCase() < user2.username.toLocaleLowerCase())
+					return filters["sort" + CFILTER_INVERSE_SUFFIX] ? 1 : -1;
+				else if (user1.username.toLocaleLowerCase() > user2.username.toLocaleLowerCase())
+					return filters["sort" + CFILTER_INVERSE_SUFFIX] ? -1 : 1;
+				return 0;
+			})
+			.map((user: IProjectUser): ReactNode => {
+				return (
+					<PProjectUsersCards
+						onUserDelete={(user) => setDeletingUser(user)}
+						user={user}
+					/>
+				);
+			});
+	};
 
 	return (
 		<Stack sx={{ flex: 1 }} direction={"row"}>
@@ -125,7 +137,7 @@ function PProjectUsers({}: PProjectUsersProps) {
 					Users
 				</CText>
 				<CFilter
-					sx={{mb: "10px"}}
+					sx={{ mb: "10px" }}
 					entries={[
 						{
 							type: "text",
@@ -136,13 +148,13 @@ function PProjectUsers({}: PProjectUsersProps) {
 						{
 							type: "selectorIcon",
 							field: "groups",
-							selectorEntries: groupEntries
+							selectorEntries: groupEntries,
 						},
 						{
 							type: "toggle",
 							field: "exclusive",
 							label: "Exclusive",
-							selectorEntries: groupEntries
+							selectorEntries: groupEntries,
 						},
 						{
 							type: "sort",
@@ -151,7 +163,7 @@ function PProjectUsers({}: PProjectUsersProps) {
 								{
 									value: "name",
 									display: "Name",
-								}
+								},
 							],
 							size: "medium",
 						},
@@ -159,9 +171,7 @@ function PProjectUsers({}: PProjectUsersProps) {
 					onChange={setFilters}
 					resetButton
 				/>
-				<Stack spacing={appTheme.shapes.spacing.tiny}>
-					{getUsersNode()}
-				</Stack>
+				<Stack spacing={appTheme.shapes.spacing.tiny}>{getUsersNode()}</Stack>
 			</Stack>
 			<CSplitterRow secondSize={"95%"} sx={{ my: "15px" }} />
 			<Stack sx={style.main} direction={"column"}>
@@ -177,7 +187,13 @@ function PProjectUsers({}: PProjectUsersProps) {
 					})}
 				</Stack>
 			</Stack>
-			<CDialogConfirm type="user"  name={deletingUser?.username} open={deletingUser ? true : false} onNo={() => setDeletingUser(null)} onYes={handleDeleteUser} />
+			<CDialogConfirm
+				type="user"
+				name={deletingUser?.username}
+				open={deletingUser ? true : false}
+				onNo={() => setDeletingUser(null)}
+				onYes={handleDeleteUser}
+			/>
 		</Stack>
 	);
 }

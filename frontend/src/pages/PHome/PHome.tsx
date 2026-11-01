@@ -74,7 +74,7 @@ function PHome({}: PHomeProps) {
 				</Grid>
 			);
 		});
-	}, [projects]);
+	}, [projects, owners]);
 
 	if (!user) return <>No user</>;
 

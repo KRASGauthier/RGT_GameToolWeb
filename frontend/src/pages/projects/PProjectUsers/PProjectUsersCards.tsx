@@ -33,10 +33,8 @@ function PProjectUsersCards({ user, onUserDelete }: PProjectUsersCardsProps) {
 
 	//====================== HANDLERS ======================
 	const handleValidate = async () => {
-		if(!selectedGroups)
-			return;
-		if(await modifyUserGroup(user.uid, selectedGroups) )
-			setSelectedGroups(undefined);
+		if (!selectedGroups) return;
+		if (await modifyUserGroup(user.uid, selectedGroups)) setSelectedGroups(undefined);
 	};
 
 	const handleCancel = () => {
@@ -68,7 +66,9 @@ function PProjectUsersCards({ user, onUserDelete }: PProjectUsersCardsProps) {
 						});
 					}}
 				/>
-				{(!user.isOwner || selectedGroups) && <CSplitterRow color={appTheme.colors.quaternary[5]} />}
+				{(!user.isOwner || selectedGroups) && (
+					<CSplitterRow color={appTheme.colors.quaternary[5]} />
+				)}
 				{selectedGroups && (
 					<CButtonIcon
 						styling="validate"

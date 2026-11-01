@@ -34,7 +34,7 @@ function PHomeProjectCard({ project, owner }: PHomeProjectCardProps) {
 
 	const getTextInfo = (
 		label: string,
-		key: keyof IProject,
+		key: keyof Omit<IProject, "users">,
 		modifier?: (value: string) => string,
 	) => {
 		let value: string;

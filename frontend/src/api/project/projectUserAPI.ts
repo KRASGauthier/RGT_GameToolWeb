@@ -21,7 +21,6 @@ import {
 import type { IProjectUser } from "../../types/data/project/TProjectUser";
 import type { IProject } from "../../types/data/project/TProject";
 
-
 //--------------------------------------------------
 //                    MANAGEMENT
 //--------------------------------------------------
@@ -31,23 +30,21 @@ export const apiProjectUserAdd = async (
 	setProject: React.Dispatch<React.SetStateAction<IProject | undefined>>,
 	setUsers: React.Dispatch<React.SetStateAction<IProjectUser[]>>,
 	push: (notif: IAppNotif) => void,
-)  => {
+) => {
 	const data: IAPIData<IAPIProjectUsersUpdate> = await apiPostData<
 		IAPIProjectUserAdd,
 		IAPIProjectUsersUpdate
 	>(
-		generatePath(
-			API_PROJECT + API_PROJECT_TARGET + API_PROJECT_USER,
-			{ uid },
-		),
+		generatePath(API_PROJECT + API_PROJECT_TARGET + API_PROJECT_USER, { uid }),
 		{ user: newUser },
 		"notif",
-	)
-	if (!apiCheckReponse(data, IAPIProjectUsersUpdateChecker, { type: "notif", handler: push })) return;
+	);
+	if (!apiCheckReponse(data, IAPIProjectUsersUpdateChecker, { type: "notif", handler: push }))
+		return;
 
 	setProject(data.data.project);
 	setUsers(data.data.users);
-}
+};
 
 export const apiProjectUserRemove = async (
 	uid: TUID,
@@ -55,23 +52,21 @@ export const apiProjectUserRemove = async (
 	setProject: React.Dispatch<React.SetStateAction<IProject | undefined>>,
 	setUsers: React.Dispatch<React.SetStateAction<IProjectUser[]>>,
 	push: (notif: IAppNotif) => void,
-)  => {
-	const data: IAPIData<IAPIProjectUsersUpdate> = await apiDeleteData<
-		{},
-		IAPIProjectUsersUpdate
-	>(
+) => {
+	const data: IAPIData<IAPIProjectUsersUpdate> = await apiDeleteData<{}, IAPIProjectUsersUpdate>(
 		generatePath(
 			API_PROJECT + API_PROJECT_TARGET + API_PROJECT_USER + API_PROJECT_USER_TARGET,
 			{ uid, projectuser: target },
 		),
 		{},
 		"notif",
-	)
-	if (!apiCheckReponse(data, IAPIProjectUsersUpdateChecker, { type: "notif", handler: push })) return;
+	);
+	if (!apiCheckReponse(data, IAPIProjectUsersUpdateChecker, { type: "notif", handler: push }))
+		return;
 
 	setProject(data.data.project);
 	setUsers(data.data.users);
-}
+};
 
 //--------------------------------------------------
 //                    GROUP
@@ -87,7 +82,11 @@ export const apiProjectUserSetGroup = async (
 		IAPIProjectUserRcv
 	>(
 		generatePath(
-			API_PROJECT + API_PROJECT_TARGET + API_PROJECT_USER + API_PROJECT_USER_TARGET + API_PROJECT_USER_GROUPS,
+			API_PROJECT +
+				API_PROJECT_TARGET +
+				API_PROJECT_USER +
+				API_PROJECT_USER_TARGET +
+				API_PROJECT_USER_GROUPS,
 			{ uid, projectuser: target },
 		),
 		{ groups },

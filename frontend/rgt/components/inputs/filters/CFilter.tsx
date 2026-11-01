@@ -72,15 +72,7 @@ export interface CFilterProps extends Omit<CPaperProps, "onChange"> {
 	onChange?: (filter: TFilterOut) => void;
 }
 
-function CFilter({
-	actions,
-	entries,
-	resetButton,
-	onChange,
-	onEvent,
-	sx,
-	...other
-}: CFilterProps) {
+function CFilter({ actions, entries, resetButton, onChange, onEvent, sx, ...other }: CFilterProps) {
 	//====================== DATA ======================
 	const [filter, setFilter] = useState<TFilterOut>({});
 	const style: IFilterStyle = useMemo(() => {
@@ -100,12 +92,22 @@ function CFilter({
 
 		if (action.icon && action.display)
 			return (
-				<CButtonIconText onClick={click} key={action.name} startIcon={DIconLibraryTsx[action.icon]}>
+				<CButtonIconText
+					onClick={click}
+					key={action.name}
+					startIcon={DIconLibraryTsx[action.icon]}
+				>
 					{action.display}
 				</CButtonIconText>
 			);
 		if (action.icon)
-			return <CButtonIcon onClick={click} key={action.name} icon={DIconLibraryTsx[action.icon]} />;
+			return (
+				<CButtonIcon
+					onClick={click}
+					key={action.name}
+					icon={DIconLibraryTsx[action.icon]}
+				/>
+			);
 		return (
 			<CButtonText onClick={click} key={action.name}>
 				{action.display ?? action.name}
@@ -152,54 +154,58 @@ function CFilter({
 					/>
 				</Stack>
 			);
-		}
-		else if (entry.type == "toggle") {
-			return <CButtonText sx={{alignSelf: "center", textTransform: "none"}}   borderRadius={appTheme.shapes.radius.small} onClick={() => {
-				setFilter((prev) => {
-					return {
-						...prev,
-						[entry.field]: filter[entry.field] ? false : true,
-					};
-				});
-			}} checkedStyling="light" styling="grey-dark" checked={filter[entry.field] ? true : false}>
-				{entry.label ?? entry.field}
-			</CButtonText>
-		}
-		else if (entry.type == "selectorIcon") {
-			if(entry.selectorEntries == undefined)
-				return;
+		} else if (entry.type == "toggle") {
+			return (
+				<CButtonText
+					sx={{ alignSelf: "center", textTransform: "none" }}
+					borderRadius={appTheme.shapes.radius.small}
+					onClick={() => {
+						setFilter((prev) => {
+							return {
+								...prev,
+								[entry.field]: filter[entry.field] ? false : true,
+							};
+						});
+					}}
+					checkedStyling="light"
+					styling="grey-dark"
+					checked={filter[entry.field] ? true : false}
+				>
+					{entry.label ?? entry.field}
+				</CButtonText>
+			);
+		} else if (entry.type == "selectorIcon") {
+			if (entry.selectorEntries == undefined) return;
 			let values = filter[entry.field];
-			if(!Array.isArray(values))
-				values = [];
-			return <CSelectorButtonIcon 
-				values={values}
-				entries={entry.selectorEntries}
-				onSelected={(value) => {
-					setFilter((prev) => {
-						let prevArr = prev[entry.field];
-						if(!Array.isArray(prevArr))
-							prevArr = [];
-						prevArr = [...(prevArr), value];
-						return {
-							...prev,
-							[entry.field]: prevArr,
-						};
-					});
-				}}
-				onUnselected={(value) => {
-					setFilter((prev) => {
-						let prevArr = prev[entry.field];
-						if(!Array.isArray(prevArr))
-							prevArr = [];
-						prevArr = prevArr.filter(
-							(valueCheck) => valueCheck != value,
-						);
-						return {
-							...prev,
-							[entry.field]: prevArr,
-						};
-					});
-				}}/>
+			if (!Array.isArray(values)) values = [];
+			return (
+				<CSelectorButtonIcon
+					values={values}
+					entries={entry.selectorEntries}
+					onSelected={(value) => {
+						setFilter((prev) => {
+							let prevArr = prev[entry.field];
+							if (!Array.isArray(prevArr)) prevArr = [];
+							prevArr = [...prevArr, value];
+							return {
+								...prev,
+								[entry.field]: prevArr,
+							};
+						});
+					}}
+					onUnselected={(value) => {
+						setFilter((prev) => {
+							let prevArr = prev[entry.field];
+							if (!Array.isArray(prevArr)) prevArr = [];
+							prevArr = prevArr.filter((valueCheck) => valueCheck != value);
+							return {
+								...prev,
+								[entry.field]: prevArr,
+							};
+						});
+					}}
+				/>
+			);
 		}
 		return (
 			<CTextFieldOutlined
@@ -225,17 +231,27 @@ function CFilter({
 		<CPaper sx={sxMerger(style.main, sx ? sx : {})} {...other}>
 			<Stack spacing={appTheme.shapes.spacing.medium} direction={"row"}>
 				{actions?.map((action: IFilterAction | string | undefined) => {
-					if (typeof action == "string")
-						action = actionsLibrary[action] as IFilterAction;
+					if (typeof action == "string") action = actionsLibrary[action] as IFilterAction;
 					if (!action) return;
 					return getEvent(action);
 				})}
-				{(actions && actions.length > 0) && <CSplitterRow sx={{ mx: "10px" }} color={appTheme.colors.primary[2]} />}
+				{actions && actions.length > 0 && (
+					<CSplitterRow sx={{ mx: "10px" }} color={appTheme.colors.primary[2]} />
+				)}
 				{entries?.map((entry: IFilterEntry) => {
 					return getEntry(entry);
 				})}
-				{resetButton && <CSplitterRow sx={{ mx: "10px" }} color={appTheme.colors.primary[2]} />}
-				{resetButton && <CButtonIcon onClick={() => setFilter({})} size="lg" sx={{alignSelf: "center"}} icon={DIconLibraryTsx["reset"]} />}
+				{resetButton && (
+					<CSplitterRow sx={{ mx: "10px" }} color={appTheme.colors.primary[2]} />
+				)}
+				{resetButton && (
+					<CButtonIcon
+						onClick={() => setFilter({})}
+						size="lg"
+						sx={{ alignSelf: "center" }}
+						icon={DIconLibraryTsx["reset"]}
+					/>
+				)}
 			</Stack>
 		</CPaper>
 	);

@@ -53,6 +53,7 @@ function PProjectNew({}: PProjectNewProps) {
 			...(formData as { name: string; version: IVersion; title?: string }),
 			engine: engine,
 			language: lang,
+			users: [],
 		};
 		const project: IProject | undefined = await apiProjectCreate(data, push);
 		if (!project) return;

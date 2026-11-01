@@ -5,8 +5,12 @@ import { verifyProjectUser } from "./middleware.js";
 
 const RProjectUserRouter = Router();
 
-RProjectUserRouter.post("/", projectUserAdd)
-RProjectUserRouter.patch(API_PROJECT_USER_TARGET + API_PROJECT_USER_GROUPS, verifyProjectUser, projectUserChangeGroup)
-RProjectUserRouter.delete(API_PROJECT_USER_TARGET, verifyProjectUser, projectUserDelete)
+RProjectUserRouter.post("/", projectUserAdd);
+RProjectUserRouter.patch(
+	API_PROJECT_USER_TARGET + API_PROJECT_USER_GROUPS,
+	verifyProjectUser,
+	projectUserChangeGroup,
+);
+RProjectUserRouter.delete(API_PROJECT_USER_TARGET, verifyProjectUser, projectUserDelete);
 
 export default RProjectUserRouter;
