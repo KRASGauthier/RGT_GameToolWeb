@@ -5,18 +5,22 @@ import CText from "../../../../rgt/components/text/CText";
 import type { IUserBase } from "../../../../rgt/types/data/TUser";
 import CButtonIcon from "../../../../rgt/components/inputs/buttons/CButtonIcon";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { useProject } from "../../../context/CProjectContext";
 
 export interface PProjectUsersSearchCardsProps {
 	user: IUserBase;
 }
 
 function PProjectUsersSearchCards({ user }: PProjectUsersSearchCardsProps) {
+
+	const { addUser } =  useProject();
+
 	return (
 		<CCard sx={{ flexShrink: 0 }}>
 			<Stack direction={"row"} sx={{ alignItems: "center" }}>
 				<CAvatar user={user} />
 				<CText sx={{ ml: "5px" }}>{user.username}</CText>
-				<CButtonIcon sx={{ ml: "auto", mr: "5px" }} icon={<PersonAddIcon />} />
+				<CButtonIcon sx={{ ml: "auto", mr: "5px" }} onClick={() => addUser(user.uid)} icon={<PersonAddIcon />} />
 			</Stack>
 		</CCard>
 	);

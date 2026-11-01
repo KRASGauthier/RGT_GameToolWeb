@@ -14,11 +14,12 @@ import CSplitterRow from "../../../../rgt/components/splitters/CSplitterRow";
 
 export interface PProjectUsersCardsProps {
 	user: IProjectUser;
+	onUserDelete?: (user: IProjectUser) => void;
 }
 
-function PProjectUsersCards({ user }: PProjectUsersCardsProps) {
+function PProjectUsersCards({ user, onUserDelete }: PProjectUsersCardsProps) {
 	//====================== DATA ======================
-	const { groups } = useProject();
+	const { groups, modifyUserGroup } = useProject();
 	const entries: ISelectorEntry[] = useMemo(() => {
 		return groups.map((group): ISelectorEntry => ({
 			value: group.uid,
@@ -31,6 +32,13 @@ function PProjectUsersCards({ user }: PProjectUsersCardsProps) {
 	const [selectedGroups, setSelectedGroups] = useState<string[] | undefined>(undefined);
 
 	//====================== HANDLERS ======================
+	const handleValidate = async () => {
+		if(!selectedGroups)
+			return;
+		if(await modifyUserGroup(user.uid, selectedGroups) )
+			setSelectedGroups(undefined);
+	};
+
 	const handleCancel = () => {
 		setSelectedGroups(undefined);
 	};
@@ -60,11 +68,12 @@ function PProjectUsersCards({ user }: PProjectUsersCardsProps) {
 						});
 					}}
 				/>
-				<CSplitterRow color={appTheme.colors.quaternary[5]} />
+				{(!user.isOwner || selectedGroups) && <CSplitterRow color={appTheme.colors.quaternary[5]} />}
 				{selectedGroups && (
 					<CButtonIcon
 						styling="validate"
 						padding={"5px"}
+						onClick={handleValidate}
 						borderRadius={"small"}
 						sx={{ ml: "5px", mr: "5px" }}
 						icon={iconApplySx("tick", { fontSize: appTheme.fonts.text.size["lg"] })}
@@ -80,8 +89,9 @@ function PProjectUsersCards({ user }: PProjectUsersCardsProps) {
 						icon={iconApplySx("clear", { fontSize: appTheme.fonts.text.size["lg"] })}
 					/>
 				)}
-				{!selectedGroups && (
+				{!selectedGroups && !user.isOwner && (
 					<CButtonIcon
+						onClick={() => onUserDelete?.(user)}
 						styling="cancel"
 						padding={"5px"}
 						borderRadius={"small"}

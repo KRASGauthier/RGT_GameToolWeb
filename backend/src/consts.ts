@@ -46,8 +46,9 @@ export const API_GROUPS = "/groups";
 export const API_GROUPS_TARGET = "/:group";
 
 //Project Uers
-export const API_PROJECT_USER = "/projectusers"
-export const API_PROJECT_USER_TARGET = "/:projectuser"
+export const API_PROJECT_USER = "/projectusers";
+export const API_PROJECT_USER_TARGET = "/:projectuser";
+export const API_PROJECT_USER_GROUPS = "/groups";
 
 //====================== CONSTS ======================
 export const AUTH_MIN_USER = 3;

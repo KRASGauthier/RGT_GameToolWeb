@@ -2,84 +2,7 @@ import type { TAPIChecker } from "../../../../rgt/types/api/TAPI";
 import type { IGroup } from "../../data/project/TGroups";
 import type { IProject } from "../../data/project/TProject";
 import type { IProjectUser } from "../../data/project/TProjectUser";
-import { projectUserChecker } from "./TAPIProjectUser";
-
-//--------------------------------------------------
-//                    SHARED
-//--------------------------------------------------
-const projectChecker: TAPIChecker = {
-	owner: {
-		type: "string",
-	},
-	uid: {
-		type: "string",
-	},
-	name: {
-		type: "string",
-	},
-	title: {
-		type: "string",
-		optional: true,
-	},
-	cover: {
-		type: "string",
-		optional: true,
-	},
-	users: {
-		type: "array",
-		checker: {
-			value: {
-				type: "string",
-			},
-		},
-	},
-	version: {
-		type: "checker",
-		checker: {
-			major: {
-				type: "number",
-			},
-			minor: {
-				type: "number",
-			},
-			patch: {
-				type: "number",
-			},
-		},
-	},
-	engine: {
-		type: "string",
-	},
-	language: {
-		type: "string",
-	},
-	created: {
-		type: "string",
-	},
-	lastOpened: {
-		type: "string",
-		optional: true,
-	},
-};
-
-const groupChecker: TAPIChecker = {
-	uid: {
-		type: "string",
-	},
-	name: {
-		type: "string",
-	},
-	icon: {
-		type: "string",
-	},
-	color: {
-		type: "string",
-	},
-	count: {
-		type: "number",
-		optional: true,
-	},
-};
+import { KGroupChecker, KProjectChecker, KProjectUserChecker } from "./TAPISharedCheckers";
 
 //--------------------------------------------------
 //                     SEND
@@ -89,26 +12,26 @@ export type TAPIProjectCreate = Omit<
 	"uid" | "owner" | "ownerName" | "created" | "lastOpened"
 >;
 export const TAPIProjectCreateChecker: TAPIChecker = {
-	name: projectChecker.name,
-	title: projectChecker.title,
-	cover: projectChecker.cover,
-	version: projectChecker.version,
-	engine: projectChecker.engine,
-	language: projectChecker.language,
+	name: KProjectChecker.name,
+	title: KProjectChecker.title,
+	cover: KProjectChecker.cover,
+	version: KProjectChecker.version,
+	engine: KProjectChecker.engine,
+	language: KProjectChecker.language,
 };
 
 export type TAPIProjectModify = Partial<Pick<IProject, "name" | "title" | "version">>;
 export const TAPIProjectModifyChecker: TAPIChecker = {
 	name: {
-		...projectChecker.name,
+		...KProjectChecker.name,
 		optional: true,
 	},
 	title: {
-		...projectChecker.title,
+		...KProjectChecker.title,
 		optional: true,
 	},
 	version: {
-		...projectChecker.version,
+		...KProjectChecker.version,
 		optional: true,
 	},
 };
@@ -122,7 +45,7 @@ export interface IAPIProject {
 export const IAPIProjectChecker: TAPIChecker = {
 	project: {
 		type: "checker",
-		checker: projectChecker,
+		checker: KProjectChecker,
 	},
 };
 
@@ -133,11 +56,11 @@ export interface IAPIProjectGetFromUser {
 export const IAPIProjectGetFromUserChecker: TAPIChecker = {
 	projects: {
 		type: "array",
-		checker: projectChecker,
+		checker: KProjectChecker,
 	},
 	owners: {
 		type: "array",
-		checker: projectUserChecker,
+		checker: KProjectUserChecker,
 	},
 };
 
@@ -149,14 +72,14 @@ export interface IAPIProjectGet {
 export const IAPIProjectGetChecker: TAPIChecker = {
 	project: {
 		type: "checker",
-		checker: projectChecker,
+		checker: KProjectChecker,
 	},
 	users: {
 		type: "array",
-		checker: projectUserChecker,
+		checker: KProjectUserChecker,
 	},
 	groups: {
 		type: "array",
-		checker: groupChecker,
+		checker: KGroupChecker,
 	},
 };

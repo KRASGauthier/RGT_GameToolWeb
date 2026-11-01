@@ -58,13 +58,11 @@ projectUserSchema.method("getData", async function(): Promise<IProjectUser> {
 	if(!project)
 		throw { code: "404", message: "Project not found"}
 
-
-
 	return {
 		...user.getUserBase(),
 		project: this.project.toString(),
 		groups: this.groups.map(group => group.toString()),
-		isOwner: project.owner == user._id
+		isOwner: project.owner.equals(user._id)
 	}
 });
 

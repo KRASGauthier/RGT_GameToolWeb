@@ -78,6 +78,15 @@ const stylingContent = {
 		],
 		disabled: [appTheme.colors.greys[6], appTheme.colors.greys[7]],
 	},
+	"grey-dark": {
+		normal: [appTheme.colors.greys[2], appTheme.colors.greys[3]],
+		hovered: [
+			appTheme.colors.greys[2],
+			appTheme.colors.greys[2],
+			appTheme.colors.greys[3],
+		],
+		disabled: [appTheme.colors.greys[0], appTheme.colors.greys[0]],
+	},
 	validate: {
 		normal: [appTheme.colors.valid[3], appTheme.colors.valid[4], appTheme.colors.valid[3]],
 		hovered: [
@@ -169,15 +178,6 @@ export const CButtonStyle = ({
 	//====================== TEXT ======================
 	const textColor = current.text ?? appTheme.colors.white;
 	const textHoverColor = current.textHover ?? current.text ?? appTheme.colors.white;
-	console.log(
-		borderRadius,
-		sizeToString(
-			typeof borderRadius == "string" && borderRadius in appTheme.shapes.radius
-				? appTheme.shapes.radius[borderRadius as TThemeRadius]
-				: borderRadius,
-			sizeToString(appTheme.shapes.radius.large),
-		),
-	);
 
 	return {
 		main: {

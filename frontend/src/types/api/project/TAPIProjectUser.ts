@@ -1,40 +1,8 @@
 import type { TAPIChecker } from "../../../../rgt/types/api/TAPI";
 import type { TUID } from "../../../../rgt/types/TShared";
+import type { IProject } from "../../data/project/TProject";
 import type { IProjectUser } from "../../data/project/TProjectUser";
-
-//--------------------------------------------------
-//                   SAHRED
-//--------------------------------------------------
-export const projectUserChecker: TAPIChecker = {
-	uid: {
-		type: "string",
-	},
-	username: {
-		type: "string",
-	},
-	avatar: {
-		type: "string",
-		optional: true,
-	},
-	initials: {
-		type: "string",
-		optional: true,
-	},
-	project: {
-		type: "string",
-	},
-	groups: {
-		type: "array",
-		checker: {
-			value: {
-				type: "string",
-			},
-		},
-	},
-	isOwner: {
-		type: "boolean",
-	},
-};
+import { KProjectChecker, KProjectUserChecker } from "./TAPISharedCheckers";
 
 //--------------------------------------------------
 //                     SEND
@@ -54,6 +22,16 @@ export const IAPIProjectUserChangeGroupChecker: TAPIChecker = {
 	},
 };
 
+export interface IAPIProjectUserAdd {
+	user: TUID;
+}
+
+export const IAPIProjectUserAddChecker: TAPIChecker = {
+	user: {
+		type: "string",
+	},
+};
+
 //--------------------------------------------------
 //                     SEND
 //--------------------------------------------------
@@ -64,6 +42,22 @@ export interface IAPIProjectUserRcv {
 export const IAPIProjectUserRcvChecker: TAPIChecker = {
 	projectUser: {
 		type: "checker",
-		checker: projectUserChecker,
+		checker: KProjectUserChecker,
+	},
+};
+
+export interface IAPIProjectUsersUpdate {
+	project: IProject;
+	users: IProjectUser[];
+}
+
+export const IAPIProjectUsersUpdateChecker: TAPIChecker = {
+	project: {
+		type: "checker",
+		checker: KProjectChecker,
+	},
+	users: {
+		type: "array",
+		checker: KProjectUserChecker,
 	},
 };

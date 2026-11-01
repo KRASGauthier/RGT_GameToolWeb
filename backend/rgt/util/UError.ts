@@ -41,7 +41,6 @@ export const handleError = (error: unknown, res: Response) => {
 			"log" in error && typeof error.log == "string" ? error.log : undefined,
 		);
 		res.status(code).json({ error: [error.message] } as IAPIErrors);
-		console.log(error);
 		if ("mutex" in error) (error.mutex as () => void)();
 		return;
 	}

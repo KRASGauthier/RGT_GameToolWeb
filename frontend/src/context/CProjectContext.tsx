@@ -15,6 +15,8 @@ import type { TAPIProjectModify } from "../types/api/project/TAPIProject";
 import { useNotif } from "../../rgt/context/app/CAppNotifContext";
 import type { IProjectUser } from "../types/data/project/TProjectUser";
 import type { IGroup } from "../types/data/project/TGroups";
+import type { TUID } from "../../rgt/types/TShared";
+import { apiProjectUserAdd, apiProjectUserRemove, apiProjectUserSetGroup } from "../api/project/projectUserAPI";
 
 //--------------------------------------------------
 //                      CONTEXT
@@ -23,8 +25,15 @@ export interface IProjectContext {
 	project: IProject | undefined;
 	users: IProjectUser[];
 	groups: IGroup[];
+
+	//====================== COMMON HANDLERS ======================
 	modify: (data: TAPIProjectModify) => Promise<boolean>;
 	modifyPicture: (file: File) => Promise<boolean>;
+
+	//====================== USERS HANDLERS ======================
+	addUser: (user: TUID) => Promise<void>
+	deleteUser: (user: TUID) => Promise<void>
+	modifyUserGroup: (user: TUID, groups: TUID[]) => Promise<boolean>
 }
 
 const projectContext: Context<IProjectContext> = createContext<IProjectContext>({
@@ -37,6 +46,11 @@ const projectContext: Context<IProjectContext> = createContext<IProjectContext>(
 	modifyPicture: async () => {
 		return true;
 	},
+	addUser: async () => {},
+	deleteUser: async () => {},
+	modifyUserGroup: async () => {
+		return true;
+	}
 });
 
 export const useProject = (): IProjectContext => {
@@ -64,6 +78,8 @@ function CProjectProvider({ children }: CProjectProviderProps) {
 		if (tab) apiGetProject(tab, setProject, setUsers, setGroups, setError);
 	}, [tab]);
 
+	
+	//====================== COMMON HANDLERS ======================
 	const modify = useCallback(
 		async (data: TAPIProjectModify): Promise<boolean> => {
 			if (!tab) return false;
@@ -86,13 +102,42 @@ function CProjectProvider({ children }: CProjectProviderProps) {
 		[tab, push],
 	);
 
+	//====================== USERS HANDLERS ======================
+	const addUser = useCallback(async (user: TUID): Promise<void> => {
+		if(!project)
+			return;
+		await apiProjectUserAdd(project.uid, user, setProject, setUsers, push)
+	}, [project, setProject, setUsers, push]);
+	const deleteUser = useCallback(async (user: TUID): Promise<void> => {
+		if(!project)
+			return;
+		await apiProjectUserRemove(project.uid, user, setProject, setUsers, push)
+	}, [project, setProject, setUsers, push]);
+
+	const modifyUserGroup = useCallback(async (target: TUID, groups: TUID[]): Promise<boolean> => {
+		if(!project)
+			return false;
+		const user: IProjectUser | undefined = await apiProjectUserSetGroup(project.uid, target, groups, push);
+		if(!user)
+			return false;
+		setUsers((prev) => {
+			const index = prev.findIndex((user: IProjectUser) => user.uid == target)
+			if(index == -1)
+				return prev;
+			const nArray = [...prev];
+			nArray[index] = user;
+			return nArray;
+		});
+		return true;
+	}, [project, push])
+
 	//====================== NODES ======================
 	if (!tab) return <CInfoCard>No opened project</CInfoCard>;
 	if (error) return <CInfoCard cardStyling="grey-light">{error}</CInfoCard>;
 	if (!project) return <CInfoCard>Loading...</CInfoCard>;
 
 	return (
-		<projectContext.Provider value={{ project, users, groups, modify, modifyPicture }}>
+		<projectContext.Provider value={{ project, users, groups, modify, modifyPicture, addUser, deleteUser, modifyUserGroup }}>
 			{children}
 		</projectContext.Provider>
 	);

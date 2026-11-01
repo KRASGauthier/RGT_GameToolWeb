@@ -17,6 +17,7 @@ import AddIcon from "@mui/icons-material/Add";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
 import ArrowDownwardRoundedIcon from "@mui/icons-material/ArrowDownwardRounded";
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 import type { SvgIconComponent } from "@mui/icons-material";
 
@@ -40,6 +41,7 @@ export const DIconLibrary = {
 	edit: EditIcon,
 	delete: DeleteIcon,
 	search: SearchRoundedIcon,
+	reset: RestartAltIcon,
 
 	//--------------------- FEEDBACK ----------------------
 	tick: DoneRoundedIcon,

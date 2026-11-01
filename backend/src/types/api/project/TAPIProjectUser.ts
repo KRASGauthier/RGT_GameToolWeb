@@ -1,29 +1,17 @@
 import type { TAPIChecker } from "../../../../rgt/types/api/TAPI.js";
 import type { TUID } from "../../../../rgt/types/TShared.js";
+import type { IProject } from "../../data/project/TProject.js";
 import type { IProjectUser } from "../../data/project/TProjectUser.js";
-
+import { KProjectChecker, KProjectUserChecker } from "./TAPISharedCheckers.js";
 
 //--------------------------------------------------
-//                   SAHRED
+//                     SEND
 //--------------------------------------------------
-export const projectUserChecker: TAPIChecker = {
-	uid: {
-		type: "string",
-	},
-	username: {
-		type: "string",
-	},
-	avatar: {
-		type: "string",
-		optional: true,
-	},
-	initials: {
-		type: "string",
-		optional: true,
-	},
-	project: {
-		type: "string",
-	},
+export interface IAPIProjectUserChangeGroup {
+	groups: TUID[];
+}
+
+export const IAPIProjectUserChangeGroupChecker: TAPIChecker = {
 	groups: {
 		type: "array",
 		checker: {
@@ -32,21 +20,14 @@ export const projectUserChecker: TAPIChecker = {
 			},
 		},
 	},
-	isOwner: {
-		type: "boolean",
-	},
 };
 
-
-//--------------------------------------------------
-//                     SEND
-//--------------------------------------------------
-export interface IAPIProjectUserChangeGroup {
-	group: TUID,
+export interface IAPIProjectUserAdd {
+	user: TUID;
 }
 
-export const IAPIProjectUserChangeGroupChecker: TAPIChecker = {
-	group: {
+export const IAPIProjectUserAddChecker: TAPIChecker = {
+	user: {
 		type: "string",
 	},
 };
@@ -55,12 +36,28 @@ export const IAPIProjectUserChangeGroupChecker: TAPIChecker = {
 //                     SEND
 //--------------------------------------------------
 export interface IAPIProjectUserRcv {
-	projectUser: IProjectUser,
+	projectUser: IProjectUser;
 }
 
 export const IAPIProjectUserRcvChecker: TAPIChecker = {
 	projectUser: {
 		type: "checker",
-		checker: projectUserChecker,
+		checker: KProjectUserChecker,
+	},
+};
+
+export interface IAPIProjectUsersUpdate {
+	project: IProject;
+	users: IProjectUser[];
+}
+
+export const IAPIProjectUsersUpdateChecker: TAPIChecker = {
+	project: {
+		type: "checker",
+		checker: KProjectChecker,
+	},
+	users: {
+		type: "array",
+		checker: KProjectUserChecker,
 	},
 };

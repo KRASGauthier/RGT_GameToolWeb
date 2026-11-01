@@ -1,27 +1,6 @@
 import type { TAPIChecker } from "../../../../rgt/types/api/TAPI.js";
 import type { IGroup } from "../../data/project/TGroups.js";
-
-//--------------------------------------------------
-//                      SHARED
-//--------------------------------------------------
-const groupChecker: TAPIChecker = {
-	uid: {
-		type: "string",
-	},
-	name: {
-		type: "string",
-	},
-	icon: {
-		type: "string",
-	},
-	color: {
-		type: "string",
-	},
-	count: {
-		type: "number",
-		optional: true,
-	},
-};
+import { KGroupChecker } from "./TAPISharedCheckers.js";
 
 //--------------------------------------------------
 //                      SEND
@@ -29,15 +8,15 @@ const groupChecker: TAPIChecker = {
 export type TAPIGroupEdit = Partial<Omit<IGroup, "uid" | "count">>;
 export const TAPIGroupEditChecker: TAPIChecker = {
 	name: {
-		...groupChecker.name,
+		...KGroupChecker.name,
 		optional: true,
 	},
 	icon: {
-		...groupChecker.icon,
+		...KGroupChecker.icon,
 		optional: true,
 	},
 	color: {
-		...groupChecker.color,
+		...KGroupChecker.color,
 		optional: true,
 	},
 };
@@ -52,7 +31,7 @@ export interface IAPIGroup {
 export const IAPIGroupChecker: TAPIChecker = {
 	group: {
 		type: "checker",
-		checker: groupChecker,
+		checker: KGroupChecker,
 	},
 };
 
@@ -63,6 +42,6 @@ export interface IAPIGroups {
 export const IAPIGroupsChecker: TAPIChecker = {
 	groups: {
 		type: "array",
-		checker: groupChecker,
+		checker: KGroupChecker,
 	},
 };

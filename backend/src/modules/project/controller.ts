@@ -22,6 +22,26 @@ import { IProjectUser } from "../../types/data/project/TProjectUser.js";
 import { MGroup } from "./groups/schema.js";
 
 //--------------------------------------------------
+//                     HELPER
+//--------------------------------------------------
+export const projectHelperGetUsers = async (req: Request): Promise<IProjectUser[]> => {
+	hasProject(req);
+	const users: IProjectUser[] = (await Promise.all(req.project.users.map(async (user) => {
+		const userFound = await MProjectUser.findOne({user: user, project: req.project._id});
+		if(userFound)
+			return userFound.getData();
+	}))).filter((user: IProjectUser | undefined) => user ? true : false) as IProjectUser[];
+	const owner = await MProjectUser.findOne({user: req.project.owner.toString(), project: req.project._id})
+	if(owner) {
+		users.push({
+			...(await owner.getData()),
+			isOwner: true
+		})
+	}
+	return users;
+}
+
+//--------------------------------------------------
 //                     MANAGE
 //--------------------------------------------------
 export const createProject = async (req: Request, res: Response) => {
@@ -98,18 +118,7 @@ export const projectGet = async (req: Request, res: Response) => {
 	if (!req.project) return;
 
 	//USERS
-	const users: IProjectUser[] = (await Promise.all(req.project.users.map(async (user) => {
-		const userFound = await MProjectUser.findOne({user: user, project: req.project._id});
-		if(userFound)
-			return userFound.getData();
-	}))).filter((user: IProjectUser | undefined) => user ? true : false) as IProjectUser[];
-	const owner = await MProjectUser.findOne({user: req.project.owner.toString(), project: req.project._id})
-	if(owner) {
-		users.push({
-			...(await owner.getData()),
-			isOwner: true
-		})
-	}
+	const users = await projectHelperGetUsers(req);
 
 	//Gorups
 	const groups = await MGroup.find({ project: req.project._id });

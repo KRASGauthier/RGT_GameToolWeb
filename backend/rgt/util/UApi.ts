@@ -12,7 +12,6 @@ export function checkApiSub(data: Record<string, unknown>, checker: TAPIChecker)
 	}
 
 	Object.entries(checker).forEach(([key, value]) => {
-		console.log(key, value);
 		if (!(key in data) && !value.optional)
 			throw {
 				code: 400,

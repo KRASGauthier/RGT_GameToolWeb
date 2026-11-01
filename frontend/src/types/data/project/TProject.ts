@@ -67,6 +67,7 @@ export interface IProject {
 	title?: string;
 	cover?: string;
 	version: IVersion;
+	users: TUID[];
 
 	engine: TProjectEngineTypes;
 	language: TProjectLanguageTypes;
