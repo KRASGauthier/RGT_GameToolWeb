@@ -59,7 +59,9 @@ const projectContext: Context<IProjectContext> = createContext<IProjectContext>(
 	},
 
 	addGroup: async () => {},
-	editGroup: async () => { return false; },
+	editGroup: async () => {
+		return false;
+	},
 	deleteGroup: async () => {},
 
 	addUser: async () => {},
@@ -125,21 +127,26 @@ function CProjectProvider({ children }: CProjectProviderProps) {
 		setGroups((prev: IGroup[]) => {
 			return [...prev, { ...group, new: true }];
 		});
-	}, [project, push])
+	}, [project, push]);
 
-	const editGroup = useCallback(async (target: string, edit: TAPIGroupEdit): Promise<boolean> => {
-		if (!project) return false;
-		const res: IGroup[] | boolean = await apiGroupModify(project.uid, target, edit, push);
-		if (typeof res != "object") return res;
-		setGroups(res);
-		return true;
-	}, [project, push])
+	const editGroup = useCallback(
+		async (target: string, edit: TAPIGroupEdit): Promise<boolean> => {
+			if (!project) return false;
+			const res: IGroup[] | boolean = await apiGroupModify(project.uid, target, edit, push);
+			if (typeof res != "object") return res;
+			setGroups(res);
+			return true;
+		},
+		[project, push],
+	);
 
-	const deleteGroup = useCallback(async (target: string) => {
-		if (!project)
-			return;
-		await apiGroupDelete(project.uid, target, setUsers, setGroups, push);
-	}, [project, push])
+	const deleteGroup = useCallback(
+		async (target: string) => {
+			if (!project) return;
+			await apiGroupDelete(project.uid, target, setUsers, setGroups, push);
+		},
+		[project, push],
+	);
 
 	//====================== USERS HANDLERS ======================
 	const addUser = useCallback(

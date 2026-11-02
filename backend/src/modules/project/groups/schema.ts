@@ -61,15 +61,14 @@ groupSchema.set("toJSON", {
 });
 
 groupSchema.method("getJSON", async function (): Promise<IGroup> {
-
-	const count = (await MProjectUser.find({project: this.project, groups: this._id})).length
+	const count = (await MProjectUser.find({ project: this.project, groups: this._id })).length;
 
 	return {
 		uid: this._id.toString(),
 		name: this.name,
 		icon: this.icon as TIconLibrary,
 		color: this.color as TColorEntry,
-		count
+		count,
 	};
 });
 

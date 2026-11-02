@@ -50,12 +50,15 @@ export const groupEdit = async (req: Request, res: Response) => {
 export const groupDelete = async (req: Request, res: Response) => {
 	hasGroup(req);
 	hasProject(req);
-	
-	await MProjectUser.updateMany({project: req.project._id}, { $pull: { groups: req.group._id}})
+
+	await MProjectUser.updateMany(
+		{ project: req.project._id },
+		{ $pull: { groups: req.group._id } },
+	);
 	await req.group.deleteOne();
 
 	const users = await projectHelperGetUsers(req);
-	
+
 	const groups = await MGroup.find({ project: req.project._id });
 	res.status(200).json({
 		groups: await Promise.all(groups.map(async (group) => group.getJSON())),

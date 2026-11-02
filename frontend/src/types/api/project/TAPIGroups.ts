@@ -49,7 +49,7 @@ export const IAPIGroupsChecker: TAPIChecker = {
 
 export interface IAPIGroupsDelete {
 	groups: IGroup[];
-	users: IProjectUser[]
+	users: IProjectUser[];
 }
 
 export const IAPIGroupsDeleteChecker: TAPIChecker = {

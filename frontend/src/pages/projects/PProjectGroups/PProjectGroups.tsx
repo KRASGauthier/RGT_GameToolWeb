@@ -28,9 +28,8 @@ function PProjectGroups({}: PProjectGroupsProps) {
 		}
 	};
 	const handleDeleteConfirmed = async () => {
-		if(!toDelete)
-			return;
-		await deleteGroup(toDelete)
+		if (!toDelete) return;
+		await deleteGroup(toDelete);
 		setToDelete(undefined);
 	};
 	const handleDeleteCancelled = () => {
@@ -65,7 +64,6 @@ function PProjectGroups({}: PProjectGroupsProps) {
 				return 0;
 			});
 	};
-
 
 	//====================== HANDLERS ======================
 
