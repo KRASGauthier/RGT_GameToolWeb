@@ -8,4 +8,6 @@ export interface IGroup {
 	icon: TIconLibrary;
 	color: TColorEntry;
 	count?: number;
+	
+	new?: boolean; //Use by group manager only
 }

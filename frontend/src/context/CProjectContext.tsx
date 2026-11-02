@@ -84,7 +84,7 @@ function CProjectProvider({ children }: CProjectProviderProps) {
 	//====================== DATA ======================
 	const [project, setProject] = useState<IProject | undefined>();
 	const [users, setUsers] = useState<IProjectUser[]>([]);
-	const [groups, setGroups] = useState<IGroup[] & { new?: boolean }>([]);
+	const [groups, setGroups] = useState<IGroup[]>([]);
 	const [error, setError] = useState<ReactNode | undefined>();
 	const { tab } = useParams();
 	const { push } = useNotif();
@@ -138,9 +138,7 @@ function CProjectProvider({ children }: CProjectProviderProps) {
 	const deleteGroup = useCallback(async (target: string) => {
 		if (!project)
 			return;
-		const res: IGroup[] | boolean = await apiGroupDelete(project.uid, target, push);
-		if (typeof res != "object") return;
-		setGroups(res);
+		await apiGroupDelete(project.uid, target, setUsers, setGroups, push);
 	}, [project, push])
 
 	//====================== USERS HANDLERS ======================
