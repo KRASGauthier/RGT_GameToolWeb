@@ -12,11 +12,14 @@ import { API_GROUPS, API_GROUPS_TARGET, API_PROJECT, API_PROJECT_TARGET } from "
 import {
 	IAPIGroupChecker,
 	IAPIGroupsChecker,
+	IAPIGroupsDeleteChecker,
 	type IAPIGroup,
 	type IAPIGroups,
+	type IAPIGroupsDelete,
 	type TAPIGroupEdit,
 } from "../../types/api/project/TAPIGroups";
 import type { IGroup } from "../../types/data/project/TGroups";
+import type { IProjectUser } from "../../types/data/project/TProjectUser";
 
 //--------------------------------------------------
 //                      ACCESS
@@ -70,9 +73,11 @@ export const apiGroupModify = async (
 export const apiGroupDelete = async (
 	project: string,
 	target: string,
+	setUsers: React.Dispatch<React.SetStateAction<IProjectUser[]>>,
+	setGroups: React.Dispatch<React.SetStateAction<IGroup[]>>,
 	push: (notif: IAppNotif) => void,
-): Promise<IGroup[] | boolean> => {
-	const data: IAPIData<IAPIGroups> = await apiDeleteData<{}, IAPIGroups>(
+) => {
+	const data: IAPIData<IAPIGroupsDelete> = await apiDeleteData<{}, IAPIGroupsDelete>(
 		generatePath(API_PROJECT + API_PROJECT_TARGET + API_GROUPS + API_GROUPS_TARGET, {
 			uid: project,
 			group: target,
@@ -80,6 +85,11 @@ export const apiGroupDelete = async (
 		{},
 		"notif",
 	);
-	if (!apiCheckReponse(data, IAPIGroupsChecker, { type: "notif", handler: push })) return false;
-	return data.data?.groups ?? false;
+	if (!apiCheckReponse(data, IAPIGroupsDeleteChecker, { type: "notif", handler: push })) {
+		setUsers([]);
+		setGroups([]);
+		return;
+	}
+	setUsers(data.data.users);
+	setGroups(data.data.groups);
 };

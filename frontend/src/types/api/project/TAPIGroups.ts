@@ -1,6 +1,7 @@
 import type { TAPIChecker } from "../../../../rgt/types/api/TAPI";
 import type { IGroup } from "../../data/project/TGroups";
-import { KGroupChecker } from "./TAPISharedCheckers";
+import type { IProjectUser } from "../../data/project/TProjectUser";
+import { KGroupChecker, KProjectUserChecker } from "./TAPISharedCheckers";
 
 //--------------------------------------------------
 //                      SEND
@@ -43,5 +44,21 @@ export const IAPIGroupsChecker: TAPIChecker = {
 	groups: {
 		type: "array",
 		checker: KGroupChecker,
+	},
+};
+
+export interface IAPIGroupsDelete {
+	groups: IGroup[];
+	users: IProjectUser[];
+}
+
+export const IAPIGroupsDeleteChecker: TAPIChecker = {
+	groups: {
+		type: "array",
+		checker: KGroupChecker,
+	},
+	users: {
+		type: "array",
+		checker: KProjectUserChecker,
 	},
 };
