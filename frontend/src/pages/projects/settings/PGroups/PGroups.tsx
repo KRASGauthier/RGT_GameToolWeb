@@ -1,20 +1,20 @@
 import { Stack } from "@mui/material";
-import { appTheme } from "../../../style/theme";
-import { useProject } from "../../../context/CProjectContext";
+import { appTheme } from "../../../../style/theme";
+import { useProject } from "../../../../context/CProjectContext";
 import { useState } from "react";
-import type { IGroup } from "../../../types/data/project/TGroups";
-import PProjectGroupsEntry from "./PProjectGroupsEntry";
-import CStack from "../../../../rgt/components/layout/CStack";
-import type { TAPIGroupEdit } from "../../../types/api/project/TAPIGroups";
+import type { IGroup } from "../../../../types/data/project/TGroups";
+import PGroupsEntry from "./PGroupsEntry";
+import CStack from "../../../../../rgt/components/layout/CStack";
+import type { TAPIGroupEdit } from "../../../../types/api/project/TAPIGroups";
 import CFilter, {
 	CFILTER_INVERSE_SUFFIX,
 	type TFilterOut,
-} from "../../../../rgt/components/inputs/filters/CFilter";
-import CDialogConfirm from "../../../../rgt/components/feedback/dialogs/CDialogConfirm";
+} from "../../../../../rgt/components/inputs/filters/CFilter";
+import CDialogConfirm from "../../../../../rgt/components/feedback/dialogs/CDialogConfirm";
 
-export interface PProjectGroupsProps {}
+export interface PGroupsProps {}
 
-function PProjectGroups({}: PProjectGroupsProps) {
+function PGroups({}: PGroupsProps) {
 	//====================== DATA ======================
 	const [filters, setFilters] = useState<TFilterOut>({});
 	const [toDelete, setToDelete] = useState<string | undefined>(undefined);
@@ -108,7 +108,7 @@ function PProjectGroups({}: PProjectGroupsProps) {
 			>
 				{getFilteredGroups().map((group: IGroup) => {
 					return (
-						<PProjectGroupsEntry
+						<PGroupsEntry
 							onDelete={handleDelete}
 							onEdit={onEdit}
 							key={group.uid}
@@ -127,4 +127,4 @@ function PProjectGroups({}: PProjectGroupsProps) {
 	);
 }
 
-export default PProjectGroups;
+export default PGroups;

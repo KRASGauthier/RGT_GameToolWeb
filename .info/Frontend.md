@@ -283,9 +283,9 @@ groups
 
 The project area is still under active implementation.
 
-`PProjectSettings` and `PProjectGroups` are wired current pages.
+`PSettings` and `PGroups` are wired current pages.
 
-`PProjectUsers` / `PProjectUsersCards` are current work in progress and must not be treated as legacy.
+`PUsers` / `PUsersCards` are current work in progress and must not be treated as legacy.
 
 `PProject` is an active project page file even though the current navigation wiring is still evolving.
 

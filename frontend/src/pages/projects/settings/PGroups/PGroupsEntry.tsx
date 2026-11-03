@@ -1,34 +1,34 @@
 import { Stack, type SvgIconProps } from "@mui/material";
-import CCard from "../../../../rgt/components/surfaces/CCard";
-import CText from "../../../../rgt/components/text/CText";
-import { DIconLibraryTsx } from "../../../icons/IIconLibrary";
-import type { IGroup } from "../../../types/data/project/TGroups";
-import CButtonIcon from "../../../../rgt/components/inputs/buttons/CButtonIcon";
+import CCard from "../../../../../rgt/components/surfaces/CCard";
+import CText from "../../../../../rgt/components/text/CText";
+import { DIconLibraryTsx } from "../../../../icons/IIconLibrary";
+import type { IGroup } from "../../../../types/data/project/TGroups";
+import CButtonIcon from "../../../../../rgt/components/inputs/buttons/CButtonIcon";
 import { cloneElement, useMemo, useState, type ReactElement } from "react";
 import {
-	PProjectGroupsEntryStyle,
+	PGroupsEntryStyle,
 	type IProjectGroupsEntryStyle,
-} from "../../../style/pages/projects/PProjectGroupsStyle";
-import CSplitterRow from "../../../../rgt/components/splitters/CSplitterRow";
-import CTextFieldOutlined from "../../../../rgt/components/inputs/text/CTextFieldOutlined";
-import CIconButton from "../../../../rgt/components/inputs/buttons/pre-made/CIconButton";
-import CButtonColor from "../../../../rgt/components/inputs/buttons/CButtonColor";
-import { PROJECT_GROUP_NAME_MAX } from "../../../consts";
-import type { TIconLibrary } from "../../../types/icons/TIconLibrary";
-import type { TColorEntry } from "../../../../rgt/types/TStyles";
-import type { TAPIGroupEdit } from "../../../types/api/project/TAPIGroups";
-import { sxMerger } from "../../../../rgt/utils/UStyles";
+} from "../../../../style/pages/projects/PGroupsStyle";
+import CSplitterRow from "../../../../../rgt/components/splitters/CSplitterRow";
+import CTextFieldOutlined from "../../../../../rgt/components/inputs/text/CTextFieldOutlined";
+import CIconButton from "../../../../../rgt/components/inputs/buttons/pre-made/CIconButton";
+import CButtonColor from "../../../../../rgt/components/inputs/buttons/CButtonColor";
+import { PROJECT_GROUP_NAME_MAX } from "../../../../consts";
+import type { TIconLibrary } from "../../../../types/icons/TIconLibrary";
+import type { TColorEntry } from "../../../../../rgt/types/TStyles";
+import type { TAPIGroupEdit } from "../../../../types/api/project/TAPIGroups";
+import { sxMerger } from "../../../../../rgt/utils/UStyles";
 
-export interface PProjectGroupsEntryProps {
+export interface PGroupsEntryProps {
 	group: IGroup & { new?: boolean };
 	onEdit: (target: string, edit: TAPIGroupEdit) => Promise<boolean>;
 	onDelete: (target: string) => void;
 }
 
-function PProjectGroupsEntry({ group, onEdit, onDelete }: PProjectGroupsEntryProps) {
+function PGroupsEntry({ group, onEdit, onDelete }: PGroupsEntryProps) {
 	//====================== DATA ======================
 	const style: IProjectGroupsEntryStyle = useMemo(() => {
-		return PProjectGroupsEntryStyle({ color: group.color });
+		return PGroupsEntryStyle({ color: group.color });
 	}, [group]);
 
 	const [editMode, setEditMode] = useState<boolean>(group.new ?? false);
@@ -158,4 +158,4 @@ function PProjectGroupsEntry({ group, onEdit, onDelete }: PProjectGroupsEntryPro
 	);
 }
 
-export default PProjectGroupsEntry;
+export default PGroupsEntry;

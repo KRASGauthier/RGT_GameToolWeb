@@ -1,23 +1,23 @@
 import { Stack } from "@mui/material";
-import CAvatar from "../../../../rgt/components/images/CAvatar";
-import CCard from "../../../../rgt/components/surfaces/CCard";
-import CText from "../../../../rgt/components/text/CText";
-import CButtonIcon from "../../../../rgt/components/inputs/buttons/CButtonIcon";
-import type { IProjectUser } from "../../../types/data/project/TProjectUser";
-import { iconApplySx } from "../../../icons/IIconLibrary";
-import { useProject } from "../../../context/CProjectContext";
-import type { ISelectorEntry } from "../../../../rgt/components/inputs/popover/CSelector";
+import CAvatar from "../../../../../rgt/components/images/CAvatar";
+import CCard from "../../../../../rgt/components/surfaces/CCard";
+import CText from "../../../../../rgt/components/text/CText";
+import CButtonIcon from "../../../../../rgt/components/inputs/buttons/CButtonIcon";
+import type { IProjectUser } from "../../../../types/data/project/TProjectUser";
+import { iconApplySx } from "../../../../icons/IIconLibrary";
+import { useProject } from "../../../../context/CProjectContext";
+import type { ISelectorEntry } from "../../../../../rgt/components/inputs/popover/CSelector";
 import { useMemo, useState } from "react";
-import CSelectorButtonIcon from "../../../../rgt/components/inputs/selectors/CSelectorButtonIcon";
-import { appTheme } from "../../../style/theme";
-import CSplitterRow from "../../../../rgt/components/splitters/CSplitterRow";
+import CSelectorButtonIcon from "../../../../../rgt/components/inputs/selectors/CSelectorButtonIcon";
+import { appTheme } from "../../../../style/theme";
+import CSplitterRow from "../../../../../rgt/components/splitters/CSplitterRow";
 
-export interface PProjectUsersCardsProps {
+export interface PUsersCardsProps {
 	user: IProjectUser;
 	onUserDelete?: (user: IProjectUser) => void;
 }
 
-function PProjectUsersCards({ user, onUserDelete }: PProjectUsersCardsProps) {
+function PUsersCards({ user, onUserDelete }: PUsersCardsProps) {
 	//====================== DATA ======================
 	const { groups, modifyUserGroup } = useProject();
 	const entries: ISelectorEntry[] = useMemo(() => {
@@ -104,4 +104,4 @@ function PProjectUsersCards({ user, onUserDelete }: PProjectUsersCardsProps) {
 	);
 }
 
-export default PProjectUsersCards;
+export default PUsersCards;

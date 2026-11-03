@@ -14,13 +14,13 @@ export interface IProjectGroupsEntryStyle {
 	colorButton: SxProps<Theme>;
 }
 
-export interface PProjectGroupsEntryStyleProps {
+export interface PGroupsEntryStyleProps {
 	color: TColorEntry;
 }
 
-export const PProjectGroupsEntryStyle = ({
+export const PGroupsEntryStyle = ({
 	color,
-}: PProjectGroupsEntryStyleProps): IProjectGroupsEntryStyle => {
+}: PGroupsEntryStyleProps): IProjectGroupsEntryStyle => {
 	return {
 		main: {
 			background: colorGetBackground(

@@ -6,9 +6,9 @@ export interface IProjectUsersStyle {
 	main: SxProps<Theme>;
 }
 
-export interface PProjectUsersStyleProps {}
+export interface PUsersStyleProps {}
 
-export const PProjectUsersStyle = ({}: PProjectUsersStyleProps): IProjectUsersStyle => {
+export const PUsersStyle = ({}: PUsersStyleProps): IProjectUsersStyle => {
 	return {
 		main: {
 			background: colorGetBackground([appTheme.colors.greys[1], appTheme.colors.greys[0]], {

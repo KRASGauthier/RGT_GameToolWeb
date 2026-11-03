@@ -1,37 +1,37 @@
 import { Stack } from "@mui/material";
-import CSplitterRow from "../../../../rgt/components/splitters/CSplitterRow";
-import CTextFieldOutlined from "../../../../rgt/components/inputs/text/CTextFieldOutlined";
+import CSplitterRow from "../../../../../rgt/components/splitters/CSplitterRow";
+import CTextFieldOutlined from "../../../../../rgt/components/inputs/text/CTextFieldOutlined";
 import { useMemo, useRef, useState, type ReactNode } from "react";
-import type { IUserBase } from "../../../../rgt/types/data/TUser";
-import { useDebounced } from "../../../../rgt/hooks/useDebounced";
-import { apiUserGetUserSearch } from "../../../../rgt/api/user/userAPI";
-import { useNotif } from "../../../../rgt/context/app/CAppNotifContext";
-import PProjectUsersSearchCards from "./PProjectUsersSearchCards";
+import type { IUserBase } from "../../../../../rgt/types/data/TUser";
+import { useDebounced } from "../../../../../rgt/hooks/useDebounced";
+import { apiUserGetUserSearch } from "../../../../../rgt/api/user/userAPI";
+import { useNotif } from "../../../../../rgt/context/app/CAppNotifContext";
+import PUsersSearchCards from "./PUsersSearchCards";
 import {
-	PProjectUsersStyle,
+	PUsersStyle,
 	type IProjectUsersStyle,
-} from "../../../style/pages/projects/PProjectUsersStyle";
-import { useAuth } from "../../../../rgt/context/auth/CAuthContext";
-import CText from "../../../../rgt/components/text/CText";
-import PProjectUsersCards from "./PProjectUsersCards";
-import { useProject } from "../../../context/CProjectContext";
-import type { IProjectUser } from "../../../types/data/project/TProjectUser";
-import { appTheme } from "../../../style/theme";
-import CDialogConfirm from "../../../../rgt/components/feedback/dialogs/CDialogConfirm";
+} from "../../../../style/pages/projects/PUsersStyle";
+import { useAuth } from "../../../../../rgt/context/auth/CAuthContext";
+import CText from "../../../../../rgt/components/text/CText";
+import PUsersCards from "./PUsersCards";
+import { useProject } from "../../../../context/CProjectContext";
+import type { IProjectUser } from "../../../../types/data/project/TProjectUser";
+import { appTheme } from "../../../../style/theme";
+import CDialogConfirm from "../../../../../rgt/components/feedback/dialogs/CDialogConfirm";
 import CFilter, {
 	CFILTER_INVERSE_SUFFIX,
 	type TFilterOut,
-} from "../../../../rgt/components/inputs/filters/CFilter";
-import type { ISelectorEntry } from "../../../../rgt/components/inputs/popover/CSelector";
+} from "../../../../../rgt/components/inputs/filters/CFilter";
+import type { ISelectorEntry } from "../../../../../rgt/components/inputs/popover/CSelector";
 
-export interface PProjectUsersProps {}
+export interface PUsersProps {}
 
-function PProjectUsers({}: PProjectUsersProps) {
+function PUsers({}: PUsersProps) {
 	//====================== DATA ======================
 	const { push } = useNotif();
 
 	const style: IProjectUsersStyle = useMemo(() => {
-		return PProjectUsersStyle({});
+		return PUsersStyle({});
 	}, []);
 
 	const search = useRef<string>("");
@@ -111,7 +111,7 @@ function PProjectUsers({}: PProjectUsersProps) {
 			})
 			.map((user: IProjectUser): ReactNode => {
 				return (
-					<PProjectUsersCards
+					<PUsersCards
 						onUserDelete={(user) => setDeletingUser(user)}
 						user={user}
 					/>
@@ -132,7 +132,7 @@ function PProjectUsers({}: PProjectUsersProps) {
 				<CText size="xl" weight={8}>
 					Owner
 				</CText>
-				{owner && <PProjectUsersCards user={owner} />}
+				{owner && <PUsersCards user={owner} />}
 				<CText size="xl" weight={8} sx={{ mt: appTheme.shapes.spacing.mediumLarge }}>
 					Users
 				</CText>
@@ -183,7 +183,7 @@ function PProjectUsers({}: PProjectUsersProps) {
 				<Stack direction={"column"} spacing={"2px"} sx={{ flex: 1, overflow: "auto" }}>
 					{searchedUsers.map((user: IUserBase) => {
 						if (selfUser?.uid === user.uid) return;
-						return <PProjectUsersSearchCards key={user.uid} user={user} />;
+						return <PUsersSearchCards key={user.uid} user={user} />;
 					})}
 				</Stack>
 			</Stack>
@@ -198,4 +198,4 @@ function PProjectUsers({}: PProjectUsersProps) {
 	);
 }
 
-export default PProjectUsers;
+export default PUsers;

@@ -17,9 +17,9 @@ import type { TListMenuCompData } from "../../../../rgt/components/data/lists/su
 import type { TListMenuGroupData } from "../../../../rgt/components/data/lists/subs/CListMenuGroup";
 import { ROUTE_PROJECT, ROUTE_PROJECT_ID, ROUTE_PROJECT_SECCTION } from "../../../consts";
 import CProjectProvider from "../../../context/CProjectContext";
-import PProjectSettings from "../PProjectSettings/PProjectSettings";
-import PProjectUsers from "../PProjectUsers/PProjectUsers";
-import PProjectGroups from "../PProjectGroups/PProjectGroups";
+import PSettings from "../settings/PSettings/PSettings";
+import PUsers from "../settings/PUsers/PUsers";
+import PGroups from "../settings/PGroups/PGroups";
 
 //--------------------------------------------------
 //                     SECTIONS
@@ -116,11 +116,11 @@ function PProjectNavSub({}: PProjectNavProps) {
 	const current = useMemo(() => {
 		switch (section) {
 			case EProjectSections.options:
-				return <PProjectSettings />;
+				return <PSettings />;
 			case EProjectSections.users:
-				return <PProjectUsers />;
+				return <PUsers />;
 			case EProjectSections.groups:
-				return <PProjectGroups />;
+				return <PGroups />;
 		}
 	}, [section]);
 
