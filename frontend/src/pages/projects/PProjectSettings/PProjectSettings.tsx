@@ -67,7 +67,7 @@ function PProjectSettings({}: PProjectSettingsProps) {
 					managedButtonPosition="flex-end"
 				></CForm>
 
-				<CSplitterCollumn sx={{ mx: "auto", my: appTheme.shapes.spacing.mediumLarge }} />
+				<CSplitterCollumn sx={{  my: appTheme.shapes.spacing.mediumLarge }} />
 
 				<CForm
 					outlinedStyling="neutral"
@@ -85,7 +85,7 @@ function PProjectSettings({}: PProjectSettingsProps) {
 					managedButtonPosition="flex-end"
 				></CForm>
 
-				<CSplitterCollumn sx={{ mx: "auto", my: appTheme.shapes.spacing.mediumLarge }} />
+				<CSplitterCollumn sx={{ my: appTheme.shapes.spacing.mediumLarge }} />
 
 				<Stack direction={"row"} sx={{ alignItems: "center" }}>
 					<CText>Language: </CText>
@@ -100,7 +100,7 @@ function PProjectSettings({}: PProjectSettingsProps) {
 					<CChip sx={{ ml: "10px" }} label={DProjectEngine[project.engine].display} />
 				</Stack>
 			</Stack>
-			<CSplitterRow sx={{ my: "auto" }} />
+			<CSplitterRow sx={{ my: "10px" }} />
 			<Stack sx={{ flex: 1, mx: "25px", mt: "40px" }} direction={"column"}>
 				<CImage
 					onEdit={handleImageEdit}
