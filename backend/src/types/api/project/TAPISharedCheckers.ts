@@ -1,5 +1,8 @@
 import type { TAPIChecker } from "../../../../rgt/types/api/TAPI.js";
 
+//--------------------------------------------------
+//                     OPTIONS
+//--------------------------------------------------
 export const KProjectChecker: TAPIChecker = {
 	owner: {
 		type: "string",
@@ -101,6 +104,51 @@ export const KGroupChecker: TAPIChecker = {
 	},
 	count: {
 		type: "number",
+		optional: true,
+	},
+};
+
+
+//--------------------------------------------------
+//                   PROJECT
+//--------------------------------------------------
+export const KTodoChecker: TAPIChecker = {
+	uid: {
+		type: "string",
+	},
+	name: {
+		type: "string",
+	},
+	desc: {
+		type: "string",
+	},
+	date: {
+		type: "date",
+	},
+	users: {
+		type: "array",
+		checker: {
+			value: {
+				type: "string",
+			},
+		},
+	},
+	groups: {
+		type: "array",
+		checker: {
+			value: {
+				type: "string",
+			},
+		},
+	},
+	importance: {
+		type: "number",
+	},
+	difficulty: {
+		type: "number",
+	},
+	new: {
+		type: "boolean",
 		optional: true,
 	},
 };

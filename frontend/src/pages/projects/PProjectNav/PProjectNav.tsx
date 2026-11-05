@@ -20,6 +20,7 @@ import CProjectProvider from "../../../context/CProjectContext";
 import PSettings from "../settings/PSettings/PSettings";
 import PUsers from "../settings/PUsers/PUsers";
 import PGroups from "../settings/PGroups/PGroups";
+import PTodo from "../project/PTodo/PTodo";
 
 //--------------------------------------------------
 //                     SECTIONS
@@ -115,6 +116,8 @@ function PProjectNavSub({}: PProjectNavProps) {
 	};
 	const current = useMemo(() => {
 		switch (section) {
+			case EProjectSections.todo:
+				return <PTodo />;
 			case EProjectSections.options:
 				return <PSettings />;
 			case EProjectSections.users:

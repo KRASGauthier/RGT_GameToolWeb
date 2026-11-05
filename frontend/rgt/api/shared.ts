@@ -21,10 +21,20 @@ export function checkApi(data: Record<string, unknown>, checker: TAPIChecker): s
 	for (const [key, value] of Object.entries(checker)) {
 		if (!(key in data) && !value.optional) return `Missing field: ${key}`;
 		if (!(key in data) && value.optional) continue;
-		else if (value.type != "checker" && value.type != "array" && typeof data[key] != value.type)
+		else if (value.type != "checker" && value.type != "array" && value.type != "date" && typeof data[key] != value.type)
 			return `Wrong field type: ${key} (got: ${typeof data[key]}, expected: ${value.type})`;
 		else if (value.type == "array" && !Array.isArray(data[key]))
 			return `Wrong field type: ${key} (got: ${typeof data[key]}, expected: array)`;
+		else if (value.type == "date") {
+			if(typeof data[key] == "string" && Number.isNaN((new Date(data[key])).getTime()))
+				return `Wrong date enry: '${data[key]}'`;
+			else if((typeof data[key] == "object" && !(data[key] instanceof Date)) 
+				|| (typeof data[key] != "object" && typeof data[key] != "string"))
+				return `Wrong field type: ${key} (got: ${typeof data[key]}(not a date), expected: Date)`;
+
+			if(typeof data[key] == "string")
+				data[key] = new Date(data[key]);
+		}
 		else if (value.type == "checker" && value.checker) {
 			const res: string | undefined = checkApi(
 				data[key] as Record<string, unknown>,

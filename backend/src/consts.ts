@@ -41,14 +41,17 @@ export const API_PROJECT = "/projects";
 export const API_PROJECT_TARGET = "/:uid";
 export const API_PROJECT_TARGET_PICTURE = "/picture";
 
-//Groups
+	//Groups
 export const API_GROUPS = "/groups";
 export const API_GROUPS_TARGET = "/:group";
 
-//Project Uers
+	//Project Uers
 export const API_PROJECT_USER = "/projectusers";
 export const API_PROJECT_USER_TARGET = "/:projectuser";
 export const API_PROJECT_USER_GROUPS = "/groups";
+
+	//Todo
+export const API_PROJECT_TODO = "/todo";
 
 //====================== CONSTS ======================
 export const AUTH_MIN_USER = 3;

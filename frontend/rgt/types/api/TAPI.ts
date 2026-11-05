@@ -15,7 +15,7 @@ export interface IAPIErrors {
 }
 
 export interface IAPICheckInfo {
-	type: TTypeOf | "checker" | "array";
+	type: TTypeOf | "checker" | "array" | "date";
 	optional?: boolean;
 	checker?: Record<string, IAPICheckInfo>;
 }

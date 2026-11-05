@@ -61,7 +61,6 @@ export const createProject = async (req: Request, res: Response) => {
 		owner: req.user,
 		...data,
 	});
-	console.log("END");
 
 	projectUserCreate(req.user, project._id.toString());
 
