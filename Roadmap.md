@@ -22,17 +22,17 @@
   - [x] Home menu
   - [x] Personal settings
 
-- [ ] **Projects**
+- [X] **Projects**
   - [x] Project listing
     - [x] Display projects available to the user
     - [x] Project selection
   - [x] Project creation
-  - [ ] Project management
-    - [ ] Project information
+  - [X] Project management
+    - [X] Project information
     - [x] Project settings
-    - [ ] Team management
-      - [ ] Project members
-      - [ ] Member management
+    - [X] Team management
+      - [X] Project members
+      - [X] Member management
       - [x] Group management
 
 ---
