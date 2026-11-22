@@ -1,6 +1,12 @@
 import axios from "axios";
 import { API_BASE, API_BASE_SIMPLE } from "../../src/consts";
-import { type IAPIData, type IAPIErrors, type TAPIChecker } from "../types/api/TAPI";
+import {
+	type IAPICheckInfo,
+	type IAPIData,
+	type IAPIErrors,
+	type TAPIChecker,
+	type TAPICheckInfoTypes,
+} from "../types/api/TAPI";
 import { apiMakeError } from "./errors";
 import type { IErrorReturnOptions, TErrorReturn, TErrorReturnTypes } from "../types/TError";
 import type { IAppNotif } from "../types/TEvents";
@@ -13,35 +19,73 @@ export const api = axios.create({
 //--------------------------------------------------
 //                      ERROR
 //--------------------------------------------------
-export function checkApi(data: Record<string, unknown>, checker: TAPIChecker): string | undefined {
+function checkApiType(key: string, data: Record<string, unknown>, info: IAPICheckInfo) {
+	if (!(key in data) && !info.optional) throw `Missing field: ${key}`;
+	if (!(key in data) && info.optional) return;
+	if (Array.isArray(data[key])) throw `Unexpected array at key: ${key}`;
+	else if (info.type != "checker" && info.type != "date" && typeof data[key] != info.type)
+		throw `Wrong field type: ${key} (got: ${typeof data[key]}, expected: ${info.type})`;
+	else if (info.type == "date") {
+		if (typeof data[key] == "string" && Number.isNaN(new Date(data[key]).getTime()))
+			throw `Wrong date enry: '${data[key]}'`;
+		else if (
+			(typeof data[key] == "object" && !(data[key] instanceof Date)) ||
+			(typeof data[key] != "object" && typeof data[key] != "string") ||
+			(data[key] instanceof Date && Number.isNaN(new Date(data[key]).getTime()))
+		)
+			throw `Wrong field type: ${key} (got: ${typeof data[key]}(not a date), expected: Date)`;
+
+		if (typeof data[key] == "string") data[key] = new Date(data[key]);
+	}
+}
+function checkApiTypeArray(value: unknown, type: TAPICheckInfoTypes, index: number, key: string) {
+	if (Array.isArray(value)) throw `Unexpected array at index: ${index}`;
+	else if (type != "checker" && type != "date" && typeof value != type)
+		throw `Wrong field type  at ${index} for ${key} (got: ${typeof value}, expected: ${type})`;
+	else if (type == "date") {
+		if (typeof value == "string" && Number.isNaN(new Date(value).getTime()))
+			throw `Wrong date enty: '${value}'`;
+		else if (
+			(typeof value == "object" && !(value instanceof Date)) ||
+			(typeof value != "object" && typeof value != "string") ||
+			(value instanceof Date && Number.isNaN(new Date(value).getTime()))
+		)
+			throw `Wrong field type at ${index} for ${key} (got: ${typeof value}(not a date), expected: Date)`;
+	}
+}
+export function checkApi(data: Record<string, unknown>, checker: TAPIChecker) {
 	for (const [key] of Object.entries(data)) {
-		if (!(key in checker)) return `Unexpected field: ${key}`;
+		if (!(key in checker)) throw `Unexpected field: ${key}`;
 	}
 
 	for (const [key, value] of Object.entries(checker)) {
-		if (!(key in data) && !value.optional) return `Missing field: ${key}`;
-		if (!(key in data) && value.optional) continue;
-		else if (value.type != "checker" && value.type != "array" && value.type != "date" && typeof data[key] != value.type)
-			return `Wrong field type: ${key} (got: ${typeof data[key]}, expected: ${value.type})`;
-		else if (value.type == "array" && !Array.isArray(data[key]))
-			return `Wrong field type: ${key} (got: ${typeof data[key]}, expected: array)`;
-		else if (value.type == "date") {
-			if(typeof data[key] == "string" && Number.isNaN((new Date(data[key])).getTime()))
-				return `Wrong date enry: '${data[key]}'`;
-			else if((typeof data[key] == "object" && !(data[key] instanceof Date)) 
-				|| (typeof data[key] != "object" && typeof data[key] != "string"))
-				return `Wrong field type: ${key} (got: ${typeof data[key]}(not a date), expected: Date)`;
-
-			if(typeof data[key] == "string")
-				data[key] = new Date(data[key]);
-		}
-		else if (value.type == "checker" && value.checker) {
-			const res: string | undefined = checkApi(
-				data[key] as Record<string, unknown>,
-				value.checker,
-			);
-			if (res) return res;
-		}
+		if (value.isArray && Array.isArray(data[key])) {
+			for (const [index, subValue] of data[key].entries()) {
+				if (
+					value.type == "checker" &&
+					value.checker &&
+					typeof subValue == "object" &&
+					subValue != null &&
+					!Array.isArray(subValue)
+				)
+					checkApi(subValue, value.checker);
+				else if (value.type == "checker")
+					throw `Wrong field type at ${index} for ${key} (expected: object)`;
+				else checkApiTypeArray(subValue, value.type, index, key);
+			}
+		} else if (value.isArray && !Array.isArray(data[key])&& !(data[key] == undefined && value.optional))
+			throw `Wrong field type: ${key} (got: ${typeof data[key]}, expected: Array)`;
+		else if (
+			value.type == "checker" &&
+			value.checker &&
+			typeof data[key] == "object" &&
+			data[key] != null &&
+			!Array.isArray(data[key])
+		) {
+			checkApi(data[key] as Record<string, unknown>, value.checker);
+		} else if (value.type == "checker" && key in data)
+			throw `Wrong field type: ${key} (expected: object)`;
+		else checkApiType(key, data, value);
 	}
 }
 
@@ -92,16 +136,20 @@ export const apiCheckReponse = <_T extends object>(
 			return false;
 		}
 	} else if (typeof target == "object") {
-		const res: string | undefined = checkApi(data.data as Record<string, unknown>, target);
-		if (res) {
-			const error: IAPIData<_T> = apiMakeError(-2, { error: [res] }, errorCallback.type);
-			if (errorCallback.type == "error") errorCallback.handler(error.error);
-			else
-				errorCallback.handler({
-					severity: "error",
-					message: error.error,
-				});
-			return false;
+		try {
+			checkApi(data.data as Record<string, unknown>, target);
+		} catch (res) {
+			if (typeof res == "string") {
+				const error: IAPIData<_T> = apiMakeError(-2, { error: [res] }, errorCallback.type);
+				if (errorCallback.type == "error") errorCallback.handler(error.error);
+				else
+					errorCallback.handler({
+						severity: "error",
+						message: error.error,
+					});
+				return false;
+			}
+			throw res;
 		}
 	}
 

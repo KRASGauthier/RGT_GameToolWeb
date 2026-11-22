@@ -1,9 +1,9 @@
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import CButton, { type CButtonProps } from "./CButton";
 import {
 	CButtonColorStyle,
 	type IButtonColorStyle,
-} from "../../../style/components/inputs/CButtonStyle";
+} from "../../../style/components/inputs/buttons/CButtonStyle";
 import { useMemo, useState } from "react";
 import { appTheme } from "../../../../src/style/theme";
 import CColorSelector from "../popover/CColorSelector";

@@ -5,7 +5,7 @@ import {
 	getQuadStyle,
 	shadowGenerate,
 	sizeToString,
-} from "../../../utils/UStyles";
+} from "../../../util/UStyles";
 import type { TQuadStyle } from "../../../types/TStyles";
 
 export type TPaperStyling = "normal" | "normal-wavy" | "grey";

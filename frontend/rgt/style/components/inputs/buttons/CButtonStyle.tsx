@@ -4,11 +4,11 @@ import {
 	getQuadStyle,
 	shadowGenerate,
 	sizeToString,
-} from "../../../utils/UStyles";
-import { appTheme } from "../../../../src/style/theme";
-import type { CButtonGlobalProps } from "../../../components/inputs/buttons/CButton";
-import type { TSize } from "../../../types/TStyles";
-import type { TFontSize, TThemeRadius } from "../../../types/themeType";
+} from "../../../../util/UStyles";
+import { appTheme } from "../../../../../src/style/theme";
+import type { CButtonGlobalProps } from "../../../../components/inputs/buttons/CButton";
+import type { TSize } from "../../../../types/TStyles";
+import type { TFontSize, TThemeRadius } from "../../../../types/themeType";
 
 //--------------------------------------------------
 //                    STYLING
@@ -96,6 +96,15 @@ const stylingContent = {
 		normal: [appTheme.colors.error[3], appTheme.colors.error[4], appTheme.colors.error[3]],
 		hovered: [
 			appTheme.colors.error[5],
+			appTheme.colors.secondary[6],
+			appTheme.colors.quinary[5],
+		],
+		disabled: [appTheme.colors.greys[5], appTheme.colors.greys[6], appTheme.colors.greys[5]],
+	},
+	warning: {
+		normal: [appTheme.colors.warning[5], appTheme.colors.warning[6], appTheme.colors.warning[5]],
+		hovered: [
+			appTheme.colors.warning[6],
 			appTheme.colors.secondary[6],
 			appTheme.colors.quinary[5],
 		],
@@ -314,6 +323,53 @@ export const CButtonColorStyle = ({ color }: CButtonColorStyleProps): IButtonCol
 			"&::before": {
 				borderRadius: appTheme.shapes.radius.small,
 			},
+		},
+	};
+};
+
+//====================== BUTTON ICON LIST ======================
+export interface IButtonIconListStyle {
+	main: SxProps<Theme>;
+	stack: SxProps<Theme>;
+	node: (color: string, isFirst: boolean, isNone?: boolean) => SxProps<Theme>;
+	nodeAvatar: (isFirst: boolean, isNone?: boolean) => SxProps<Theme>;
+	extraText: SxProps<Theme>;
+}
+
+export interface CButtonIconListStyleProps {}
+
+export const CButtonIconListStyle = ({}: CButtonIconListStyleProps): IButtonIconListStyle => {
+	return {
+		main: {},
+		stack: {
+			flexDirection: "row",
+		},
+		node: (color: string, isFirst: boolean, isNone?: boolean) => {
+			return {
+				background: color,
+				borderRadius: isNone ? appTheme.shapes.radius.small : "50%",
+				padding: "5px",
+				display: "grid",
+				placeItems: "center",
+				alignSelf: "center",
+				ml: isFirst ? undefined : "-10px",
+				flexShrink: 0,
+			};
+		},
+		nodeAvatar: (isFirst: boolean) => {
+			return {
+				margin: 0,
+				borderRadius: "50%",
+				ml: isFirst ? undefined : "-10px",
+				width: "30px",
+				height: "30px",
+				zIndex: -1,
+			};
+		},
+		extraText: {
+			margin: "4px",
+			lineHeight: 1,
+			p: 0,
 		},
 	};
 };

@@ -3,10 +3,10 @@ import type { GCompProps } from "../../shared/ccommon";
 import CButtonIconText from "../buttons/CButtonIconText";
 import { CToggleStyle, type IToggleStyle } from "../../../style/components/inputs/CToggleStyle";
 import { useMemo, type ReactNode } from "react";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import type { TSize } from "../../../types/TStyles";
 import CText from "../../text/CText";
-import type { TButtonStylingTypes } from "../../../style/components/inputs/CButtonStyle";
+import type { TButtonStylingTypes } from "../../../style/components/inputs/buttons/CButtonStyle";
 
 //--------------------------------------------------
 //                     TYPES

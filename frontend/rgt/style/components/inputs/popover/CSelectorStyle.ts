@@ -1,5 +1,5 @@
 import type { SxProps, Theme } from "@mui/material";
-import { colorAlterColor, colorGetBackground, colorGetTextColor } from "../../../../utils/UStyles";
+import { colorAlterColor, colorGetBackground, colorGetTextColor } from "../../../../util/UStyles";
 
 export interface ISelectorStyle {
 	main: SxProps<Theme>;

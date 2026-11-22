@@ -1,6 +1,6 @@
 import type { SxProps, Theme } from "@mui/material";
 import { appTheme } from "../../../../src/style/theme";
-import { sizeToString } from "../../../utils/UStyles";
+import { sizeToString } from "../../../util/UStyles";
 import type { TSize } from "../../../types/TStyles";
 
 export interface IFormStyle {

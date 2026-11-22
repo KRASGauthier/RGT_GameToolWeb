@@ -1,7 +1,7 @@
 import type { SxProps, Theme } from "@mui/material";
 import type { CSplitterPosition } from "../../../components/splitters/CSplitter";
 import { appTheme } from "../../../../src/style/theme";
-import { shadowGenerate } from "../../../utils/UStyles";
+import { shadowGenerate } from "../../../util/UStyles";
 
 export interface TSplitterStyle {
 	main: SxProps<Theme>;

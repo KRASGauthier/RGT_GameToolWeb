@@ -13,6 +13,9 @@ export const API_USER_SELF_PASSWORD = "/password";
 export const API_USER_CHECK_AVAILABLE = "/available";
 export const API_USER_REGISTER = "/register";
 
+//TAGS
+export const API_TAG_GLOBAL_ID = "/:tag";
+
 //====================== IMAGES ======================
 export const IMG_USERS = "/users";
 export const IMG_USERS_ID = "/:UID";
@@ -26,7 +29,23 @@ export const TIME_1D = 24 * TIME_1H;
 export const TIME_1W = 7 * TIME_1D;
 export const TIME_1Y = 365 * TIME_1D;
 
-//====================== CONST ======================
+export const TIME_TINY_DAYS = ["M", "T", "W", "T", "F", "S", "S"];
+export const TIME_LARGE_MONTHS = [
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December",
+];
+
+//====================== SETTINGS ======================
 export const PASSWORD_MIN = 8;
 export const PASSWORD_MAX = 20;
 
@@ -34,3 +53,6 @@ export const DEFAULT_DEBOUNCED_TIME = 300;
 
 export const LIMITER_LOGIN = TIME_1M;
 export const LIMITER_REGISTER = TIME_1M;
+
+//TAG
+export const TAG_MAX_LEN = 50;

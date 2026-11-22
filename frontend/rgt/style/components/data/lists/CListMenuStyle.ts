@@ -1,6 +1,6 @@
 import type { SxProps, Theme } from "@mui/material";
 import type { TQuadStyle } from "../../../../types/TStyles";
-import { colorGetBackground, getQuadStyle, shadowGenerate } from "../../../../utils/UStyles";
+import { colorGetBackground, getQuadStyle, shadowGenerate } from "../../../../util/UStyles";
 import { appTheme } from "../../../../../src/style/theme";
 import type { TListMenuCompData } from "../../../../components/data/lists/subs/CListMenuComp";
 import type { IThemeColor } from "../../../../types/themeType";

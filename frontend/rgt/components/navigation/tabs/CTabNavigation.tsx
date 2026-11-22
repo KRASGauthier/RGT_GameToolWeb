@@ -5,7 +5,7 @@ import {
 	type ITabNavigationStyle,
 } from "../../../style/components/navigation/tabs/CTabNavigationStyle";
 import { useMemo, type ReactElement } from "react";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import CButtonIcon from "../../inputs/buttons/CButtonIcon";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import CTabNavigationButton from "./CTabNavigationButton";

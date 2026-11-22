@@ -1,6 +1,6 @@
 import { Dialog, DialogActions, DialogContent, type DialogProps } from "@mui/material";
 import type { GCompProps } from "../../shared/ccommon";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import { CDialogStyle, type IDialogStyle } from "../../../style/components/feedback/CDialogStyle";
 import { useMemo } from "react";
 import CButtonText from "../../inputs/buttons/CButtonText";

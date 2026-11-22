@@ -10,7 +10,7 @@ import CText from "../../text/CText";
 import CTextFieldOutlined from "./CTextFieldOutlined";
 import { appTheme } from "../../../../src/style/theme";
 import type { IVersion, TVersionType } from "../../../types/TShared";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 
 const MAX_INPUT = 7;
 export interface CVersionFieldOutlinedProps

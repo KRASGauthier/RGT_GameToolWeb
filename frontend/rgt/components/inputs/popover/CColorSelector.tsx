@@ -8,7 +8,7 @@ import {
 	CColorSelectorStyle,
 	type IColorSelectorStyle,
 } from "../../../style/components/inputs/popover/CColorSelectorStyle";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import CText from "../../text/CText";
 import CTextFieldOutlined from "../text/CTextFieldOutlined";
 import CButtonValidate from "../buttons/pre-made/CButtonValidate";

@@ -4,9 +4,9 @@ import {
 	CButtonStyle,
 	type IButtonStyle,
 	type TButtonStylingTypes,
-} from "../../../style/components/inputs/CButtonStyle";
-import { memo } from "react";
-import { sxMerger } from "../../../utils/UStyles";
+} from "../../../style/components/inputs/buttons/CButtonStyle";
+import React, { memo } from "react";
+import { sxMerger } from "../../../util/UStyles";
 import type { TQuadStyle, TSize } from "../../../types/TStyles";
 import type { TThemeRadius } from "../../../types/themeType";
 
@@ -40,6 +40,10 @@ function CButton({
 	borderRadius,
 	checked,
 	sx,
+
+	noPropagation,
+	onClick,
+
 	...other
 }: CButtonProps) {
 	const style: IButtonStyle = CButtonStyle({
@@ -51,7 +55,19 @@ function CButton({
 		checked,
 	});
 
-	return <Button variant="contained" sx={sxMerger(style.main, sx ? sx : {})} {...other}></Button>;
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		if (noPropagation) event.stopPropagation();
+		onClick?.(event);
+	};
+
+	return (
+		<Button
+			variant="contained"
+			onClick={handleClick}
+			sx={sxMerger(style.main, sx ? sx : {})}
+			{...other}
+		></Button>
+	);
 }
 
 export default memo(CButton);

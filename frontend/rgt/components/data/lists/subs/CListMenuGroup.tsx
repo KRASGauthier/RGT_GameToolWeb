@@ -4,7 +4,7 @@ import {
 	type IListMenuGroupStyle,
 } from "../../../../style/components/data/lists/CListMenuStyle";
 import CList, { CListItemButton, CListItemIcon, CListItemText, type CListProps } from "../CList";
-import { sxMerger } from "../../../../utils/UStyles";
+import { sxMerger } from "../../../../util/UStyles";
 import CListMenuComp, { type TListMenuCompData } from "./CListMenuComp";
 import { cloneElement, useMemo, useState, type ReactElement } from "react";
 import type { TQuadStyle } from "../../../../types/TStyles";

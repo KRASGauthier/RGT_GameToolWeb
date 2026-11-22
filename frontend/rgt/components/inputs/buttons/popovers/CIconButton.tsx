@@ -1,29 +1,20 @@
-import { useState, type ReactElement } from "react";
+import { useState } from "react";
 import CIconSelector from "../../popover/CIconSelector";
-import type { SvgIconProps } from "@mui/material";
 import CButtonIcon, { type CButtonIconProps } from "../CButtonIcon";
+import type { TIconLibrary } from "../../../../../src/types/icons/TIconLibrary";
+import { DIconLibraryTsx } from "../../../../../src/icons/IIconLibrary";
 
-export interface CIconButtonProps<_T extends string> extends Omit<
-	CButtonIconProps,
-	"onClick" | "icon"
-> {
-	library: Record<_T, ReactElement<SvgIconProps>>;
-	value: _T;
-	onSelected?: (value: _T) => void;
+export interface CIconButtonProps extends Omit<CButtonIconProps, "onClick" | "icon"> {
+	value: TIconLibrary;
+	onSelected?: (value: TIconLibrary) => void;
 }
 
-function CIconButton<_T extends string>({
-	value,
-	library,
-	onSelected,
-	...other
-}: CIconButtonProps<_T>) {
+function CIconButton({ value, onSelected, ...other }: CIconButtonProps) {
 	const [buttonRef, setButtonRef] = useState<HTMLButtonElement | null>(null);
 
 	return (
 		<>
 			<CIconSelector
-				library={library}
 				anchorEl={buttonRef}
 				anchorOrigin={{
 					vertical: -4,
@@ -34,7 +25,7 @@ function CIconButton<_T extends string>({
 					horizontal: "center",
 				}}
 				open={buttonRef != null}
-				onSelected={(value: _T) => {
+				onSelected={(value: TIconLibrary) => {
 					setButtonRef(null);
 					onSelected?.(value);
 				}}
@@ -43,7 +34,7 @@ function CIconButton<_T extends string>({
 				}}
 			/>
 			<CButtonIcon
-				icon={library[value]}
+				icon={DIconLibraryTsx[value]}
 				onClick={(e) => setButtonRef(e.currentTarget)}
 				{...other}
 			/>

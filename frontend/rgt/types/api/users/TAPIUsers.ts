@@ -52,7 +52,8 @@ export interface IAPIUserList {
 }
 export const IAPIUserListChecker: TAPIChecker = {
 	users: {
-		type: "array",
+		type: "checker",
+		isArray: true,
 		checker: {
 			uid: {
 				type: "string",

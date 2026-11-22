@@ -1,7 +1,7 @@
 import { Typography, type TypographyProps } from "@mui/material";
 import type { GCompProps } from "../shared/ccommon";
 import type { TFontSize } from "../../types/themeType";
-import { sxMerger } from "../../utils/UStyles";
+import { sxMerger } from "../../util/UStyles";
 import { useMemo, type ReactNode } from "react";
 import { CTextStyles } from "../../style/components/text/CTextStyles";
 

@@ -11,12 +11,15 @@ import CTextFieldOutlined from "../text/CTextFieldOutlined";
 import CButtonIconText from "../buttons/CButtonIconText";
 import CStack from "../../layout/CStack";
 import { DIconLibraryTsx } from "../../../../src/icons/IIconLibrary";
+import type { IUserBase } from "../../../types/data/TUser";
+import CAvatar from "../../images/CAvatar";
 
 export interface ISelectorEntry {
 	value: string;
 	display?: string;
 	icon?: TIconLibrary;
 	color?: string;
+	user?: IUserBase;
 }
 
 export interface CSelectorProps extends CPopoverProps {
@@ -64,7 +67,17 @@ function CSelector({ values, entries, onSelected, onUnselected, ...other }: CSel
 					endIcon={values.includes(entry.value) ? DIconLibraryTsx["tick"] : undefined}
 					textProps={{ sx: { flex: 1, textAlign: "left" } }}
 				>
-					{entry.display ?? entry.value}
+					{entry.user && (
+						<Stack direction={"row"} sx={{ alignItems: "center" }}>
+							<CAvatar
+								user={entry.user}
+								fontSize="xs"
+								sx={{ width: "30px", height: "30px", mr: "10px" }}
+							/>
+							{entry.display ?? entry.value}
+						</Stack>
+					)}
+					{!entry.user && (entry.display ?? entry.value)}
 				</CButtonIconText>
 			);
 		});

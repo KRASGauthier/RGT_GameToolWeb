@@ -6,7 +6,7 @@ import {
 import type { CButtonProps } from "../../inputs/buttons/CButton";
 import CButton from "../../inputs/buttons/CButton";
 import type { GCompProps } from "../../shared/ccommon";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import { Stack, type SvgIconProps } from "@mui/material";
 import CText from "../../text/CText";
 import CButtonIcon from "../../inputs/buttons/CButtonIcon";

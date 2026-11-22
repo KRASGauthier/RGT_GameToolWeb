@@ -1,5 +1,5 @@
 import type { SxProps, Theme } from "@mui/material";
-import { colorGetBackground } from "../../../utils/UStyles";
+import { colorGetBackground } from "../../../util/UStyles";
 import { appTheme } from "../../../../src/style/theme";
 
 export type TAvatarStyling = "light";

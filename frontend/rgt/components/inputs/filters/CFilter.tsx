@@ -12,7 +12,7 @@ import {
 	CFilterStyle,
 	type IFilterStyle,
 } from "../../../style/components/inputs/CFilterStyle";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import CSelectOutlined, { type ISelectOutlinedValues } from "../select/CSelectOutlined";
 import { DIconLibraryTsx } from "../../../../src/icons/IIconLibrary";
 import type { TIconLibrary } from "../../../../src/types/icons/TIconLibrary";

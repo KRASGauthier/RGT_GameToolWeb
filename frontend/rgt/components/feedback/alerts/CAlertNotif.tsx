@@ -7,7 +7,7 @@ import {
 	type IAlertNotifStyle,
 } from "../../../style/components/feedback//CAlertNotifStyle";
 import type { IAppNotif } from "../../../types/TEvents";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 
 interface CAlertNotifProps extends GCompProps, AlertProps {
 	notif: IAppNotif;

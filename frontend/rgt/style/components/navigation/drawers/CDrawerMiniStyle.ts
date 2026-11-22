@@ -4,7 +4,7 @@ import {
 	colorGetBackground,
 	getQuadStyle,
 	shadowGenerate,
-} from "../../../../utils/UStyles";
+} from "../../../../util/UStyles";
 import { appTheme } from "../../../../../src/style/theme";
 import type { TQuadStyle } from "../../../../types/TStyles";
 

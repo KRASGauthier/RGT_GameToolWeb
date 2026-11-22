@@ -85,7 +85,14 @@ export function getScaledRadius(borderRadius: number | string, divisor = 1) {
 //--------------------------------------------------
 //               COLOR MANAGEMENT
 //--------------------------------------------------
-
+export function colorApplyAlpha(color: string, alpha: number) {
+	return (
+		color +
+		Number(Math.trunc(alpha * 255))
+			.toString(16)
+			.padStart(2, "0")
+	);
+}
 export function colorGetBackground(colors: string | string[], options?: IColorBackground): string {
 	if (typeof colors == "string") return colors;
 	if (!options) options = {};

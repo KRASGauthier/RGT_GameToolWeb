@@ -1,7 +1,7 @@
 import { FormControl, InputLabel, MenuItem, Select, type SelectProps } from "@mui/material";
 import type { GCompProps } from "../../shared/ccommon";
 import type { TFontSize } from "../../../types/themeType";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import { memo, useId } from "react";
 import {
 	CSelectOutlinedStyle,

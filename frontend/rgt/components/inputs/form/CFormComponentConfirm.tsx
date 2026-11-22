@@ -3,7 +3,7 @@ import type { IFormEntry, TFormDataType } from "./CForm";
 import type { CFormComponentProps } from "./CFormComponent";
 import CTextFieldOutlined from "../text/CTextFieldOutlined";
 import { InputAdornment, Stack } from "@mui/material";
-import { keyboartdIsSubmit } from "../../../utils/UKeyboard";
+import { keyboartdIsSubmit } from "../../../util/UKeyboard";
 import CButtonIcon from "../buttons/CButtonIcon";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";

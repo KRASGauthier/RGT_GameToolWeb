@@ -11,7 +11,7 @@ import {
 import type { GCompProps } from "../../shared/ccommon";
 import { CListStyle, type IListStyle } from "../../../style/components/data/lists/CListStyle";
 import { useMemo } from "react";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 
 //--------------------------------------------------
 //                      ICON

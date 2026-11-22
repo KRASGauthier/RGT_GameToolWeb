@@ -11,7 +11,7 @@ import {
 	type CListItemIconProps,
 	type CListItemTextProps,
 } from "../CList";
-import { sxMerger } from "../../../../utils/UStyles";
+import { sxMerger } from "../../../../util/UStyles";
 import CText from "../../../text/CText";
 import type { TQuadStyle } from "../../../../types/TStyles";
 import type { IThemeColor } from "../../../../types/themeType";

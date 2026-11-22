@@ -5,12 +5,14 @@ import {
 	type IPopoverStyle,
 } from "../../../style/components/feedback/CPopoverStyle";
 import { useMemo } from "react";
-import { sxMerger } from "../../../utils/UStyles";
-import CPaper from "../../surfaces/CPaper";
+import { sxMerger } from "../../../util/UStyles";
+import CPaper, { type CPaperProps } from "../../surfaces/CPaper";
 
-export interface CPopoverProps extends GCompProps, PopoverProps {}
+export interface CPopoverProps extends GCompProps, PopoverProps {
+	paperProps?: CPaperProps;
+}
 
-function CPopover({ children, sx, ...other }: CPopoverProps) {
+function CPopover({ paperProps, children, sx, ...other }: CPopoverProps) {
 	const style: IPopoverStyle = useMemo(() => {
 		return CPopoverStyle({});
 	}, []);
@@ -29,7 +31,7 @@ function CPopover({ children, sx, ...other }: CPopoverProps) {
 			sx={sxMerger(style.main, sx ? sx : {})}
 			{...other}
 		>
-			<CPaper>{children}</CPaper>
+			<CPaper {...(paperProps ?? {})}>{children}</CPaper>
 		</Popover>
 	);
 }

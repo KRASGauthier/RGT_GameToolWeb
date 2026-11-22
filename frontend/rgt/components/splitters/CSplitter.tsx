@@ -5,7 +5,7 @@ import {
 	type TSplitterStyle,
 } from "../../style/components/splitters/CSplitterStyle";
 import { useMemo } from "react";
-import { sxMerger } from "../../utils/UStyles";
+import { sxMerger } from "../../util/UStyles";
 
 export type CSplitterPosition = "row" | "column";
 export interface CSplitterProps extends GCompProps {

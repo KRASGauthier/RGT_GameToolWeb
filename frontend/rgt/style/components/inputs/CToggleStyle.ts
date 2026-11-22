@@ -1,7 +1,7 @@
 import type { SxProps, Theme } from "@mui/material";
 import { appTheme } from "../../../../src/style/theme";
 import type { TSize } from "../../../types/TStyles";
-import { sizeToString } from "../../../utils/UStyles";
+import { sizeToString } from "../../../util/UStyles";
 
 export interface IToggleStyle {
 	main: SxProps<Theme>;

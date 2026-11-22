@@ -2,7 +2,7 @@ import { useTheme, type SxProps, type Theme } from "@mui/material";
 import { appTheme } from "../../../../src/style/theme";
 import { getLightColor, getNeutralColor, type CInputOutlinedColor } from "./sharedStyle";
 import type { CSelectOutlinedProps } from "../../../components/inputs/select/CSelectOutlined";
-import { getQuadStyle, shadowGenerate } from "../../../utils/UStyles";
+import { getQuadStyle, shadowGenerate } from "../../../util/UStyles";
 
 export interface ISelectSOutlinedStyle {
 	main: SxProps<Theme>;

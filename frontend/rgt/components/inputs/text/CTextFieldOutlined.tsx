@@ -5,7 +5,7 @@ import {
 	CTextFieldOutlinedStyle,
 	type ITextFieldOutlinedStyle,
 } from "../../../style/components/inputs/CTextFieldStyle";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import type { TFontSize } from "../../../types/themeType";
 import type { CInputOutlinedStyling } from "../../../style/components/inputs/sharedStyle";
 import type { TQuadStyle } from "../../../types/TStyles";

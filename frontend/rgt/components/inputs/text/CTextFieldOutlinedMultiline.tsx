@@ -3,7 +3,7 @@ import {
 	CTextFieldOutlinedMultilineStyle,
 	type ITextFieldOutlinedMultilineStyle,
 } from "../../../style/components/inputs/CTextFieldStyle";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import type { CTextFieldOutlinedProps } from "./CTextFieldOutlined";
 import CTextFieldOutlined from "./CTextFieldOutlined";
 

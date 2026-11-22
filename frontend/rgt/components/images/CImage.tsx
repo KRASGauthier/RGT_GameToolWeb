@@ -6,7 +6,7 @@ import {
 	type TImageStyling,
 } from "../../style/components/images/CImageStyle";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { sxMerger } from "../../utils/UStyles";
+import { sxMerger } from "../../util/UStyles";
 import HideImageIcon from "@mui/icons-material/HideImage";
 import CDialogImage from "../feedback/dialogs/CDialogImage";
 import { apiGetImageBlob } from "../../api/shared";

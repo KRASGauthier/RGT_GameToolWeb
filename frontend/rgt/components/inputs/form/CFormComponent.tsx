@@ -6,7 +6,7 @@ import type { GCompProps } from "../../shared/ccommon";
 import { getFormTypeDefaultField, type IFormEntry, type TFormDataType } from "./CForm";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import CTextFieldOutlined from "../text/CTextFieldOutlined";
-import { keyboartdIsSubmit } from "../../../utils/UKeyboard";
+import { keyboartdIsSubmit } from "../../../util/UKeyboard";
 import CText from "../../text/CText";
 import { appTheme } from "../../../../src/style/theme";
 import { useDebounced } from "../../../hooks/useDebounced";

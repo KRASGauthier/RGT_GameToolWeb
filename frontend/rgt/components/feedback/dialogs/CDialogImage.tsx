@@ -5,7 +5,7 @@ import {
 	CDialogImageStyle,
 	type IDialogImageStyle,
 } from "../../../style/components/feedback/CDialogStyle";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import { Box, Stack } from "@mui/material";
 import HideImageIcon from "@mui/icons-material/HideImage";
 import CSkeleton from "../skeleton/CSkeleton";

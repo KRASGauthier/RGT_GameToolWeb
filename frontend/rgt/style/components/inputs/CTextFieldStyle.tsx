@@ -7,7 +7,7 @@ import {
 	type CInputOutlinedColor,
 } from "./sharedStyle";
 import type { CTextFieldOutlinedProps } from "../../../components/inputs/text/CTextFieldOutlined";
-import { getQuadStyle, shadowGenerate } from "../../../utils/UStyles";
+import { getQuadStyle, shadowGenerate } from "../../../util/UStyles";
 
 export interface ITextFieldOutlinedStyle {
 	main: SxProps<Theme>;

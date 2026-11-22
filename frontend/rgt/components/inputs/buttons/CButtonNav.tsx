@@ -1,7 +1,10 @@
 import { useMemo } from "react";
-import { CButtonStyle, type IButtonStyle } from "../../../style/components/inputs/CButtonStyle";
+import {
+	CButtonStyle,
+	type IButtonStyle,
+} from "../../../style/components/inputs/buttons/CButtonStyle";
 import CButtonIcon, { type CButtonIconProps } from "./CButtonIcon";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import { useLocation, useNavigate } from "react-router";
 
 interface CButtonNavProps extends CButtonIconProps {

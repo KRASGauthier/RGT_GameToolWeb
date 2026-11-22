@@ -2,7 +2,7 @@ import { Chip, type ChipProps } from "@mui/material";
 import type { GCompProps } from "../../shared/ccommon";
 import { CChipStyle, type IChipStyle } from "../../../style/components/data/chip/CChipStyle";
 import { useMemo } from "react";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import CText from "../../text/CText";
 
 export interface CChipProps extends GCompProps, Omit<ChipProps, "label"> {

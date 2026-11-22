@@ -1,5 +1,5 @@
 import type { SxProps, Theme } from "@mui/material";
-import { colorGetBackground, sizeToString } from "../../../utils/UStyles";
+import { colorGetBackground, sizeToString } from "../../../util/UStyles";
 import { appTheme } from "../../../../src/style/theme";
 import type { TSize } from "../../../types/TStyles";
 import {

@@ -6,7 +6,7 @@ import {
 	type TCardStyling,
 } from "../../style/components/surfaces/CCardStyle";
 import { useMemo } from "react";
-import { sxMerger } from "../../utils/UStyles";
+import { sxMerger } from "../../util/UStyles";
 import type { TQuadStyle } from "../../types/TStyles";
 
 export interface CCardProps extends GCompProps, Omit<CardProps, "elevation"> {

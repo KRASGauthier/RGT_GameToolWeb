@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import {
 	CDrawerMiniStyle,
 	type IDrawerMiniStyle,

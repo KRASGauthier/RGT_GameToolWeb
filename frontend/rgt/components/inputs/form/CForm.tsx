@@ -14,7 +14,7 @@ import CFormUser from "./CFormUser";
 import type { TErrorInfo } from "../../../types/api/TAPI";
 import type { IVersion } from "../../../types/TShared";
 import CFormVersion from "./CFormVersion";
-import type { TButtonStylingTypes } from "../../../style/components/inputs/CButtonStyle";
+import type { TButtonStylingTypes } from "../../../style/components/inputs/buttons/CButtonStyle";
 
 //--------------------------------------------------
 //                      TYPES

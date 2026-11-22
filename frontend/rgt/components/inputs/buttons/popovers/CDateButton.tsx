@@ -5,10 +5,11 @@ import CButtonIconText from "../CButtonIconText";
 
 export interface CDateButtonProps extends Omit<CButtonIconTextProps, "value" | "onChange"> {
 	value: Date;
+	customText?: string;
 	onChange?: (date: Date) => void;
 }
 
-function CDateButton({ value, onChange, ...other }: CDateButtonProps) {
+function CDateButton({ value, customText, onChange, ...other }: CDateButtonProps) {
 	const [buttonRef, setButtonRef] = useState<HTMLButtonElement | null>(null);
 
 	return (
@@ -34,8 +35,8 @@ function CDateButton({ value, onChange, ...other }: CDateButtonProps) {
 					onChange?.(date);
 				}}
 			/>
-			<CButtonIconText {...other} onClick={(e) => setButtonRef(e.currentTarget)}>
-				{value.toLocaleDateString()}
+			<CButtonIconText  {...other} onClick={(e) => setButtonRef(e.currentTarget)}>
+				{customText ?? value.toLocaleDateString()}
 			</CButtonIconText>
 		</>
 	);

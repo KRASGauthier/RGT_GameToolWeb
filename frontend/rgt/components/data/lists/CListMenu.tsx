@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import type { CListProps } from "./CList";
 import {
 	CListMenuStyle,

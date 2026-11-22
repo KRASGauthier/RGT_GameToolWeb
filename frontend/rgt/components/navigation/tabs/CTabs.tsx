@@ -6,7 +6,7 @@ import {
 	type ITabsStyle,
 	type TTabsStyling,
 } from "../../../style/components/navigation/tabs/CTabsStyle";
-import { sxMerger } from "../../../utils/UStyles";
+import { sxMerger } from "../../../util/UStyles";
 import CText from "../../text/CText";
 
 export interface ITabEntry {

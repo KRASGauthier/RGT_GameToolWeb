@@ -6,8 +6,8 @@ import { useMemo, useRef, useState } from "react";
 import {
 	CButtonCopyStyle,
 	type IButtonCopyStyle,
-} from "../../../../style/components/inputs/CButtonStyle";
-import { sxMerger } from "../../../../utils/UStyles";
+} from "../../../../style/components/inputs/buttons/CButtonStyle";
+import { sxMerger } from "../../../../util/UStyles";
 import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
 
 const COPIED_TIMED = 5000;

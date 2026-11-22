@@ -13,8 +13,10 @@ export interface IAPIErrors {
 	errorInfo?: TErrorInfo;
 }
 
+export type TAPICheckInfoTypes = TTypeOf | "checker" | "date";
 export interface IAPICheckInfo {
-	type: TTypeOf | "checker" | "array" | "date";
+	type: TAPICheckInfoTypes;
+	isArray?: boolean;
 	optional?: boolean;
 	checker?: Record<string, IAPICheckInfo>;
 }

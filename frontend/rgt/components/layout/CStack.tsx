@@ -6,7 +6,7 @@ import {
 	type TStackStyling,
 } from "../../style/components/layout/CStackStyling";
 import { useMemo } from "react";
-import { sxMerger } from "../../utils/UStyles";
+import { sxMerger } from "../../util/UStyles";
 import type { TSize } from "../../types/TStyles";
 import type { TThemeRadius } from "../../types/themeType";
 

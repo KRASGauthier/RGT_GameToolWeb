@@ -1,6 +1,6 @@
 import { Paper, type PaperProps } from "@mui/material";
 import type { GCompProps } from "../shared/ccommon";
-import { sxMerger } from "../../utils/UStyles";
+import { sxMerger } from "../../util/UStyles";
 import { useMemo } from "react";
 import {
 	CPaperStyle,

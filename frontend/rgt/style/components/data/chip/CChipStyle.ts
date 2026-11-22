@@ -1,6 +1,6 @@
 import type { SxProps, Theme } from "@mui/material";
 import { appTheme } from "../../../../../src/style/theme";
-import { colorGetBackground } from "../../../../utils/UStyles";
+import { colorGetBackground } from "../../../../util/UStyles";
 
 //--------------------------------------------------
 //                     STYLING
