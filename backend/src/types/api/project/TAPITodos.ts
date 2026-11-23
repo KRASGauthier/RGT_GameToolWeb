@@ -1,6 +1,79 @@
 import type { TAPIChecker } from "../../../../rgt/types/api/TAPI.js";
-import type { ITodo } from "../../data/project/TTodo.js";
-import { KTodoChecker } from "./TAPISharedCheckers.js";
+import { apiMakePartial } from "../../../../rgt/util/UApi.js";
+import type { ITodo, TTodoState } from "../../data/project/TTodo.js";
+
+//--------------------------------------------------
+//                      SHARED
+//--------------------------------------------------
+export const todoChecker: TAPIChecker = {
+	uid: {
+		type: "string",
+	},
+	project: {
+		type: "string",
+	},
+	name: {
+		type: "string",
+	},
+	desc: {
+		type: "string",
+	},
+	date: {
+		type: "date",
+	},
+	users: {
+		type: "string",
+		isArray: true,
+	},
+	groups: {
+		type: "string",
+		isArray: true,
+	},
+	tags: {
+		type: "string",
+		isArray: true,
+	},
+	importance: {
+		type: "number",
+	},
+	difficulty: {
+		type: "number",
+	},
+	state: {
+		type: "string",
+	},
+	new: {
+		type: "boolean",
+		optional: true,
+	},
+};
+
+
+//--------------------------------------------------
+//                     SEND
+//--------------------------------------------------
+export interface IAPITodoEdit {
+	todo: Partial<Omit<ITodo, "uid" | "project" | "new" | "state">>;
+}
+
+export const IAPITodoEditChecker: TAPIChecker = {
+	todo: {
+		type: "checker",
+		checker: apiMakePartial(todoChecker, ["uid", "project", "new", "state"]),
+	},
+};
+
+export interface IAPITodoSetState {
+	state: TTodoState;
+}
+
+export const IAPITodoSetStateChecker: TAPIChecker = {
+	state: {
+		type: "string",
+	},
+};
+
+
 
 //--------------------------------------------------
 //                     RCV
@@ -11,7 +84,8 @@ export interface IAPITodoRcvAll {
 
 export const IAPITodoRcvAllChecker: TAPIChecker = {
 	todos: {
-		type: "array",
-		checker: KTodoChecker,
+		type: "checker",
+		isArray: true,
+		checker: todoChecker,
 	},
 };
