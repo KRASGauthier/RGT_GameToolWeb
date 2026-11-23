@@ -11,13 +11,13 @@ import {
 } from "../../../../style/pages/projects/PGroupsStyle";
 import CSplitterRow from "../../../../../rgt/components/splitters/CSplitterRow";
 import CTextFieldOutlined from "../../../../../rgt/components/inputs/text/CTextFieldOutlined";
-import CIconButton from "../../../../../rgt/components/inputs/buttons/pre-made/CIconButton";
+import CIconButton from "../../../../../rgt/components/inputs/buttons/popovers/CIconButton";
 import CButtonColor from "../../../../../rgt/components/inputs/buttons/CButtonColor";
 import { PROJECT_GROUP_NAME_MAX } from "../../../../consts";
 import type { TIconLibrary } from "../../../../types/icons/TIconLibrary";
 import type { TColorEntry } from "../../../../../rgt/types/TStyles";
 import type { TAPIGroupEdit } from "../../../../types/api/project/TAPIGroups";
-import { sxMerger } from "../../../../../rgt/utils/UStyles";
+import { sxMerger } from "../../../../../rgt/util/UStyles";
 
 export interface PGroupsEntryProps {
 	group: IGroup & { new?: boolean };
@@ -69,7 +69,6 @@ function PGroupsEntry({ group, onEdit, onDelete }: PGroupsEntryProps) {
 						size="lg"
 						padding={"4px"}
 						value={edit.icon ?? group.icon}
-						library={DIconLibraryTsx}
 						onSelected={(value: TIconLibrary) => {
 							setEdit((prev) => {
 								return {

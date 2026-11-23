@@ -67,7 +67,7 @@ function PSettings({}: PSettingsProps) {
 					managedButtonPosition="flex-end"
 				></CForm>
 
-				<CSplitterCollumn sx={{  my: appTheme.shapes.spacing.mediumLarge }} />
+				<CSplitterCollumn sx={{ my: appTheme.shapes.spacing.mediumLarge }} />
 
 				<CForm
 					outlinedStyling="neutral"

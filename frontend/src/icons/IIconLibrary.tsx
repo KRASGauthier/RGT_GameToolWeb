@@ -1,7 +1,7 @@
 import { cloneElement, type ReactElement } from "react";
 import { DIconLibrary, type TIconLibrary } from "../types/icons/TIconLibrary";
 import type { SvgIconProps, SxProps } from "@mui/material";
-import { sxMerger } from "../../rgt/utils/UStyles";
+import { sxMerger } from "../../rgt/util/UStyles";
 
 //LOCAL CONSTS
 export const DIconLibraryTsx = Object.fromEntries(

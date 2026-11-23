@@ -7,10 +7,7 @@ import { useDebounced } from "../../../../../rgt/hooks/useDebounced";
 import { apiUserGetUserSearch } from "../../../../../rgt/api/user/userAPI";
 import { useNotif } from "../../../../../rgt/context/app/CAppNotifContext";
 import PUsersSearchCards from "./PUsersSearchCards";
-import {
-	PUsersStyle,
-	type IProjectUsersStyle,
-} from "../../../../style/pages/projects/PUsersStyle";
+import { PUsersStyle, type IProjectUsersStyle } from "../../../../style/pages/projects/PUsersStyle";
 import { useAuth } from "../../../../../rgt/context/auth/CAuthContext";
 import CText from "../../../../../rgt/components/text/CText";
 import PUsersCards from "./PUsersCards";
@@ -110,12 +107,7 @@ function PUsers({}: PUsersProps) {
 				return 0;
 			})
 			.map((user: IProjectUser): ReactNode => {
-				return (
-					<PUsersCards
-						onUserDelete={(user) => setDeletingUser(user)}
-						user={user}
-					/>
-				);
+				return <PUsersCards onUserDelete={(user) => setDeletingUser(user)} user={user} />;
 			});
 	};
 
