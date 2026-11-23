@@ -13,12 +13,8 @@ export interface IAPIProjectUserChangeGroup {
 
 export const IAPIProjectUserChangeGroupChecker: TAPIChecker = {
 	groups: {
-		type: "array",
-		checker: {
-			value: {
-				type: "string",
-			},
-		},
+		type: "string",
+		isArray: true,
 	},
 };
 
@@ -33,7 +29,7 @@ export const IAPIProjectUserAddChecker: TAPIChecker = {
 };
 
 //--------------------------------------------------
-//                     SEND
+//                    RECEIVE
 //--------------------------------------------------
 export interface IAPIProjectUserRcv {
 	projectUser: IProjectUser;
@@ -57,7 +53,8 @@ export const IAPIProjectUsersUpdateChecker: TAPIChecker = {
 		checker: KProjectChecker,
 	},
 	users: {
-		type: "array",
+		type: "checker",
+		isArray: true,
 		checker: KProjectUserChecker,
 	},
 };
