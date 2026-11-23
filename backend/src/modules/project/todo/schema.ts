@@ -3,18 +3,19 @@ import { ITodo } from "../../../types/data/project/TTodo.js";
 import { getDefaultSchema } from "../../../../rgt/util/USchema.js";
 import { appDB } from "../../../../rgt/middleware/db.js";
 
-export interface ITodoDB extends Omit<ITodo, "uid" | "users" | "groups" |  "new" | "project"> {
+export interface ITodoDB extends Omit<ITodo, "uid" | "users" | "groups" | "tags" |  "new" | "project"> {
 	project: Types.ObjectId;
 	users: Types.ObjectId[];
 	groups: Types.ObjectId[];
+	tags: Types.ObjectId[];
 }
 
-export interface IToodoDBMethods {
+export interface ITodoDBMethods {
 	getData(): Promise<ITodo>;
 }
 export const todoCurrentVersion: number = 0;
 
-const todoSchema = new Schema<ITodoDB, Model<ITodoDB>, IToodoDBMethods>(
+const todoSchema = new Schema<ITodoDB, Model<ITodoDB>, ITodoDBMethods>(
 	{
 		project: {
 			type: Schema.Types.ObjectId,
@@ -44,6 +45,11 @@ const todoSchema = new Schema<ITodoDB, Model<ITodoDB>, IToodoDBMethods>(
 			ref: "group",
 			default: [],
 		},
+		tags: {
+			type: [Schema.Types.ObjectId],
+			ref: "tag",
+			default: [],
+		},
 		importance: {
 			type: Number,
 			default: 2,
@@ -55,6 +61,12 @@ const todoSchema = new Schema<ITodoDB, Model<ITodoDB>, IToodoDBMethods>(
 			default: 2,
 			min: 0,
 			max: 4
+		},
+		state: {
+			type: String,
+			enum: ["current", "done", "canceled"],
+			required: true,
+			default: "current"
 		},
 		...getDefaultSchema(todoCurrentVersion),
 	},
@@ -72,8 +84,10 @@ todoSchema.method("getData", async function (): Promise<ITodo> {
 		date: this.date,
 		users: this.users.map((user: Types.ObjectId): string => user.toString()),
 		groups: this.groups.map((group: Types.ObjectId): string => group.toString()),
+		tags: this.tags.map((tag: Types.ObjectId): string => tag.toString()),
 		importance: this.importance,
 		difficulty: this.difficulty,
+		state: this.state
 	};
 });
 
