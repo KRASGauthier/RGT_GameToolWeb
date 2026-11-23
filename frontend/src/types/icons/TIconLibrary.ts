@@ -18,11 +18,21 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
 import ArrowDownwardRoundedIcon from "@mui/icons-material/ArrowDownwardRounded";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import ArrowLeftRoundedIcon from "@mui/icons-material/ArrowLeftRounded";
+import ArrowRightRoundedIcon from "@mui/icons-material/ArrowRightRounded";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 import type { SvgIconComponent } from "@mui/icons-material";
 
 //LOCAL CONSTS
 export const DIconLibrary = {
+	//--------------------- COMMON ---------------------
+	tag: LocalOfferIcon,
+
 	//--------------------- PROJECT ---------------------
 	home: HomeRounded,
 	project: FolderRounded,
@@ -43,11 +53,18 @@ export const DIconLibrary = {
 	search: SearchRoundedIcon,
 	reset: RestartAltIcon,
 
+	done: TaskAltIcon,
+	cancel: HighlightOffIcon,
+
 	//--------------------- FEEDBACK ----------------------
 	tick: DoneRoundedIcon,
 	clear: ClearRoundedIcon,
 	upArrow: ArrowUpwardRoundedIcon,
 	downArrow: ArrowDownwardRoundedIcon,
+	leftArrowSmall: ArrowLeftRoundedIcon,
+	rightArrowSmall: ArrowRightRoundedIcon,
+	upArrowSmall: ArrowDropUpIcon,
+	downArrowSmall: ArrowDropDownIcon,
 } satisfies Record<string, SvgIconComponent>;
 
 export type TIconLibrary = keyof typeof DIconLibrary;

@@ -1,4 +1,5 @@
 export const DIconLibrary = [
+	"tag",
 	"home",
 	"project",
 	"todo",
@@ -13,10 +14,16 @@ export const DIconLibrary = [
 	"delete",
 	"search",
 	"reset",
+	"done",
+	"cancel",
 	"tick",
 	"clear",
 	"upArrow",
 	"downArrow",
+	"leftArrowSmall",
+	"rightArrowSmall",
+	"upArrowSmall",
+	"downArrowSmall",
 ] as const;
 
 export type TIconLibrary = (typeof DIconLibrary)[number];
