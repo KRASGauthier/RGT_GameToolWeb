@@ -3,6 +3,7 @@ import {
 	useCallback,
 	useContext,
 	useEffect,
+	useMemo,
 	useState,
 	type Context,
 	type ReactNode,
@@ -23,6 +24,7 @@ import {
 } from "../api/project/projectUserAPI";
 import { apiGroupCreate, apiGroupDelete, apiGroupModify } from "../api/project/groupsAPI";
 import type { TAPIGroupEdit } from "../types/api/project/TAPIGroups";
+import type { ISelectorEntry } from "../../rgt/components/inputs/popover/CSelector";
 
 //--------------------------------------------------
 //                      CONTEXT
@@ -31,6 +33,8 @@ export interface IProjectContext {
 	project: IProject | undefined;
 	users: IProjectUser[];
 	groups: IGroup[];
+	usersEntries: ISelectorEntry[];
+	groupEntries: ISelectorEntry[];
 
 	//====================== COMMON HANDLERS ======================
 	modify: (data: TAPIProjectModify) => Promise<boolean>;
@@ -51,6 +55,9 @@ const projectContext: Context<IProjectContext> = createContext<IProjectContext>(
 	project: undefined,
 	users: [],
 	groups: [],
+	usersEntries: [],
+	groupEntries: [],
+
 	modify: async () => {
 		return true;
 	},
@@ -90,6 +97,23 @@ function CProjectProvider({ children }: CProjectProviderProps) {
 	const [error, setError] = useState<ReactNode | undefined>();
 	const { tab } = useParams();
 	const { push } = useNotif();
+
+	const usersEntries: ISelectorEntry[] = useMemo(() => {
+		return users.map((user): ISelectorEntry => ({
+			value: user.uid,
+			display: user.username,
+			user,
+		}));
+	}, [users]);
+
+	const groupEntries: ISelectorEntry[] = useMemo(() => {
+		return groups.map((group): ISelectorEntry => ({
+			value: group.uid,
+			display: group.name,
+			icon: group.icon,
+			color: group.color,
+		}));
+	}, [groups]);
 
 	//====================== EVENT ======================
 	useEffect(() => {
@@ -197,6 +221,8 @@ function CProjectProvider({ children }: CProjectProviderProps) {
 				project,
 				users,
 				groups,
+				usersEntries,
+				groupEntries,
 				modify,
 				modifyPicture,
 				addGroup,

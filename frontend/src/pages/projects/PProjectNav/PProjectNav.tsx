@@ -15,12 +15,20 @@ import { useMemo } from "react";
 import CDrawerMenu from "../../../../rgt/components/navigation/drawers/CDrawerMenu";
 import type { TListMenuCompData } from "../../../../rgt/components/data/lists/subs/CListMenuComp";
 import type { TListMenuGroupData } from "../../../../rgt/components/data/lists/subs/CListMenuGroup";
-import { ROUTE_PROJECT, ROUTE_PROJECT_ID, ROUTE_PROJECT_SECCTION } from "../../../consts";
-import CProjectProvider from "../../../context/CProjectContext";
+import {
+	API_PROJECT,
+	API_PROJECT_TARGET,
+	API_TAGS,
+	ROUTE_PROJECT,
+	ROUTE_PROJECT_ID,
+	ROUTE_PROJECT_SECCTION,
+} from "../../../consts";
+import CProjectProvider, { useProject } from "../../../context/CProjectContext";
 import PSettings from "../settings/PSettings/PSettings";
 import PUsers from "../settings/PUsers/PUsers";
 import PGroups from "../settings/PGroups/PGroups";
 import PTodo from "../project/PTodo/PTodo";
+import CTagSelectorProvider from "../../../../rgt/context/popover/CTagSelectorProvider";
 
 //--------------------------------------------------
 //                     SECTIONS
@@ -104,6 +112,7 @@ function PProjectNavSub({}: PProjectNavProps) {
 	//====================== DATA ======================
 	const { tab, section } = useParams();
 	const navigate = useNavigate();
+	const { project } = useProject();
 
 	//====================== FUNCTIONS ======================
 	const handleChange = (value: string) => {
@@ -137,16 +146,21 @@ function PProjectNavSub({}: PProjectNavProps) {
 			/>
 		);
 	return (
-		<Stack direction={"row"} sx={{ flex: 1, overflow: "hidden" }}>
-			<CDrawerMenu
-				saveID="projectMenu"
-				onValueChange={handleChange}
-				value={section}
-				comps={DProjectMenuComp}
-				groups={DProjectMenuGroups}
-			/>
-			{current}
-		</Stack>
+		<CTagSelectorProvider
+			path={API_PROJECT + API_PROJECT_TARGET + API_TAGS}
+			pathBuilder={project ? { uid: project.uid } : {}}
+		>
+			<Stack direction={"row"} sx={{ flex: 1, overflow: "hidden" }}>
+				<CDrawerMenu
+					saveID="projectMenu"
+					onValueChange={handleChange}
+					value={section}
+					comps={DProjectMenuComp}
+					groups={DProjectMenuGroups}
+				/>
+				{current}
+			</Stack>
+		</CTagSelectorProvider>
 	);
 }
 
