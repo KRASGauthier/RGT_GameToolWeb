@@ -1,5 +1,5 @@
 import type { SxProps, Theme } from "@mui/material";
-import { colorGetBackground, shadowGenerate } from "../../../../rgt/utils/UStyles";
+import { colorGetBackground, shadowGenerate } from "../../../../rgt/util/UStyles";
 import { appTheme } from "../../theme";
 
 export interface IProjectUsersStyle {

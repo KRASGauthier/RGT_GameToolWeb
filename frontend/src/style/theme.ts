@@ -1,6 +1,6 @@
 import { createTheme, type ThemeOptions } from "@mui/material";
 import type { IAppTheme } from "../../rgt/types/themeType";
-import { colorGetBackground } from "../../rgt/utils/UStyles";
+import { colorGetBackground } from "../../rgt/util/UStyles";
 
 export const appTheme: IAppTheme = {
 	colors: {

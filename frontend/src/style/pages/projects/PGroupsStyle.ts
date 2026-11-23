@@ -4,7 +4,7 @@ import {
 	colorAlterColor,
 	colorGetBackground,
 	colorGetTextColor,
-} from "../../../../rgt/utils/UStyles";
+} from "../../../../rgt/util/UStyles";
 import { appTheme } from "../../theme";
 
 export interface IProjectGroupsEntryStyle {
@@ -18,9 +18,7 @@ export interface PGroupsEntryStyleProps {
 	color: TColorEntry;
 }
 
-export const PGroupsEntryStyle = ({
-	color,
-}: PGroupsEntryStyleProps): IProjectGroupsEntryStyle => {
+export const PGroupsEntryStyle = ({ color }: PGroupsEntryStyleProps): IProjectGroupsEntryStyle => {
 	return {
 		main: {
 			background: colorGetBackground(
