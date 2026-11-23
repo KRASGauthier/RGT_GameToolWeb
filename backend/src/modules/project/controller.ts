@@ -74,7 +74,7 @@ export const projectModify = async (req: Request, res: Response) => {
 	await req.project.set(data);
 	await req.project.save();
 
-	res.status(201).json({ project: await req.project.getProjectFull() } as IAPIProject);
+	res.status(200).json({ project: await req.project.getProjectFull() } as IAPIProject);
 };
 export const projectModifyPicture = async (req: Request, res: Response) => {
 	hasProject(req);
@@ -94,7 +94,7 @@ export const projectModifyPicture = async (req: Request, res: Response) => {
 		) + IMG_PROJECT_COVER;
 	await req.project.save();
 
-	res.status(201).json({ project: await req.project.getProjectFull() } as IAPIProject);
+	res.status(200).json({ project: await req.project.getProjectFull() } as IAPIProject);
 };
 
 //--------------------------------------------------

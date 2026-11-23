@@ -11,6 +11,7 @@ export type TAPIProjectCreate = Omit<
 	IProject,
 	"uid" | "owner" | "ownerName" | "created" | "lastOpened"
 >;
+
 export const TAPIProjectCreateChecker: TAPIChecker = {
 	name: KProjectChecker.name,
 	title: KProjectChecker.title,
@@ -21,6 +22,7 @@ export const TAPIProjectCreateChecker: TAPIChecker = {
 };
 
 export type TAPIProjectModify = Partial<Pick<IProject, "name" | "title" | "version">>;
+
 export const TAPIProjectModifyChecker: TAPIChecker = {
 	name: {
 		...KProjectChecker.name,
@@ -42,6 +44,7 @@ export const TAPIProjectModifyChecker: TAPIChecker = {
 export interface IAPIProject {
 	project: IProject;
 }
+
 export const IAPIProjectChecker: TAPIChecker = {
 	project: {
 		type: "checker",
@@ -53,13 +56,16 @@ export interface IAPIProjectGetFromUser {
 	projects: IProject[];
 	owners: IProjectUser[];
 }
+
 export const IAPIProjectGetFromUserChecker: TAPIChecker = {
 	projects: {
-		type: "array",
+		type: "checker",
+		isArray: true,
 		checker: KProjectChecker,
 	},
 	owners: {
-		type: "array",
+		type: "checker",
+		isArray: true,
 		checker: KProjectUserChecker,
 	},
 };
@@ -69,17 +75,20 @@ export interface IAPIProjectGet {
 	users: IProjectUser[];
 	groups: IGroup[];
 }
+
 export const IAPIProjectGetChecker: TAPIChecker = {
 	project: {
 		type: "checker",
 		checker: KProjectChecker,
 	},
 	users: {
-		type: "array",
+		type: "checker",
+		isArray: true,
 		checker: KProjectUserChecker,
 	},
 	groups: {
-		type: "array",
+		type: "checker",
+		isArray: true,
 		checker: KGroupChecker,
 	},
 };

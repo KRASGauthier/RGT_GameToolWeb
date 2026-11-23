@@ -42,7 +42,8 @@ export interface IAPIGroups {
 
 export const IAPIGroupsChecker: TAPIChecker = {
 	groups: {
-		type: "array",
+		type: "checker",
+		isArray: true,
 		checker: KGroupChecker,
 	},
 };
@@ -54,11 +55,13 @@ export interface IAPIGroupsDelete {
 
 export const IAPIGroupsDeleteChecker: TAPIChecker = {
 	groups: {
-		type: "array",
+		type: "checker",
+		isArray: true,
 		checker: KGroupChecker,
 	},
 	users: {
-		type: "array",
+		type: "checker",
+		isArray: true,
 		checker: KProjectUserChecker,
 	},
 };
