@@ -48,7 +48,6 @@ export const todoChecker: TAPIChecker = {
 	},
 };
 
-
 //--------------------------------------------------
 //                     SEND
 //--------------------------------------------------
@@ -72,8 +71,6 @@ export const IAPITodoSetStateChecker: TAPIChecker = {
 		type: "string",
 	},
 };
-
-
 
 //--------------------------------------------------
 //                     RCV

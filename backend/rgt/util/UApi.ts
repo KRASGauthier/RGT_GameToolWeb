@@ -1,18 +1,19 @@
 import { IAPICheckInfo, TAPIChecker, TAPICheckInfoTypes } from "../types/api/TAPI.js";
 
-
 function checkApiType(key: string, data: Record<string, unknown>, info: IAPICheckInfo) {
-	if (!(key in data) && !info.optional) throw {
+	if (!(key in data) && !info.optional)
+		throw {
 			code: 400,
 			message: "Contract missmatch",
 			log: `Missing field: ${key}`,
 		};
 	if (!(key in data) && info.optional) return;
-	if (Array.isArray(data[key])) throw {
-				code: 400,
-				message: "Contract missmatch",
-				log: `Unexpected array at key: ${key}`,
-			};
+	if (Array.isArray(data[key]))
+		throw {
+			code: 400,
+			message: "Contract missmatch",
+			log: `Unexpected array at key: ${key}`,
+		};
 	else if (info.type != "checker" && info.type != "date" && typeof data[key] != info.type)
 		throw {
 			code: 400,
@@ -41,11 +42,12 @@ function checkApiType(key: string, data: Record<string, unknown>, info: IAPIChec
 	}
 }
 function checkApiTypeArray(value: unknown, type: TAPICheckInfoTypes, index: number, key: string) {
-	if (Array.isArray(value)) throw {
-				code: 400,
-				message: "Contract missmatch",
-				log: `Unexpected array at index: ${index}`,
-			};
+	if (Array.isArray(value))
+		throw {
+			code: 400,
+			message: "Contract missmatch",
+			log: `Unexpected array at index: ${index}`,
+		};
 	else if (type != "checker" && type != "date" && typeof value != type)
 		throw {
 			code: 400,
@@ -73,11 +75,12 @@ function checkApiTypeArray(value: unknown, type: TAPICheckInfoTypes, index: numb
 }
 export function checkApi<_T>(data: Record<string, unknown>, checker: TAPIChecker): _T {
 	for (const [key] of Object.entries(data)) {
-		if (!(key in checker)) throw {
-			code: 400,
-			message: "Contract missmatch",
-			log: `Unexpected field: ${key}`,
-		};
+		if (!(key in checker))
+			throw {
+				code: 400,
+				message: "Contract missmatch",
+				log: `Unexpected field: ${key}`,
+			};
 	}
 
 	for (const [key, value] of Object.entries(checker)) {
@@ -99,7 +102,11 @@ export function checkApi<_T>(data: Record<string, unknown>, checker: TAPIChecker
 					};
 				else checkApiTypeArray(subValue, value.type, index, key);
 			}
-		} else if (value.isArray && !Array.isArray(data[key]) && !(data[key] == undefined && value.optional))
+		} else if (
+			value.isArray &&
+			!Array.isArray(data[key]) &&
+			!(data[key] == undefined && value.optional)
+		)
 			throw {
 				code: 400,
 				message: "Contract missmatch",
@@ -121,19 +128,18 @@ export function checkApi<_T>(data: Record<string, unknown>, checker: TAPIChecker
 			};
 		else checkApiType(key, data, value);
 	}
-	
+
 	return data as _T;
 }
 
 export function apiMakePartial(checker: TAPIChecker, omits: string[]) {
-	const out: TAPIChecker = {}
+	const out: TAPIChecker = {};
 
-	for(const [key, value] of Object.entries(checker)) {
-		if(omits.includes(key))
-			continue;
-		out[key] = structuredClone(value)
-		out[key].optional = true
+	for (const [key, value] of Object.entries(checker)) {
+		if (omits.includes(key)) continue;
+		out[key] = structuredClone(value);
+		out[key].optional = true;
 	}
 
-	return out
+	return out;
 }

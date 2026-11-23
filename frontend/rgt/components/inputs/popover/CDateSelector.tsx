@@ -45,7 +45,16 @@ function CDateSelector({
 		() => new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0, 0),
 	);
 	const [today] = useState<Date>(
-		() => new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0, 0),
+		() =>
+			new Date(
+				new Date().getFullYear(),
+				new Date().getMonth(),
+				new Date().getDate(),
+				0,
+				0,
+				0,
+				0,
+			),
 	);
 
 	//====================== HANDLERS ======================
@@ -102,7 +111,13 @@ function CDateSelector({
 			output.push(
 				<Grid size={1} sx={{ display: "flex", justifyContent: "center" }}>
 					<CButtonText
-						styling={currentDate.getTime() == value.getTime() ? "secondary-light" : (currentDate.getTime() == today.getTime() ? "light" : "transparent")}
+						styling={
+							currentDate.getTime() == value.getTime()
+								? "secondary-light"
+								: currentDate.getTime() == today.getTime()
+									? "light"
+									: "transparent"
+						}
 						textProps={{ size: "sm" }}
 						padding={0}
 						sx={style.dayButton(currentDate, displayDate.getMonth())}

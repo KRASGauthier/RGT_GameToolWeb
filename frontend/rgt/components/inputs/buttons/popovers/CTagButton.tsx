@@ -9,7 +9,7 @@ export interface CTagButtonProps extends Omit<CButtonIconListProps, "onChange" |
 
 function CTagButton({ onChange, values, ...other }: CTagButtonProps) {
 	const { tags, open } = useTagSelector();
-	
+
 	return (
 		<>
 			<CButtonIconList

@@ -73,7 +73,11 @@ export function checkApi(data: Record<string, unknown>, checker: TAPIChecker) {
 					throw `Wrong field type at ${index} for ${key} (expected: object)`;
 				else checkApiTypeArray(subValue, value.type, index, key);
 			}
-		} else if (value.isArray && !Array.isArray(data[key])&& !(data[key] == undefined && value.optional))
+		} else if (
+			value.isArray &&
+			!Array.isArray(data[key]) &&
+			!(data[key] == undefined && value.optional)
+		)
 			throw `Wrong field type: ${key} (got: ${typeof data[key]}, expected: Array)`;
 		else if (
 			value.type == "checker" &&

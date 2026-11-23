@@ -53,7 +53,10 @@ function CButtonIconList({
 		});
 		if (filtered.length == 0)
 			return (
-				<Box key={"none-display"} sx={style.node(emptyColor ?? appTheme.colors.primary[5], true, true)}>
+				<Box
+					key={"none-display"}
+					sx={style.node(emptyColor ?? appTheme.colors.primary[5], true, true)}
+				>
 					<CText size="xs" weight={9} sx={style.extraText}>
 						{emptyText ?? "None"}
 					</CText>

@@ -36,29 +36,33 @@ const stylingContent = {
 			angle: 165,
 		}),
 	},
-	"warning": {
-		background: colorGetBackground(
-			[appTheme.colors.warning[5], appTheme.colors.warning[4]],
-			{ positions: undefined, type: "linear", angle: 165 },
-		),
+	warning: {
+		background: colorGetBackground([appTheme.colors.warning[5], appTheme.colors.warning[4]], {
+			positions: undefined,
+			type: "linear",
+			angle: 165,
+		}),
 	},
-	"error": {
-		background: colorGetBackground(
-			[appTheme.colors.error[4], appTheme.colors.error[3]],
-			{ positions: undefined, type: "linear", angle: 165 },
-		),
+	error: {
+		background: colorGetBackground([appTheme.colors.error[4], appTheme.colors.error[3]], {
+			positions: undefined,
+			type: "linear",
+			angle: 165,
+		}),
 	},
 	"error-dark": {
-		background: colorGetBackground(
-			[appTheme.colors.error[2], appTheme.colors.error[1]],
-			{ positions: undefined, type: "linear", angle: 165 },
-		),
+		background: colorGetBackground([appTheme.colors.error[2], appTheme.colors.error[1]], {
+			positions: undefined,
+			type: "linear",
+			angle: 165,
+		}),
 	},
 	"error-dark-grey": {
-		background: colorGetBackground(
-			[appTheme.colors.greys[2], appTheme.colors.error[1]],
-			{ positions: undefined, type: "linear", angle: 165 },
-		),
+		background: colorGetBackground([appTheme.colors.greys[2], appTheme.colors.error[1]], {
+			positions: undefined,
+			type: "linear",
+			angle: 165,
+		}),
 	},
 	"glass-dark": {
 		background: colorGetBackground(

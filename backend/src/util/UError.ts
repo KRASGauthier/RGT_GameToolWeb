@@ -6,15 +6,12 @@ import { IProjectUserDB, IProjectUserDBMethods } from "../modules/project/projec
 import { ITagDB, ITagDBMethods } from "../modules/project/tags/schema.js";
 import { ITodoDB, ITodoDBMethods } from "../modules/project/todo/schema.js";
 
-
 //====================== SHARED ======================
 export const hasTag: (req: Request) => asserts req is Request & {
 	tag: HydratedDocument<ITagDB, ITagDBMethods>;
 } = (req: Request) => {
 	if (!req.tag) throw { code: 400, message: "Missing tag" };
 };
-
-
 
 //====================== MAIN ======================
 export const hasProject: (

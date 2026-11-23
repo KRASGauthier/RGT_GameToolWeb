@@ -2,7 +2,13 @@ import { Stack } from "@mui/material";
 import CFilter from "../../../../../rgt/components/inputs/filters/CFilter";
 import { appTheme } from "../../../../style/theme";
 import { useEffect, useState } from "react";
-import { apiTodoAdd, apiTodoDelete, apiTodoEdit, apiTodoGet, apiTodoSetState } from "../../../../api/project/todoAPI";
+import {
+	apiTodoAdd,
+	apiTodoDelete,
+	apiTodoEdit,
+	apiTodoGet,
+	apiTodoSetState,
+} from "../../../../api/project/todoAPI";
 import { useProject } from "../../../../context/CProjectContext";
 import { useNotif } from "../../../../../rgt/context/app/CAppNotifContext";
 import type { ITodo, TTodoState } from "../../../../types/data/project/TTodo";
@@ -16,7 +22,7 @@ function PTodo({}: PTodoProps) {
 	//====================== DATA ======================
 	const { project } = useProject();
 	const [todos, setTodos] = useState<ITodo[]>([]);
-	const [toDelete, setToDelete] = useState<ITodo | undefined>()
+	const [toDelete, setToDelete] = useState<ITodo | undefined>();
 
 	const { push } = useNotif();
 
@@ -36,43 +42,54 @@ function PTodo({}: PTodoProps) {
 	};
 
 	const handleEdit = async (uid: TUID, todo: Partial<ITodo>): Promise<boolean> => {
-		if(!project)
-			return false;
-		return apiTodoEdit(project.uid, uid, todo, setTodos, push)
-	}
+		if (!project) return false;
+		return apiTodoEdit(project.uid, uid, todo, setTodos, push);
+	};
 	const handleStateChange = async (uid: TUID, state: TTodoState) => {
-		if(!project)
-			return false;
-		apiTodoSetState(project.uid, uid, state, setTodos, push)
-	}
+		if (!project) return false;
+		apiTodoSetState(project.uid, uid, state, setTodos, push);
+	};
 
 	const handleOnRequestDelete = (todo: ITodo) => {
-		if(!project)
-			return
-		if(todo.state != "current")
-		{
-			apiTodoDelete(project.uid, todo.uid, setTodos, push)
-			setToDelete(undefined)
+		if (!project) return;
+		if (todo.state != "current") {
+			apiTodoDelete(project.uid, todo.uid, setTodos, push);
+			setToDelete(undefined);
 			return;
 		}
-		setToDelete(todo)
-		return
-	}
+		setToDelete(todo);
+		return;
+	};
 	const handleOnDelete = () => {
-		if(!toDelete || !project)
-			return
-		apiTodoDelete(project.uid, toDelete.uid, setTodos, push)
-		setToDelete(undefined)
-	}
+		if (!toDelete || !project) return;
+		apiTodoDelete(project.uid, toDelete.uid, setTodos, push);
+		setToDelete(undefined);
+	};
 
 	//====================== NODES ======================
 	return (
-		<Stack spacing={"2px"} sx={{ flex: 1, m: appTheme.shapes.spacing.main, overflow: "hidden" }}>
+		<Stack
+			spacing={"2px"}
+			sx={{ flex: 1, m: appTheme.shapes.spacing.main, overflow: "hidden" }}
+		>
 			<CFilter actions={["add"]} onEvent={handleEvent} />
 			{todos.map((todo: ITodo) => {
-				return <PTodoNode onStateChange={handleStateChange} onEdit={handleEdit} onDelete={handleOnRequestDelete} todo={todo} />;
+				return (
+					<PTodoNode
+						onStateChange={handleStateChange}
+						onEdit={handleEdit}
+						onDelete={handleOnRequestDelete}
+						todo={todo}
+					/>
+				);
 			})}
-			<CDialogConfirm type={"Todo"} name={toDelete?.name} open={toDelete ? true : false} onYes={handleOnDelete} onNo={() => setToDelete(undefined)}/>
+			<CDialogConfirm
+				type={"Todo"}
+				name={toDelete?.name}
+				open={toDelete ? true : false}
+				onYes={handleOnDelete}
+				onNo={() => setToDelete(undefined)}
+			/>
 		</Stack>
 	);
 }

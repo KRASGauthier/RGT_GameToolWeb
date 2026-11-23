@@ -9,16 +9,16 @@ import { TColorEntry } from "../../../../rgt/types/TStyles.js";
 import { appDB } from "../../../../rgt/middleware/db.js";
 
 export interface ITagDB extends Omit<ITag, "uid">, IDBData {
-	project: Types.ObjectId
+	project: Types.ObjectId;
 }
 
 export interface ITagDBMethods {
-	getData(): Promise<ITag>
+	getData(): Promise<ITag>;
 }
 
 export const tagCurrentVersion: number = 0;
 
-const tagSchema = new Schema<ITagDB, Model<ITagDB>, ITagDBMethods> (
+const tagSchema = new Schema<ITagDB, Model<ITagDB>, ITagDBMethods>(
 	{
 		project: {
 			type: Schema.Types.ObjectId,
@@ -29,7 +29,7 @@ const tagSchema = new Schema<ITagDB, Model<ITagDB>, ITagDBMethods> (
 			type: String,
 			required: true,
 			trim: true,
-			maxLength: TAG_MAX_LEN
+			maxLength: TAG_MAX_LEN,
 		},
 		icon: {
 			type: String,
@@ -46,15 +46,15 @@ const tagSchema = new Schema<ITagDB, Model<ITagDB>, ITagDBMethods> (
 	{
 		timestamps: true,
 	},
-)
+);
 
-tagSchema.method("getData", async function(): Promise<ITag> {
+tagSchema.method("getData", async function (): Promise<ITag> {
 	return {
 		uid: this._id.toString(),
 		name: this.name,
 		icon: this.icon as TIconLibrary,
-		color: this.color as TColorEntry
-	}
-})
+		color: this.color as TColorEntry,
+	};
+});
 
 export const MTag = appDB.main.model("tag", tagSchema);

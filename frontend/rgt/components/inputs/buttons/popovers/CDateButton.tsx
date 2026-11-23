@@ -35,7 +35,7 @@ function CDateButton({ value, customText, onChange, ...other }: CDateButtonProps
 					onChange?.(date);
 				}}
 			/>
-			<CButtonIconText  {...other} onClick={(e) => setButtonRef(e.currentTarget)}>
+			<CButtonIconText {...other} onClick={(e) => setButtonRef(e.currentTarget)}>
 				{customText ?? value.toLocaleDateString()}
 			</CButtonIconText>
 		</>

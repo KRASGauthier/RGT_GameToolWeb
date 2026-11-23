@@ -41,7 +41,7 @@ projectRouter.use(API_PROJECT_TARGET + API_GROUPS, verifyProject, groupRouter);
 projectRouter.use(API_PROJECT_TARGET + API_PROJECT_USER, verifyProject, RProjectUserRouter);
 
 //PROJECT
-projectRouter.use(API_PROJECT_TARGET + API_TAGS, verifyProject, RTagRouter)
-projectRouter.use(API_PROJECT_TARGET + API_PROJECT_TODO, verifyProject, todoRouter)
+projectRouter.use(API_PROJECT_TARGET + API_TAGS, verifyProject, RTagRouter);
+projectRouter.use(API_PROJECT_TARGET + API_PROJECT_TODO, verifyProject, todoRouter);
 
 export default projectRouter;

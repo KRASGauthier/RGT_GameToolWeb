@@ -102,7 +102,11 @@ const stylingContent = {
 		disabled: [appTheme.colors.greys[5], appTheme.colors.greys[6], appTheme.colors.greys[5]],
 	},
 	warning: {
-		normal: [appTheme.colors.warning[5], appTheme.colors.warning[6], appTheme.colors.warning[5]],
+		normal: [
+			appTheme.colors.warning[5],
+			appTheme.colors.warning[6],
+			appTheme.colors.warning[5],
+		],
 		hovered: [
 			appTheme.colors.warning[6],
 			appTheme.colors.secondary[6],

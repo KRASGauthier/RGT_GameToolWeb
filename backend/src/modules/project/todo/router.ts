@@ -5,11 +5,11 @@ import { verifyTodo } from "./middleware.js";
 
 const todoRouter = Router();
 
-todoRouter.get("/", todoGet)
-todoRouter.post("/", todoCreate)
+todoRouter.get("/", todoGet);
+todoRouter.post("/", todoCreate);
 
-todoRouter.patch(API_PROJECT_TODO_TARGET, verifyTodo, todoEdit)
-todoRouter.patch(API_PROJECT_TODO_TARGET + API_PROJECT_TODO_STATE, verifyTodo, todoSetState)
-todoRouter.delete(API_PROJECT_TODO_TARGET, verifyTodo, todoDelete)
+todoRouter.patch(API_PROJECT_TODO_TARGET, verifyTodo, todoEdit);
+todoRouter.patch(API_PROJECT_TODO_TARGET + API_PROJECT_TODO_STATE, verifyTodo, todoSetState);
+todoRouter.delete(API_PROJECT_TODO_TARGET, verifyTodo, todoDelete);
 
-export default todoRouter
+export default todoRouter;

@@ -5,7 +5,10 @@ import { useMemo, useState, type ReactNode } from "react";
 import CText from "../text/CText";
 import CButtonIcon from "../inputs/buttons/CButtonIcon";
 import { appTheme } from "../../../src/style/theme";
-import { CAccordionStyle, type IAccordionStyle } from "../../style/components/surfaces/CAccordionStyle";
+import {
+	CAccordionStyle,
+	type IAccordionStyle,
+} from "../../style/components/surfaces/CAccordionStyle";
 import type { TSize } from "../../types/TStyles";
 import type { TCardStyling } from "../../style/components/surfaces/CCardStyle";
 
@@ -15,16 +18,21 @@ export interface CAccordionProps extends GCompProps {
 
 	openOnButton?: boolean;
 
-	styling?: TCardStyling
-	borderRadius?: TSize
+	styling?: TCardStyling;
+	borderRadius?: TSize;
 }
 
-function CAccordion({ header, children, openOnButton, styling, borderRadius = appTheme.shapes.radius.medium }: CAccordionProps) {
-	
+function CAccordion({
+	header,
+	children,
+	openOnButton,
+	styling,
+	borderRadius = appTheme.shapes.radius.medium,
+}: CAccordionProps) {
 	const [open, setOpen] = useState<boolean>(false);
 	const style: IAccordionStyle = useMemo(() => {
-		return CAccordionStyle({borderRadius, open})
-	}, [open, borderRadius])
+		return CAccordionStyle({ borderRadius, open });
+	}, [open, borderRadius]);
 
 	return (
 		<Stack>

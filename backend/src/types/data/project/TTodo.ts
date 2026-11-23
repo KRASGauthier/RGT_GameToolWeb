@@ -1,6 +1,6 @@
 import type { TUID } from "../../../../rgt/types/TShared.js";
 
-export type TTodoState = "current" | "done" | "canceled"
+export type TTodoState = "current" | "done" | "canceled";
 export interface ITodo {
 	uid: TUID;
 	project: TUID;
